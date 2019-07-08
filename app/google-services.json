@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1061862189047",
+    "firebase_url": "https://kiosk-jnsy.firebaseio.com",
+    "project_id": "kiosk-jnsy",
+    "storage_bucket": "kiosk-jnsy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061862189047:android:be9504c7ee8e104c",
+        "android_client_info": {
+          "package_name": "com.example.kiosk_jnsy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1061862189047-dpg321m2bjgda6q0mniv2f85v9te2vd3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kiosk_jnsy",
+            "certificate_hash": "4d09911e816586e0e3b0d7711d755404519811ce"
+          }
+        },
+        {
+          "client_id": "1061862189047-sao9fqthgtpmrggfb2bhgstvli41umhs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWoYSYNVM_I6lUndRUXDa4cIoLXYnlxTQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061862189047-sao9fqthgtpmrggfb2bhgstvli41umhs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,16 +10,11 @@ import com.example.kiosk_jnsy.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-
     ActivityMainBinding binding;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-
 
         // 메뉴판 클릭하면 화면 이동
         binding.btnMenuList.setOnClickListener(new View.OnClickListener() {
@@ -30,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         // 주문기록 클릭하면 화면 이동
         binding.btnOrderedList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,11 +33,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
     }//end onCreate
-
-
-
 }//end Activity

@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.kiosk_jnsy.model.MenuItem;
+import com.example.kiosk_jnsy.model.CafeItem;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.example.kiosk_jnsy.model.MenuItem;
+
 public class OrderedListActivity extends AppCompatActivity {
 
     @Override
@@ -28,9 +28,9 @@ public class OrderedListActivity extends AppCompatActivity {
         // 리사이클러뷰
         RecyclerView recyclerView=findViewById(R.id.recyclerView);
         //어댑터 만들기
-        OrderedListActivity.MenuItemAdapter adapter=new OrderedListActivity.MenuItemAdapter(new OrderedListActivity.MenuItemAdapter.OnMenuItemClickListener() {
+        OrderedListActivity.CafeItemAdapter adapter=new OrderedListActivity.CafeItemAdapter(new OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener() {
             @Override
-            public void onMenuItemClicked(MenuItem model) {
+            public void onCafeItemClicked(CafeItem model) {
                 // 주문기록에 있는 메뉴를 선택하면
                 Toast.makeText(OrderedListActivity.this, model.getName(), Toast.LENGTH_SHORT).show();
                 // 상세메뉴 페이지로 넘어감
@@ -41,9 +41,9 @@ public class OrderedListActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         // 실제 데이터 넣기
         // 현재 커피공장에 있는 메뉴
-        MenuItem realmenu[]=new MenuItem[9];
+        CafeItem realmenu[]=new CafeItem[9];
 
-        List<MenuItem> people=new ArrayList<>();
+        List<CafeItem> people=new ArrayList<>();
 
         // 배열에 음료 데이터 넣기
         // 1. 파이어베이스에 이 정보를 넣자
@@ -52,15 +52,8 @@ public class OrderedListActivity extends AppCompatActivity {
 
         // 2. 읽어와서 이 배열에 넣자
         // 근데 메뉴판은 파베인 이유가 뭐지
-        people.add(new MenuItem("아메리카노",2000,""));
-        people.add(new MenuItem("카페라떼",3000,""));
-        people.add(new MenuItem("바닐라라떼",3000,""));
-        people.add(new MenuItem("헤이즐넛 라떼",2000,""));
-        people.add(new MenuItem("캐러멜 라떼",3000,""));
-        people.add(new MenuItem("초콜릿 라떼",3000,""));
-        people.add(new MenuItem("허니 라떼",2000,""));
-        people.add(new MenuItem("유기농 아가베라떼",3000,""));
-        people.add(new MenuItem("카페 하노이",3000,""));
+        people.add(new CafeItem("아메리카노",2000,"","aaa"));
+        people.add(new CafeItem("카페라떼",3000,"","bbb"));
 
 
         Toast.makeText(this, "음료 추가", Toast.LENGTH_SHORT).show();
@@ -68,38 +61,38 @@ public class OrderedListActivity extends AppCompatActivity {
         adapter.setItems(people);
         Log.d("백지연","dd");
     }
-    private static class MenuItemAdapter extends RecyclerView.Adapter<OrderedListActivity.MenuItemAdapter.MenuItemViewHolder> {
-        interface OnMenuItemClickListener {
-            void onMenuItemClicked(MenuItem model);
+    private static class CafeItemAdapter extends RecyclerView.Adapter<OrderedListActivity.CafeItemAdapter.CafeItemViewHolder> {
+        interface OnCafeItemClickListener {
+            void onCafeItemClicked(CafeItem model);
         }
 
-        private OrderedListActivity.MenuItemAdapter.OnMenuItemClickListener mListener;
+        private OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener mListener;
 
-        private List<MenuItem> mItems = new ArrayList<>();
+        private List<CafeItem> mItems = new ArrayList<>();
 
-        public MenuItemAdapter() {}
+        public CafeItemAdapter() {}
 
-        public MenuItemAdapter(OrderedListActivity.MenuItemAdapter.OnMenuItemClickListener listener) {
+        public CafeItemAdapter(OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener listener) {
             mListener = listener;
         }
 
-        public void setItems(List<MenuItem> items) {
+        public void setItems(List<CafeItem> items) {
             this.mItems = items;
             notifyDataSetChanged();
         }
 
         @NonNull
         @Override
-        public OrderedListActivity.MenuItemAdapter.MenuItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public OrderedListActivity.CafeItemAdapter.CafeItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_menu, parent, false);
-            final OrderedListActivity.MenuItemAdapter.MenuItemViewHolder viewHolder = new OrderedListActivity.MenuItemAdapter.MenuItemViewHolder(view);
+            final OrderedListActivity.CafeItemAdapter.CafeItemViewHolder viewHolder = new OrderedListActivity.CafeItemAdapter.CafeItemViewHolder(view);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        final MenuItem item = mItems.get(viewHolder.getAdapterPosition());
-                        mListener.onMenuItemClicked(item);
+                        final CafeItem item = mItems.get(viewHolder.getAdapterPosition());
+                        mListener.onCafeItemClicked(item);
                     }
                 }
             });
@@ -107,12 +100,12 @@ public class OrderedListActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(@NonNull OrderedListActivity.MenuItemAdapter.MenuItemViewHolder holder, int position) {
-            MenuItem item = mItems.get(position);
+        public void onBindViewHolder(@NonNull OrderedListActivity.CafeItemAdapter.CafeItemViewHolder holder, int position) {
+            CafeItem item = mItems.get(position);
             // TODO : 데이터를 뷰홀더에 표시하시오
             holder.name.setText(item.getName());
             holder.price.setText(item.getPrice()+"");
-            holder.img.setText(item.getImg()+"");
+            holder.img.setText(item.getImageUrl()+"");
         }
 
         @Override
@@ -120,13 +113,13 @@ public class OrderedListActivity extends AppCompatActivity {
             return mItems.size();
         }
 
-        public static class MenuItemViewHolder extends RecyclerView.ViewHolder {
+        public static class CafeItemViewHolder extends RecyclerView.ViewHolder {
             // TODO : 뷰홀더 완성하시오
             TextView name;
             TextView price;
             TextView img;
 
-            public MenuItemViewHolder(@NonNull View itemView) {
+            public CafeItemViewHolder(@NonNull View itemView) {
                 super(itemView);
                 // TODO : 뷰홀더 완성하시오
                 name=itemView.findViewById(R.id.name_text);

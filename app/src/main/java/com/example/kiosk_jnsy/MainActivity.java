@@ -16,6 +16,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+
+        // 타 추천 클릭하면 화면 이동
+        binding.btnOtherReco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RegisterMenuActivity.class);
+                startActivity(intent);
+            }
+        });
+
         // 메뉴판 클릭하면 화면 이동
         binding.btnMenuList.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -27,6 +27,7 @@
                 android:layout_height="match_parent"
                 android:textSize="20dp"
                 android:text="타 추천"
+                android:id="@+id/btn_other_reco"
                 android:layout_weight="1"
                 android:layout_margin="20dp"/>
 

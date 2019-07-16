@@ -28,7 +28,13 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/tv_menuName"
+                    android:id="@+id/tv_menuTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"/>
+
+                <TextView
+                    android:id="@+id/tv_menuPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="20dp"/>
@@ -39,7 +45,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
         <!-- 담기 + 목록 버튼 -->
         <LinearLayout

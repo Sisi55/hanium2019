@@ -179,6 +179,9 @@ public class MenuListActivity extends AppCompatActivity {
                 //Toast.makeText(MenuListActivity.this, model.getName()+" 상세정보 보기", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MenuListActivity.this, DetailMenuItemActivity.class);
                 intent.putExtra("detail",model);
+                ArrayList<CafeItem> shoplist=(ArrayList<CafeItem>) getIntent().getSerializableExtra("shoplist");
+
+                intent.putExtra("shoplist",shoplist); // 지연 : 고대로 보냄
                 startActivity(intent);
 
             }

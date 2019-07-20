@@ -48,6 +48,7 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
 
                 getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
                         .replace(R.id.body, MenuListFragment.getFragment())
                         .commit();
 
@@ -55,12 +56,13 @@ public class MainFragment extends Fragment {
         });
 
         // 주문기록 화면으로 이동
-        Button btnOrderedList = (Button) view.findViewById(R.id.btn_menuList);
+        Button btnOrderedList = (Button) view.findViewById(R.id.btn_orderedList);
         btnOrderedList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
                         .replace(R.id.body, OrderedListFragment.getFragment())
                         .commit();
 

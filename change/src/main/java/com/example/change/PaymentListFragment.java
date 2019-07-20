@@ -54,33 +54,6 @@ public class PaymentListFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_main_list);
         add_menu=(Button)view.findViewById(R.id.add_menu_btn);
 
-
-        return view;
-    }
-    //end on create view
-
-
-
-
-
-// 유빈
-
-    private RecyclerView mRecyclerView;
-    private ArrayList<CafeItem> mArrayList; // 인텐트로 받아올 값
-    private PaymentListAdapter mAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
-    private Button add_menu;
-
-    private int count = -1;
-
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_payment_list);
-
-
-
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
@@ -88,7 +61,7 @@ public class PaymentListFragment extends Fragment {
         // mArrayList = new ArrayList<>();
         // 지연 : intet 값 받아오기
         // 시현 : getIntent 부분은 해당 클래스의 멤버함수로 대체될듯. 이동 전에.
-        mArrayList=(ArrayList<CafeItem>) getIntent().getSerializableExtra("shoplist");
+//        mArrayList=(ArrayList<CafeItem>) getIntent().getSerializableExtra("shoplist");
         Toast.makeText(getActivity(), mArrayList.size()+"", Toast.LENGTH_SHORT).show();
         // RecyclerView를 위해 CustomAdapter를 사용합니다.
         mAdapter = new PaymentListAdapter(mArrayList);
@@ -109,12 +82,35 @@ public class PaymentListFragment extends Fragment {
                 fragment.setCafeItemArrayList(mArrayList); // arrayList ? payment list fragment 에서 온다
 
                 getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
                         .replace(R.id.body, fragment)
                         .commit();
 
             }
         });
-    }//end on create
+
+        return view;
+    }
+    //end on create view
+
+    public void setCafeItemArrayList(ArrayList<CafeItem> cafeItemArrayList){
+        mArrayList = cafeItemArrayList;
+    }
+    //end method
+
+
+
+
+// 유빈
+
+    private RecyclerView mRecyclerView;
+    private ArrayList<CafeItem> mArrayList; // 인텐트로 받아올 값
+    private PaymentListAdapter mAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
+    private Button add_menu;
+
+    private int count = -1;
+
 
     class PaymentListAdapter extends RecyclerView.Adapter<PaymentListAdapter.ListViewHolder> {
 

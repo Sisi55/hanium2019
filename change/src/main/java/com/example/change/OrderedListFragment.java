@@ -42,26 +42,12 @@ public class OrderedListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    RecyclerView recyclerView;
+    RecyclerView recyclerView; View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_ordered_list, container, false);
-
-        recyclerView=(RecyclerView) view.findViewById(R.id.recyclerView);
-
-        return view;
-    }
-    //end on create view
-
-
-//
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_menu_list);
+        view = inflater.inflate(R.layout.fragment_ordered_list, container, false);
 
         //어댑터 만들기
         OrderedListFragment.CafeItemAdapter adapter=new OrderedListFragment.CafeItemAdapter(new OrderedListFragment.CafeItemAdapter.OnCafeItemClickListener() {
@@ -76,11 +62,13 @@ public class OrderedListFragment extends Fragment {
 */
 
                 getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
                         .replace(R.id.body, DetailMenuItemFragment.getFragment())
                         .commit();
 
             }
         });
+        recyclerView=(RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
         // 실제 데이터 넣기
         // 현재 커피공장에 있는 메뉴
@@ -103,6 +91,21 @@ public class OrderedListFragment extends Fragment {
 
         adapter.setItems(people);
         Log.d("백지연","dd");
+
+
+//        recyclerView=(RecyclerView) view.findViewById(R.id.recyclerView);
+
+        return view;
+    }
+    //end on create view
+
+
+//
+
+    @Override // on create view 로 대체합니다 오류나서
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_menu_list);
     }
     private static class CafeItemAdapter extends RecyclerView.Adapter<OrderedListFragment.CafeItemAdapter.CafeItemViewHolder> {
         interface OnCafeItemClickListener {
@@ -171,7 +174,5 @@ public class OrderedListFragment extends Fragment {
             }
         }//end class
     }//end class
-
-
 
 }//end fragment

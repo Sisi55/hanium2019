@@ -27,8 +27,16 @@ public class MainActivity extends AppCompatActivity {
 
         // 첫번째 Fragment가 출력되도록 초기화 : 메뉴판 메인 화면
         getSupportFragmentManager().beginTransaction()
+                .addToBackStack(null)
                 .add(R.id.body, MainFragment.getFragment())
                 .commit();
+
+        // camera
+        getSupportFragmentManager().beginTransaction()
+                .addToBackStack(null)
+                .replace(R.id.head, Camera2BasicFragment.newInstance())
+                .commit();
+
 
 
 

@@ -71,6 +71,128 @@ public class MenuListFragment extends Fragment {
 
         recyclerView=(RecyclerView) view.findViewById(R.id.recyclerView);
 
+        citems=new ArrayList<CafeItem>();
+
+        // storage
+        mStorageRef= FirebaseStorage.getInstance().getReference("Image");
+
+     /*
+        ch=(Button)findViewById(R.id.choosebtn);
+        up=(Button)findViewById(R.id.uploadbtn);
+        down=(Button)findViewById(R.id.download);
+        img=(ImageView)findViewById(R.id.imageview);
+        ch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              fileChooser();
+            }
+        });
+        up.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(uploadTask!=null&&uploadTask.isInProgress()){
+                    // 파일이 올라가는 중임을 암시
+                    Toast.makeText(MenuListActivity.this,"upload in progress",Toast.LENGTH_LONG).show();
+                }else{
+                    fileUploader();
+                }
+            }
+        });
+        down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               download();
+            }
+        });
+
+
+        // 데이터베이스 쓰기
+        button = (Button) findViewById(R.id.btn1);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("MainActivity", "Button - onClickListener");
+                //FirebaseDatabase.getInstance().getReference().push().setValue(new CafeItem("바닐라 라떼",3000,"url3"));
+            }
+        });// 버튼 이벤트 리스너
+
+*/
+
+        // 리사이클러뷰
+
+
+        //어댑터 만들기  // 클릭하면 이동 ?
+        adapter=new CafeItemAdapter(new CafeItemAdapter.OnCafeItemClickListener() {
+            @Override
+            public void onCafeItemClicked(CafeItem model) {
+                Toast.makeText(getActivity(), model.getName()+" 상세정보 보기", Toast.LENGTH_SHORT).show();
+/*
+                Intent intent = new Intent(MenuListActivity.this, DetailMenuItemActivity.class);
+                intent.putExtra("detail",model);
+                ArrayList<CafeItem> shoplist=(ArrayList<CafeItem>) getIntent().getSerializableExtra("shoplist");
+                // 시현: 음.. 어디서 오는걸까 getIntent ? < payment list fragment 에서 온다
+
+                intent.putExtra("shoplist",shoplist); // 지연 : 고대로 보냄
+                startActivity(intent);
+*/
+
+                // 시현 acivity : intent > fragment 간 이동으로 임시 변경
+                DetailMenuItemFragment fragment = DetailMenuItemFragment.getFragment();
+                fragment.setCafeItem(model);
+                fragment.setCafeItemArrayList((ArrayList<CafeItem>) citems); // arrayList ? payment list fragment 에서 온다
+
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.body, fragment)
+                        .commit();
+
+
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        Log.d("현재",citems.size()+"");
+
+
+        // 데이터베이스 읽기 #2. Single ValueEventListener
+        FirebaseDatabase.getInstance().getReference().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Log.d("MainActivity", "Single ValueEventListener : " + snapshot.getValue());
+                    Log.d("데이터",valueOf(snapshot)+"형");
+                    String name = (String) snapshot.child("name").getValue();
+                    Long pricen = (Long) snapshot.child("price").getValue();
+                    String body=(String)snapshot.child("body").getValue();
+                    int price=pricen.intValue();
+                    String imageUrl=(String)snapshot.child("imageUrl").getValue();
+
+                    // 객체 형태로 받아와야 함. 오류...
+                    //CafeItem ciObject = dataSnapshot.getValue(CafeItem.class);
+                    citems.add(new CafeItem(name,price,imageUrl,body));
+                    Log.d("현재 들어감",citems.size()+"");
+
+                    /*
+                    if(ciObject!=null) {
+
+                        Log.d("데이터1",ciObject.getName());
+                        Log.d("데이터2", message+"이다");
+                       // Log.d("데이터3", ciObject.getPrice() + "이다");
+                    }
+                    */
+
+                }
+                // for문 다 수행 후 어댑터 설정
+                adapter.setItems(citems);
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        // 파이어베이스 입출력 : 출처: https://stack07142.tistory.com/282 [Hello World]
 
         return view;
     }
@@ -165,128 +287,6 @@ public class MenuListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_menu_list);  // fragment 라서..
-        citems=new ArrayList<CafeItem>();
-
-        // storage
-        mStorageRef= FirebaseStorage.getInstance().getReference("Image");
-
-     /*
-        ch=(Button)findViewById(R.id.choosebtn);
-        up=(Button)findViewById(R.id.uploadbtn);
-        down=(Button)findViewById(R.id.download);
-        img=(ImageView)findViewById(R.id.imageview);
-        ch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              fileChooser();
-            }
-        });
-        up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(uploadTask!=null&&uploadTask.isInProgress()){
-                    // 파일이 올라가는 중임을 암시
-                    Toast.makeText(MenuListActivity.this,"upload in progress",Toast.LENGTH_LONG).show();
-                }else{
-                    fileUploader();
-                }
-            }
-        });
-        down.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               download();
-            }
-        });
-
-
-        // 데이터베이스 쓰기
-        button = (Button) findViewById(R.id.btn1);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("MainActivity", "Button - onClickListener");
-                //FirebaseDatabase.getInstance().getReference().push().setValue(new CafeItem("바닐라 라떼",3000,"url3"));
-            }
-        });// 버튼 이벤트 리스너
-
-*/
-
-        // 리사이클러뷰
-
-
-        //어댑터 만들기  // 클릭하면 이동 ?
-        adapter=new CafeItemAdapter(new CafeItemAdapter.OnCafeItemClickListener() {
-            @Override
-            public void onCafeItemClicked(CafeItem model) {
-                Toast.makeText(getActivity(), model.getName()+" 상세정보 보기", Toast.LENGTH_SHORT).show();
-/*
-                Intent intent = new Intent(MenuListActivity.this, DetailMenuItemActivity.class);
-                intent.putExtra("detail",model);
-                ArrayList<CafeItem> shoplist=(ArrayList<CafeItem>) getIntent().getSerializableExtra("shoplist");
-                // 시현: 음.. 어디서 오는걸까 getIntent ? < payment list fragment 에서 온다
-
-                intent.putExtra("shoplist",shoplist); // 지연 : 고대로 보냄
-                startActivity(intent);
-*/
-
-                // 시현 acivity : intent > fragment 간 이동으로 임시 변경
-                DetailMenuItemFragment fragment = DetailMenuItemFragment.getFragment();
-                fragment.setCafeItem(model);
-                fragment.setCafeItemArrayList(); // arrayList ? payment list fragment 에서 온다
-
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.body, fragment)
-                        .commit();
-
-
-            }
-        });
-        recyclerView.setAdapter(adapter);
-        Log.d("현재",citems.size()+"");
-
-
-        // 데이터베이스 읽기 #2. Single ValueEventListener
-        FirebaseDatabase.getInstance().getReference().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Log.d("MainActivity", "Single ValueEventListener : " + snapshot.getValue());
-                    Log.d("데이터",valueOf(snapshot)+"형");
-                    String name = (String) snapshot.child("name").getValue();
-                    Long pricen = (Long) snapshot.child("price").getValue();
-                    String body=(String)snapshot.child("body").getValue();
-                    int price=pricen.intValue();
-                    String imageUrl=(String)snapshot.child("imageUrl").getValue();
-
-                    // 객체 형태로 받아와야 함. 오류...
-                    //CafeItem ciObject = dataSnapshot.getValue(CafeItem.class);
-                    citems.add(new CafeItem(name,price,imageUrl,body));
-                    Log.d("현재 들어감",citems.size()+"");
-
-                    /*
-                    if(ciObject!=null) {
-
-                        Log.d("데이터1",ciObject.getName());
-                        Log.d("데이터2", message+"이다");
-                       // Log.d("데이터3", ciObject.getPrice() + "이다");
-                    }
-                    */
-
-                }
-                // for문 다 수행 후 어댑터 설정
-                adapter.setItems(citems);
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        // 파이어베이스 입출력 : 출처: https://stack07142.tistory.com/282 [Hello World]
-
 
     }// onCreate()
     // 리사이클러뷰 어댑터 클래스

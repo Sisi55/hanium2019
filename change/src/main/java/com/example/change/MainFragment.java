@@ -70,7 +70,9 @@ public class MainFragment extends Fragment {
         });
 
 
-        return view;
+
+
+       return view;
     }
     //end on create view
 

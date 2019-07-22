@@ -154,7 +154,7 @@ public class MenuListFragment extends Fragment {
 
 
         // 데이터베이스 읽기 #2. Single ValueEventListener
-        FirebaseDatabase.getInstance().getReference().addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("menu").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
@@ -164,6 +164,7 @@ public class MenuListFragment extends Fragment {
                     Long pricen = (Long) snapshot.child("price").getValue();
                     String body=(String)snapshot.child("body").getValue();
                     int price=pricen.intValue();
+                    //int price=100000;
                     String imageUrl=(String)snapshot.child("imageUrl").getValue();
 
                     // 객체 형태로 받아와야 함. 오류...
@@ -259,7 +260,7 @@ public class MenuListFragment extends Fragment {
                                                 if (task.isSuccessful()) {
                                                     CafeItem ci = new CafeItem("변경필요", 5000, task.getResult().toString(),"상세설명");
                                                     //mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(key).setValue(friendlyMessage);
-                                                    FirebaseDatabase.getInstance().getReference().push().setValue(ci);
+                                                    FirebaseDatabase.getInstance().getReference().child("menu").push().setValue(ci);
                                                 }
                                             }
                                         });

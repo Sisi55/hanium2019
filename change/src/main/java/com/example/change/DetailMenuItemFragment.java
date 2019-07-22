@@ -166,6 +166,7 @@ public class DetailMenuItemFragment extends Fragment {
                                     .addToBackStack(null)
                                     .replace(R.id.body, fragment)
                                     .commit();
+                            // startIntent
 
                             // 현재 상태의 리스트 받아옴.
                             // 리스트에 담은 메뉴 추가

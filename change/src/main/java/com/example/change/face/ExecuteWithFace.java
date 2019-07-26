@@ -225,7 +225,7 @@ public class ExecuteWithFace {
 
                         if(trainingStatus.status == TrainingStatus.Status.Failed)
                         {
-/* 지우지마요
+
                             // 상당히 오랜시간 train 한다 ?
                             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                                 @Override
@@ -233,26 +233,23 @@ public class ExecuteWithFace {
                                     ((Camera2BasicFragment)fragment).addTextToEditText("train status failed");
                                 }
                             },0);
-*/
+
                             Log.e("train status failed","");
 
                             return null;
 
                         }else if(trainingStatus.status == TrainingStatus.Status.Running){
 
-/*                                     ((Camera2BasicFragment)fragment).addTextToEditText("train status failed");
-
                             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                                 @Override
                                 public void run() {
-                                    ((Camera2BasicFragment)fragment).addTextToEditText("train status running");
+                                    ((Camera2BasicFragment)fragment).addTextToEditText("train status running ok ?");
                                 }
                             },0);
-*/
+
                             Log.e("train status running","");
 //                            return null;
                         }else if(trainingStatus.status == TrainingStatus.Status.Succeeded){
-/*                             Log.e("train status failed","");
 
                             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                                 @Override
@@ -260,7 +257,7 @@ public class ExecuteWithFace {
                                     ((Camera2BasicFragment)fragment).addTextToEditText("train status succeeded");
                                 }
                             },0);
-*/
+
                             Log.e("train status succeeded","");
                         }
                         //end if else
@@ -277,14 +274,13 @@ public class ExecuteWithFace {
 
                     } catch (final Exception e)
                     {
-/* 지우지마요
+
                         handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                             @Override
                             public void run() {
                                 ((Camera2BasicFragment)fragment).addTextToEditText("  d-identify try catch:\n"+ e.getMessage()+"\n");
                             }
                         },0);
-*/
 
                         return null;
                     }
@@ -308,7 +304,13 @@ public class ExecuteWithFace {
 //                        ((Camera2BasicFragment)fragment).addTextToEditText("   identify>UUID:  "+ ""+identifyResults[i].faceId);
                         if(identifyResults[i].candidates.size() != 0) {
 //                            ((Camera2BasicFragment)fragment).addTextToEditText("   identify: 사람있다");
-                            ((Camera2BasicFragment)fragment).addTextToEditText("uuid: "+identifyResults[i].candidates.get(0).personId + "\n정확도:"+identifyResults[i].candidates.get(0).confidence);
+
+                            // 여기서 get person
+                            // "uuid: "+identifyResults[i].candidates.get(0).personId
+                            new GetPersonTask(fragment/*, identifyResults[i].candidates.get(0).personId*/).execute(identifyResults[i].candidates.get(0).personId);
+
+
+                            ((Camera2BasicFragment)fragment).addTextToEditText("정확도:"+identifyResults[i].candidates.get(0).confidence);
 //                            identifyResults[i].candidates.get(0).personId
                             AppSetting.personUUID = identifyResults[i].candidates.get(0).personId.toString();
                             AppSetting.trainRequestFlag=true; // true하면 사용한 곳에서 자동으로 false 초기화한다
@@ -360,12 +362,17 @@ public class ExecuteWithFace {
 //            mainActivity = context;
             this.fragment = fragment;
         }
+
+        public GetPersonTask(Fragment fragment){
+            this.fragment = fragment;
+        }
         //end 생성자
 
         @Override
         protected Person doInBackground(UUID... params) {
             try{
 
+                // uuid만 보내주면 되겠다
                 return AppSetting.faceServiceClient.getPersonInLargePersonGroup(AppSetting.personGroupId, params[0]);
 
             } catch (Exception e)
@@ -390,18 +397,9 @@ public class ExecuteWithFace {
                 @Override
                 public void run() {
 
-//                    ((Camera2BasicFragment)fragment).addTextToEditText(person.name);
+                    ((Camera2BasicFragment)fragment).addTextToEditText(person.name);
 
 //                    Log.e("   getPerson>UUID:  ", ""+person.personId); // 체크
-
-                    // 일단은 일련의 순서로 작성하지만
-                    // 재사용 할 수 있도록 좀 더 분리된 구조를 생각해봤으면 좋겠다
-                    // 그런데 UUID 말고도 필요한게 더 있다 시발
-                    // UUID, inputStream, face 안의 rect
-//                    new AddFaceTask(person.personId, inputStream, face).execute();
-                    // UUID를 전달하는 형태로 변경하자
-
-                    // InputStream inputStream; Face face;
 
                 }
             });
@@ -518,7 +516,7 @@ public class ExecuteWithFace {
 
             } catch (final Exception e) {
                 Log.e("   error", "add face"); // 오류 로그 찍는다
-/* 지우지마요
+
                 handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                     @Override
                     public void run() {
@@ -526,7 +524,7 @@ public class ExecuteWithFace {
                         Log.e("add face try failed ",""+e.getMessage());
                     }
                 },0);
-*/
+
                 return false;
 
             }
@@ -536,7 +534,7 @@ public class ExecuteWithFace {
         protected void onPostExecute(Boolean result) {
 
             if (result == false) { // 실패하면
-//                ((Camera2BasicFragment)fragment).addTextToEditText("add face 실패");
+                ((Camera2BasicFragment)fragment).addTextToEditText("add face 실패");
                 return;
             }
 
@@ -547,7 +545,7 @@ public class ExecuteWithFace {
                 new AboutPersonGroup.TrainPersonGroupTask(fragment).execute();
                 AppSetting.trainRequestFlag = false; // 사용하고 초기화
             }
-//            ((Camera2BasicFragment)fragment).addTextToEditText("add face 성공");
+            ((Camera2BasicFragment)fragment).addTextToEditText("add face 성공");
         }
     }
     //end add face task

@@ -176,7 +176,7 @@ public class AboutPerson {
             AppSetting.personUUID = personId.toString(); // 전역으로 저장
 
             // 사진 10장 추가 // 함수로 스레드 기동 위임
-            ((Camera2BasicFragment)fragment).startCaptureThread();
+//            ((Camera2BasicFragment)fragment).startCaptureThread();
 
         }
         //end post

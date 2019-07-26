@@ -4,11 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/img_text"
-        android:text="이미지뷰로 바꿀예정"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

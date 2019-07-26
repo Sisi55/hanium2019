@@ -12,18 +12,12 @@ import com.example.change.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-
     ActivityMainBinding binding;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
-
-
 
         // 첫번째 Fragment가 출력되도록 초기화 : 메뉴판 메인 화면
         getSupportFragmentManager().beginTransaction()
@@ -36,12 +30,5 @@ public class MainActivity extends AppCompatActivity {
 //                .addToBackStack(null)
                 .replace(R.id.head, Camera2BasicFragment.newInstance())
                 .commit();
-
-
-
-
     }//end onCreate
-
-
-
 }//end Activity

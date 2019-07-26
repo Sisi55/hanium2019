@@ -11,6 +11,8 @@ import android.util.Log;
 //import com.example.camera2basic.setting.AppSetting;
 import com.example.change.Camera2BasicFragment;
 import com.example.change.setting.AppSetting;
+import com.microsoft.projectoxford.face.FaceServiceClient;
+import com.microsoft.projectoxford.face.contract.Emotion;
 import com.microsoft.projectoxford.face.contract.Face;
 import com.microsoft.projectoxford.face.contract.IdentifyResult;
 import com.microsoft.projectoxford.face.contract.Person;
@@ -18,6 +20,13 @@ import com.microsoft.projectoxford.face.contract.TrainingStatus;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 //import com.example.camera.MainActivity;
@@ -81,7 +90,11 @@ public class ExecuteWithFace {
             try{
 
                 // detect 가 여러 얼굴 탐지하는 똑똑한 함수였구나
-                return AppSetting.faceServiceClient.detect(inputStream,true,false,null);
+                return AppSetting.faceServiceClient.detect(inputStream,true,false,
+                        null);
+                /*new FaceServiceClient.FaceAttributeType[] {
+                                FaceServiceClient.FaceAttributeType.Emotion
+                        }*/
 
             }
             catch (final Exception ex) // 여기서 오류가 났다  detect 자체가 실행되지 않았다 이유가 뭐지
@@ -105,12 +118,60 @@ public class ExecuteWithFace {
             if(faces != null){
                 detectFlag = true; // 사람있다
             }
-//            ((Camera2BasicFragment)fragment).addTextToEditText("detect 성공");
+/*
+            String result_emotion = getEmotion(faces[0].faceAttributes.emotion);
+
+            ((Camera2BasicFragment)fragment).addTextToEditText("감정: "+result_emotion);
+*/
             // add face
             new AddFaceTask(/*전역:create 후 저장*/UUID.fromString(AppSetting.personUUID),
                     bytes, /*faces[0],*/ fragment, detectFlag).execute();
 //            ((Camera2BasicFragment)fragment).addTextToEditText("new add face task");
         }
+        private String getEmotion(Emotion emotion){
+            Map<String, Double> emotionMap = new HashMap<>();
+            emotionMap.put("anger",emotion.anger);
+            emotionMap.put("contempt",emotion.contempt);
+            emotionMap.put("disgust",emotion.disgust);
+            emotionMap.put("fear",emotion.fear);
+
+            emotionMap.put("happiness",emotion.happiness);
+            emotionMap.put("neutral",emotion.neutral);
+            emotionMap.put("sadness",emotion.sadness);
+            emotionMap.put("surprise",emotion.surprise);
+
+            // map 내림차 정렬
+            Iterator iterator = sortByValue(emotionMap/* map */).iterator(); // 내림차 정렬
+            // 값으로 내림차 정렬된 키가 들어있는 Iterator
+            String maxValueKey = (String) iterator.next();
+
+            return maxValueKey + ": "+ emotionMap.get(maxValueKey);
+            //감정: 점수 형태로 가장 최대 하나만 반환하자
+        }
+        // 예상 점수 내림차 정렬한다
+        //from: getEmotion
+        private List sortByValue(final Map map) {
+
+            List<String> list = new ArrayList();
+            list.addAll(map.keySet());
+
+            Collections.sort(list,new Comparator() { // key를 내림차 value에 대해 정렬
+
+                public int compare(Object o1, Object o2) { // (오름차: 1>2일 때 return 양수
+
+                    Object v1 = map.get(o1);
+                    Object v2 = map.get(o2);
+
+                    return ((Comparable) v2).compareTo(v1); //compareTo: 인자가 더 크면 return 음수
+                    //compare: 양수인 경우  두 객체의 자리가 바뀐다
+                    // 뭐.. 잘 안나오면 1,2 바꿔봐..
+                }
+
+            });
+
+            return list; // key 리스트 리턴한다
+        }
+
 
     }// end class
 
@@ -147,7 +208,10 @@ public class ExecuteWithFace {
 
             try{
                 // detect 가 여러 얼굴 탐지하는 똑똑한 함수였구나
-                return AppSetting.faceServiceClient.detect(inputStream,true,false,null);
+                return AppSetting.faceServiceClient.detect(inputStream,true,false,
+                        new FaceServiceClient.FaceAttributeType[] {
+                                FaceServiceClient.FaceAttributeType.Emotion
+                        });
                 // 사진 속 얼굴이 들어있겠다. family 얼굴 4개 !
 
             }
@@ -183,6 +247,12 @@ public class ExecuteWithFace {
 
             // identify 단계로 넘어가자 !
             facesDetected = new UUID[faces.length];
+
+            //일단 첫 번째 사람 감정만 출력해본다
+            String result_emotion = getEmotion(faces[0].faceAttributes.emotion);
+
+            ((Camera2BasicFragment)fragment).addTextToEditText("감정: "+result_emotion);
+
 
             for(int i=0;i<facesDetected.length;i++){
                 facesDetected[i] = faces[i].faceId;
@@ -333,6 +403,52 @@ public class ExecuteWithFace {
             new IdentificationTask().execute();
 
         }
+        //end post method
+
+        private String getEmotion(Emotion emotion){
+            Map<String, Double> emotionMap = new HashMap<>();
+            emotionMap.put("anger",emotion.anger);
+            emotionMap.put("contempt",emotion.contempt);
+            emotionMap.put("disgust",emotion.disgust);
+            emotionMap.put("fear",emotion.fear);
+
+            emotionMap.put("happiness",emotion.happiness);
+            emotionMap.put("neutral",emotion.neutral);
+            emotionMap.put("sadness",emotion.sadness);
+            emotionMap.put("surprise",emotion.surprise);
+
+            // map 내림차 정렬
+            Iterator iterator = sortByValue(emotionMap/* map */).iterator(); // 내림차 정렬
+            // 값으로 내림차 정렬된 키가 들어있는 Iterator
+            String maxValueKey = (String) iterator.next();
+
+            return maxValueKey + ": "+ emotionMap.get(maxValueKey);
+            //감정: 점수 형태로 가장 최대 하나만 반환하자
+        }
+        // 예상 점수 내림차 정렬한다
+//from: getEmotion
+        private List sortByValue(final Map map) {
+
+            List<String> list = new ArrayList();
+            list.addAll(map.keySet());
+
+            Collections.sort(list,new Comparator() { // key를 내림차 value에 대해 정렬
+
+                public int compare(Object o1, Object o2) { // (오름차: 1>2일 때 return 양수
+
+                    Object v1 = map.get(o1);
+                    Object v2 = map.get(o2);
+
+                    return ((Comparable) v2).compareTo(v1); //compareTo: 인자가 더 크면 return 음수
+                    //compare: 양수인 경우  두 객체의 자리가 바뀐다
+                    // 뭐.. 잘 안나오면 1,2 바꿔봐..
+                }
+
+            });
+
+            return list; // key 리스트 리턴한다
+        }
+
 
     }
     // end task
@@ -397,7 +513,7 @@ public class ExecuteWithFace {
                 @Override
                 public void run() {
 
-                    ((Camera2BasicFragment)fragment).addTextToEditText(person.name);
+                    ((Camera2BasicFragment)fragment).addTextToEditText("이름: "+person.name);
 
 //                    Log.e("   getPerson>UUID:  ", ""+person.personId); // 체크
 

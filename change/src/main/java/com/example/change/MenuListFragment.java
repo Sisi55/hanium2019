@@ -199,9 +199,9 @@ public class MenuListFragment extends Fragment {
     }
     //end on create view
 
-    ArrayList<CafeItem> cafeItemArrayList;
+//    ArrayList<CafeItem> cafeItemArrayList;
     public void setCafeItemArrayList(ArrayList<CafeItem> cafeItemArrayList){
-        this.cafeItemArrayList = cafeItemArrayList;
+        citems = cafeItemArrayList;
     }
     //end method
 

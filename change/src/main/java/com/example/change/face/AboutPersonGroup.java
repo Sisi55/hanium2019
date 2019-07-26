@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 
 //import com.example.camera2basic.setting.AppSetting;
+import com.example.change.Camera2BasicFragment;
 import com.example.change.setting.AppSetting;
 import com.microsoft.projectoxford.face.contract.LargePersonGroup;
 
@@ -202,14 +203,14 @@ public class AboutPersonGroup {
             // 성공 로그
             Log.e("   train group", "");
 
-/* 지우지마요
+
             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                 @Override
                 public void run() {
                     ((Camera2BasicFragment)fragment).addTextToEditText("train request\n");
                 }
             },0);
-*/
+
         }
     }
     //end train group

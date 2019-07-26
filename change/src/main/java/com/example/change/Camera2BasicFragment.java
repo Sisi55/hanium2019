@@ -96,6 +96,9 @@ public class Camera2BasicFragment extends Fragment
 //        getEditName(); // 처음에는 잘 뜨는데 다시 누르면 안뜨고 그러지 않았나?
         editName = (EditText) alertView.findViewById(R.id.edit_name);
 
+        showAlertDialog();
+
+
         //editText.setHi
 
         return view;
@@ -105,8 +108,75 @@ public class Camera2BasicFragment extends Fragment
     public void addTextToEditText(String str){ // 진행사항 출력하는 함수
         String tempStr = editText.getText().toString() + "\n" + str; // 개행하고 붙인다
         editText.setText(tempStr);
+
+/*
+        new AlertDialog.Builder(getContext())
+                .setTitle("카메라에 얼굴이 나오게 해주세요!")
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+*/
+
     }
     //end method
+
+    void showAlertDialog(){
+        // 대화상자 출력한다
+        new AlertDialog.Builder(getContext())
+                .setTitle("얼굴 등록 하셨나요?")
+                //.setMessage("카메라에 얼굴이 나오게 해주세요!")
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    // 등록함
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("카메라에 얼굴이 나오게 해주세요!?")
+                                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        AppSetting.registeredPersonFlag=true;
+//                            addTextToEditText("등록했습니다");
+                                        takePicture(); // 사진 찍는다 > 콜백3
+
+                                    }
+                                }).show();
+
+                    }
+                }).setNegativeButton("아뇨", new DialogInterface.OnClickListener(){
+            // 등록안함
+            public void onClick(DialogInterface dialog, int which) {
+                AppSetting.registeredPersonFlag=false;
+//                            addTextToEditText("등록안했어요");
+                // 대화상자 출력한다
+                new AlertDialog.Builder(getContext())
+                        .setTitle("이름 등록")
+                        .setView(alertView)
+                        //.setMessage("10번 사진 찍습니다!")
+                        .setPositiveButton("등록", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // 가져온다
+                                name = editName.getText().toString();
+                                // 이름 받고 이름 토대로 사람 생성
+                                new AboutPerson.CreatePersonTask(name,Camera2BasicFragment.this).execute("");
+
+                                new AlertDialog.Builder(getContext())
+                                        .setTitle("10번 사진 찍습니다!\n카메라에 얼굴이 나오게 해주세요!")
+                                        .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                // 10번 스레드
+                                                startCaptureThread();
+                                            }
+                                        }).show();
+
+                            }
+                        }).show();
+            }
+
+        }).show();
+
+    }
 
     String name; // 바로 아래서 사용한다 : 대화상자
     // texture view 관련 생명주기 인터페이스 구현
@@ -120,37 +190,7 @@ public class Camera2BasicFragment extends Fragment
             AppSetting.personGroupId = "cafetest"; // 앱 초기 설정하는 파일도 필요한것같다
             //new AboutPersonGroup.CreatePersonGroupTask(Camera2BasicFragment.this).execute(""); // 그룹id 전달
 
-            // 대화상자 출력한다
-            new AlertDialog.Builder(getContext())
-                    .setTitle("얼굴 등록 하셨나요?")
-                    .setMessage("카메라에 얼굴이 나오게 해주세요!")
-                    .setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    // 등록함
-                        public void onClick(DialogInterface dialog, int which) {
-                            AppSetting.registeredPersonFlag=true;
-//                            addTextToEditText("등록했습니다");
-                            takePicture(); // 사진 찍는다 > 콜백3
-                        }
-                    }).setNegativeButton("아뇨", new DialogInterface.OnClickListener(){
-                    // 등록안함
-                        public void onClick(DialogInterface dialog, int which) {
-                            AppSetting.registeredPersonFlag=false;
-//                            addTextToEditText("등록안했어요");
-                            // 대화상자 출력한다
-                            new AlertDialog.Builder(getContext())
-                                    .setTitle("이름 등록")
-                                    .setView(alertView)
-                                    .setMessage("10번 사진 찍습니다!")
-                                    .setPositiveButton("등록", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // 가져온다
-                                            name = editName.getText().toString();
-                                            // 이름 받고 이름 토대로 사람 생성
-                                            new AboutPerson.CreatePersonTask(name,Camera2BasicFragment.this).execute("");
-                                        }
-                                    }).show();
-                        }
-                    }).show();
+//            showAlertDialog();
 
 /* 지우지마요 */
 //            new AboutPersonGroup.TrainPersonGroupTask(Camera2BasicFragment.this).execute();

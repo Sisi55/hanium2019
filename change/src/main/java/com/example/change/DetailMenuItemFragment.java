@@ -10,8 +10,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +23,23 @@ import com.example.change.databinding.FragmentDetailMenuItemBinding;
 import com.example.change.model.CafeItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class DetailMenuItemFragment extends Fragment {
+    Map<String,Double> options;
+    // 지연 세부 메뉴
+    private Spinner spinner1;
+    ArrayList<String> shotList;
+    ArrayAdapter<String> arrayAdapter;
+    private Spinner spinner2;
+    ArrayList<String> whipList;
+    ArrayAdapter<String> arrayAdapter2;
+
 
 // 시현
     // 자기자신 - 싱글톤
@@ -38,15 +52,14 @@ public class DetailMenuItemFragment extends Fragment {
     //end method
 
 
-
     public DetailMenuItemFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        options=new HashMap<String,Double>();
 
         View view = inflater.inflate(R.layout.fragment_detail_menu_item, container, false);
 
@@ -55,6 +68,56 @@ public class DetailMenuItemFragment extends Fragment {
         ImageView imgMenu = (ImageView) view.findViewById(R.id.img_menu);
         Button btnBack = (Button) view.findViewById(R.id.btn_back);
         Button btnSave = (Button) view.findViewById(R.id.btn_save);
+        // 세부 옵션 저장할 맵
+        //optionMap=new HashMap<String,Double>();
+        // 지연 샷에 대한 스피너 추가
+        shotList = new ArrayList<>();
+        shotList.add("0.5");
+        shotList.add("1.0");
+        shotList.add("1.5");
+        shotList.add("2.0");
+
+        arrayAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, shotList);
+
+        spinner1=(Spinner)view.findViewById(R.id.spinner1);
+        spinner1.setAdapter(arrayAdapter);
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getActivity().getApplicationContext(),shotList.get(i)+"가 선택되었습니다.",
+                        Toast.LENGTH_SHORT).show();
+                options.put("샷",Double.parseDouble(shotList.get(i)));
+                model.setOptions(options);
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        // 지연 휘핑에 대한 스피너 추가
+        whipList = new ArrayList<>();
+        whipList.add("0.0");
+        whipList.add("0.5");
+        whipList.add("1.0");
+        whipList.add("2.0");
+
+        arrayAdapter2 = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, whipList);
+
+        spinner2=(Spinner)view.findViewById(R.id.spinner2);
+        spinner2.setAdapter(arrayAdapter2);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getActivity().getApplicationContext(),whipList.get(i)+"가 선택되었습니다.",
+                        Toast.LENGTH_SHORT).show();
+                options.put("휘핑",Double.parseDouble(whipList.get(i)));
+                model.setOptions(options);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
 
 
 //        binding = DataBindingUtil.setContentView(getActivity(), R.layout.fragment_detail_menu_item);
@@ -162,6 +225,7 @@ public class DetailMenuItemFragment extends Fragment {
                         @Override
                         public void run() {
                             PaymentListFragment fragment = PaymentListFragment.getFragment();
+
                             getActivity().getSupportFragmentManager().beginTransaction()
                                     .addToBackStack(null)
                                     .replace(R.id.body, fragment)
@@ -194,7 +258,8 @@ public class DetailMenuItemFragment extends Fragment {
 //    CafeItem model;
     public void setCafeItem(CafeItem cafeItem){
         this.model = cafeItem;
-    }
+
+}
     //end method
 
 

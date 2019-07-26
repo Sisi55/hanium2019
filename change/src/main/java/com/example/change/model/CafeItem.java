@@ -1,6 +1,8 @@
 package com.example.change.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 // 메뉴 아이템 모델
 public class CafeItem implements Serializable { // 인텐트에 객체를 전달하기 위해 Serializable
@@ -9,6 +11,16 @@ public class CafeItem implements Serializable { // 인텐트에 객체를 전달
     private String body; // 메뉴 상세설명 : 나중에 추가
     private String photoUrl; // 안씀
     private String imageUrl; // 스토리지 download url
+
+    public Map<String, Double> getOptions() {
+        return options;
+    }
+
+    public void setOptions(Map<String, Double> options) {
+        this.options = options;
+    }
+
+    private Map<String,Double> options;// 세부옵션들과 그 값
 
     public CafeItem() {
     }
@@ -20,6 +32,8 @@ public class CafeItem implements Serializable { // 인텐트에 객체를 전달
         this.imageUrl = imageUrl;
         this.body=body;
     }
+
+
 
 
     public int getPrice() {

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +19,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.change.model.CafeItem;
+import com.example.change.model.Order;
+import com.example.change.setting.AppSetting;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
+import com.microsoft.projectoxford.face.FaceServiceClient;
+import com.microsoft.projectoxford.face.rest.ClientException;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -53,9 +64,10 @@ public class PaymentListFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_main_list);
         add_menu=(Button)view.findViewById(R.id.add_menu_btn);
-
+        order_btn=(Button)view.findViewById(R.id.order_btn);
         mLinearLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
+
 
         // MainActivity에서 RecyclerView의 데이터에 접근시 사용됩니다.
         // mArrayList = new ArrayList<>();
@@ -89,6 +101,40 @@ public class PaymentListFragment extends Fragment {
             }
         });
 
+
+        // 결제 버튼을 누르면 파이어베이스에 Order을 올린다.
+        order_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 아무 데이터 넣을게요
+                Map<String,Double> emotion=new HashMap<String,Double>();
+                emotion.put("happiness",0.9);
+                // 감정 최고기록 받아오기ㅠㅠㅠㅠ
+                //AppSetting.faceServiceClient.detect(AppSetting.faceServiceClient.getPerson(),true,true, FaceServiceClient.FaceAttributeType.Emotion);
+
+                Map<String,Double> weather=new HashMap<String,Double>();
+                weather.put("humidity",0.5);
+                // calender로 현재 날짜 알아오기
+                SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+                String format_time1 = format1.format (System.currentTimeMillis());
+                String today=format_time1;
+                String guest= AppSetting.personUUID;
+                Order order = new Order(emotion,weather,mArrayList,today,guest);
+                FirebaseDatabase.getInstance().getReference().child("order").push().setValue(order);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+                builder.setMessage("주문되었습니다")
+                        .setCancelable(false)
+                        .setPositiveButton("확인",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                    }
+                                });
+                builder.show();
+            }
+        });
+
         return view;
     }
     //end on create view
@@ -108,6 +154,8 @@ public class PaymentListFragment extends Fragment {
     private PaymentListAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Button add_menu;
+    private Button order_btn;
+    StorageReference mStorageRef; // 지연 : 파이어베이스
 
     private int count = -1;
 

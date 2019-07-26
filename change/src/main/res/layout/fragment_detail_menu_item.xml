@@ -39,7 +39,36 @@
                     android:layout_height="wrap_content"
                     android:textSize="20dp"/>
 
-                <!-- 체크박스 그룹 -->
+                <!--세부옵션 추가버튼 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="샷 설정"/>
+                    <Spinner
+                        android:id="@+id/spinner1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"></Spinner>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="휘핑 설정"/>
+                    <Spinner
+                        android:id="@+id/spinner2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"></Spinner>
+                </LinearLayout>
+
 
 
             </LinearLayout>

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.change.model.CafeItem;
 import com.example.change.model.Order;
+import com.example.change.setting.AppSetting;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +37,7 @@ import static java.lang.String.valueOf;
 public class OrderedListFragment extends Fragment {
 
     List<Order> people;
+    String guest="";
     // 시현
     // 자기자신 - 싱글톤
     public static OrderedListFragment fragment = new OrderedListFragment();
@@ -98,21 +100,23 @@ public class OrderedListFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    // uuid가 아래와 같은 경우만 add함////////////////////////////////////////////////////
-                    String guest = (String) snapshot.child("guest").getValue();
-                    ArrayList<CafeItem> items = (ArrayList<CafeItem>)snapshot.child("items").getValue();
-                    String today=(String)snapshot.child("today").getValue();
+                    // uuid가 아래와 같은 경우만 add함///////////////////////////////////////////////////
+                    guest = (String) snapshot.child("guest").getValue();
+                    if(AppSetting.personUUID.equals(guest)){
+                        ArrayList<CafeItem> items = (ArrayList<CafeItem>)snapshot.child("items").getValue();
+                        String today=(String)snapshot.child("today").getValue();
+                        // 필요 없음
+                        Map<String,Double> emotion=(Map)snapshot.child("emotion").getValue();
+                        Map<String,Double> weather=(Map)snapshot.child("weather").getValue();
 
-                    // 필요 없음
-                    Map<String,Double> emotion=(Map)snapshot.child("emotion").getValue();
-                    Map<String,Double> weather=(Map)snapshot.child("weather").getValue();
+                        //String imageUrl=(String)snapshot.child("imageUrl").getValue();
 
-                    //String imageUrl=(String)snapshot.child("imageUrl").getValue();
+                        // 객체 형태로 받아와야 함. 오류...
+                        //Order ciObject = dataSnapshot.getValue(Order.class);
+                        people.add(new Order(emotion,weather,items,today,guest));
+                        Toast.makeText(getActivity(), "현재"+people.size(), Toast.LENGTH_SHORT).show();
+                    }
 
-                    // 객체 형태로 받아와야 함. 오류...
-                    //Order ciObject = dataSnapshot.getValue(Order.class);
-                    people.add(new Order(emotion,weather,items,today,guest));
-                    Toast.makeText(getActivity(), "현재"+people.size(), Toast.LENGTH_SHORT).show();
 
                 }
                 // for문 다 수행 후 어댑터 설정

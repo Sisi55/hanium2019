@@ -192,7 +192,7 @@ public class OrderedListFragment extends Fragment {
         public void onBindViewHolder(@NonNull OrderedListFragment.OrderAdapter.OrderViewHolder holder, int position) {
             Order item = mItems.get(position);
             // TODO : 데이터를 뷰홀더에 표시하시오
-            holder.guest.setText(item.getGuest());
+            holder.guest.setText(item.getToday()); // 주문날짜
             // arraylist에는 cafeitem 여러개가 있다
             //
             // 자기 주문기록에는 날짜와 메뉴만 나오면 될듯
@@ -216,6 +216,7 @@ public class OrderedListFragment extends Fragment {
             // TODO : 뷰홀더 완성하시오
             TextView guest;
             TextView items;
+
             TextView emotion;
 
             public OrderViewHolder(@NonNull View itemView) {

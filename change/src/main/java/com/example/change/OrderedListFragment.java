@@ -23,7 +23,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -193,9 +197,6 @@ public class OrderedListFragment extends Fragment {
             Order item = mItems.get(position);
             // TODO : 데이터를 뷰홀더에 표시하시오
             holder.guest.setText(item.getToday()); // 주문날짜
-            // arraylist에는 cafeitem 여러개가 있다
-            //
-            // 자기 주문기록에는 날짜와 메뉴만 나오면 될듯
             String s="";
             CafeItem ca;
             ArrayList<CafeItem> list=item.getItems();
@@ -203,6 +204,47 @@ public class OrderedListFragment extends Fragment {
                 Log.d("타입",(list.get(i))+"");
             }
 
+            try {
+                JSONArray jarray = new JSONObject(item.getItems().get(0).getName()).getJSONArray("weather");
+                JSONObject jObject = jarray.getJSONObject(0);
+               // description = jObject.optString("description");
+
+
+               // holder.items.setText((((ArrayList<CafeItem>) item.getItems()).get(0)).getName() + "");
+            }catch (Exception e){
+                Log.d("오류",e.getMessage()+"");
+            }
+            //holder.emotion.setText(item.getEmotion()+"");
+
+            //holder.items.setText(list.get("샷")+"");
+            //int t=list.indexOf("title");
+            //String title=
+
+            // arraylist에는 cafeitem 여러개가 있다
+            //
+
+            //JSONArray jarray = new JSONObject(item);
+            /*
+            JSONObject jObject = jarray.getJSONObject(0);
+            description = jObject.optString("description");
+
+            JSONObject main=new JSONObject(result).getJSONObject("main");
+            humidity = main.optString("humidity");
+            temp = main.optString("temp");
+
+            */
+            // 자기 주문기록에는 날짜와 메뉴만 나오면 될듯
+            //String s="";
+           // CafeItem ca;
+/*
+            for(int i=0;i<list.size();i++){
+                try {
+                    Log.d("타입", (list.get(i)).getName());
+                }catch (Exception e){
+                    Log.d("오류",e.getMessage());
+                }
+            }
+*/
             holder.items.setText(item.getItems().get(0)+"");
             //holder.emotion.setText(item.getEmotion()+"");
         }

@@ -40,7 +40,7 @@ import static java.lang.String.valueOf;
  */
 public class OrderedListFragment extends Fragment {
 
-    List<Order> people;
+    List<Person> people;
     String guest="";
     // 시현
     // 자기자신 - 싱글톤
@@ -62,7 +62,7 @@ public class OrderedListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        people=new ArrayList<Order>();
+        people=new ArrayList<Person>();
         // 파이어베이스에서 읽어오기
 
         final OrderedListFragment.OrderAdapter adapter;
@@ -73,7 +73,7 @@ public class OrderedListFragment extends Fragment {
         //어댑터 만들기
         adapter=new OrderedListFragment.OrderAdapter(new OrderedListFragment.OrderAdapter.OnOrderClickListener() {
             @Override
-            public void onOrderClicked(Order model) {
+            public void onOrderClicked(Person model) {
                 // 주문기록에 있는 메뉴를 선택하면
 
                 // 상세메뉴 페이지로 넘어감
@@ -106,19 +106,26 @@ public class OrderedListFragment extends Fragment {
 
                     // uuid가 아래와 같은 경우만 add함///////////////////////////////////////////////////
                     guest = (String) snapshot.child("guest").getValue();
-                    if(AppSetting.personUUID.equals(guest)){
-                        ArrayList<CafeItem> items = (ArrayList<CafeItem>)snapshot.child("items").getValue();
+                    if(guest.equals("63cf6c6d-86ef-4647-b941-1b0bf187065f")){
+                        Map items = (Map)snapshot.child("items").child("0").getValue();
                         String today=(String)snapshot.child("today").getValue();
+
                         // 필요 없음
+                        /*
                         Map<String,Double> emotion=(Map)snapshot.child("emotion").getValue();
                         Map<String,Double> weather=(Map)snapshot.child("weather").getValue();
+                        */
+                       // Map tt = (Map)snapshot.child("items").child("0").getValue();
+                       // Toast.makeText(getActivity(), tt.get("name")+"메뉴임", Toast.LENGTH_SHORT).show();
+
 
                         //String imageUrl=(String)snapshot.child("imageUrl").getValue();
 
                         // 객체 형태로 받아와야 함. 오류...
                         //Order ciObject = dataSnapshot.getValue(Order.class);
-                        people.add(new Order(emotion,weather,items,today,guest));
-                        Toast.makeText(getActivity(), "현재"+people.size(), Toast.LENGTH_SHORT).show();
+                        Person p=new Person(items,today);
+                        people.add(p);
+                        Toast.makeText(getActivity(), "현재"+today, Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -126,22 +133,17 @@ public class OrderedListFragment extends Fragment {
                 // for문 다 수행 후 어댑터 설정
                 adapter.setItems(people);
 
-
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
         Toast.makeText(getActivity(), "종료"+people.size(), Toast.LENGTH_SHORT).show();
         Log.d("백지연","dd");
 
-
 //        recyclerView=(RecyclerView) view.findViewById(R.id.recyclerView);
-
         return view;
     }
     //end on create view
@@ -156,12 +158,12 @@ public class OrderedListFragment extends Fragment {
     }
     private static class OrderAdapter extends RecyclerView.Adapter<OrderedListFragment.OrderAdapter.OrderViewHolder> {
         interface OnOrderClickListener {
-            void onOrderClicked(Order model);
+            void onOrderClicked(Person model);
         }
 
         private OrderedListFragment.OrderAdapter.OnOrderClickListener mListener;
 
-        private List<Order> mItems = new ArrayList<>();
+        private List<Person> mItems = new ArrayList<>();
 
         public OrderAdapter() {}
 
@@ -169,7 +171,7 @@ public class OrderedListFragment extends Fragment {
             mListener = listener;
         }
 
-        public void setItems(List<Order> items) {
+        public void setItems(List<Person> items) {
             this.mItems = items;
             notifyDataSetChanged();
         }
@@ -184,7 +186,7 @@ public class OrderedListFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        final Order item = mItems.get(viewHolder.getAdapterPosition());
+                        final Person item = mItems.get(viewHolder.getAdapterPosition());
                         mListener.onOrderClicked(item);
                     }
                 }
@@ -194,26 +196,13 @@ public class OrderedListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull OrderedListFragment.OrderAdapter.OrderViewHolder holder, int position) {
-            Order item = mItems.get(position);
+            Person item = mItems.get(position);
             // TODO : 데이터를 뷰홀더에 표시하시오
-            holder.guest.setText(item.getToday()); // 주문날짜
+           // //////////////////////////// holder.guest.setText(item.get("today")+""); // 주문날짜
             String s="";
             CafeItem ca;
-            ArrayList<CafeItem> list=item.getItems();
-            for(int i=0;i<list.size();i++){
-                Log.d("타입",(list.get(i))+"");
-            }
+            //ArrayList<CafeItem> list=item.getItems();
 
-            try {
-                JSONArray jarray = new JSONObject(item.getItems().get(0).getName()).getJSONArray("weather");
-                JSONObject jObject = jarray.getJSONObject(0);
-               // description = jObject.optString("description");
-
-
-               // holder.items.setText((((ArrayList<CafeItem>) item.getItems()).get(0)).getName() + "");
-            }catch (Exception e){
-                Log.d("오류",e.getMessage()+"");
-            }
             //holder.emotion.setText(item.getEmotion()+"");
 
             //holder.items.setText(list.get("샷")+"");
@@ -235,7 +224,7 @@ public class OrderedListFragment extends Fragment {
             */
             // 자기 주문기록에는 날짜와 메뉴만 나오면 될듯
             //String s="";
-           // CafeItem ca;
+            // CafeItem ca;
 /*
             for(int i=0;i<list.size();i++){
                 try {
@@ -245,7 +234,13 @@ public class OrderedListFragment extends Fragment {
                 }
             }
 */
-            holder.items.setText(item.getItems().get(0)+"");
+          //  Object[] tttt=item.getItems().toArray();
+            holder.guest.setText(item.date);
+
+             Map<String,Double> op=(Map)item.map.get("options");
+
+            holder.items.setText(item.map.get("name")+"(휘핑 :"+op.get("휘핑")+" / 샷 : "+op.get("샷")+")");
+             // holder.items.setText(tttt[0]+"");
             //holder.emotion.setText(item.getEmotion()+"");
         }
 
@@ -271,4 +266,14 @@ public class OrderedListFragment extends Fragment {
         }//end class
     }//end class
 
+    // 테스트
+    class Person {
+        Map map;
+        String date="aa";
+        public Person(){}
+        public Person(Map map,String date){
+            this.map=map;
+            this.date=date;
+        }
+    }
 }//end fragment

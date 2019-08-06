@@ -25,12 +25,21 @@ public class CafeItem implements Serializable { // 인텐트에 객체를 전달
     public CafeItem() {
     }
 
+    public CafeItem(String name, int price, String imageUrl, String body,Map<String,Double> options) {
+        this.price=price;
+        this.name = name;
+        // this.photoUrl = photoUrl;
+        this.imageUrl = imageUrl;
+        this.body=body;
+        this.options=options;
+    }
     public CafeItem(String name, int price, String imageUrl, String body) {
         this.price=price;
         this.name = name;
         // this.photoUrl = photoUrl;
         this.imageUrl = imageUrl;
         this.body=body;
+
     }
 
 

@@ -44,6 +44,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
 
+
+    // ms face
+    implementation 'com.microsoft.projectoxford:face:1.4.3'
     // Firebase UI
     implementation 'com.firebaseui:firebase-ui-database:4.2.0'
 

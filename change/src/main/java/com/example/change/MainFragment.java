@@ -69,6 +69,20 @@ public class MainFragment extends Fragment {
             }
         });
 
+        // 나추천 화면으로 이동
+        Button btnMyReco = (Button) view.findViewById(R.id.btn_my_reco);
+        btnMyReco.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .addToBackStack(null)
+                        .replace(R.id.body, MyRecoFragment.getFragment())
+                        .commit();
+
+            }
+        });
+
 
 
 

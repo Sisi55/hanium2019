@@ -13,26 +13,33 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kiosk_jnsy.model.CafeItem;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class OrderedListActivity extends AppCompatActivity {
 
+    List<Person> people;
+    String guest="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        people=new ArrayList<Person>();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_list);
+        setContentView(R.layout.activity_ordered_list);
         // 리사이클러뷰
         RecyclerView recyclerView=findViewById(R.id.recyclerView);
         //어댑터 만들기
-        OrderedListActivity.CafeItemAdapter adapter=new OrderedListActivity.CafeItemAdapter(new OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener() {
+        final OrderedListActivity.CafeItemAdapter adapter=new OrderedListActivity.CafeItemAdapter(new OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener() {
             @Override
-            public void onCafeItemClicked(CafeItem model) {
+            public void onCafeItemClicked(Person model) {
                 // 주문기록에 있는 메뉴를 선택하면
-                Toast.makeText(OrderedListActivity.this, model.getName(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(OrderedListActivity.this, model.getName(), Toast.LENGTH_SHORT).show();
                 // 상세메뉴 페이지로 넘어감
                 Intent intent = new Intent(OrderedListActivity.this, DetailMenuItemActivity.class);
                 startActivity(intent);
@@ -43,17 +50,48 @@ public class OrderedListActivity extends AppCompatActivity {
         // 현재 커피공장에 있는 메뉴
         CafeItem realmenu[]=new CafeItem[9];
 
-        List<CafeItem> people=new ArrayList<>();
+        //final List<CafeItem> people=new ArrayList<>();
 
-        // 배열에 음료 데이터 넣기
-        // 1. 파이어베이스에 이 정보를 넣자
-        DatabaseReference mRootRef= FirebaseDatabase.getInstance().getReference();
-        DatabaseReference mConditionRef=mRootRef.child("condition1");
+        FirebaseDatabase.getInstance().getReference().child("order").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-        // 2. 읽어와서 이 배열에 넣자
-        // 근데 메뉴판은 파베인 이유가 뭐지
-        people.add(new CafeItem("아메리카노",2000,"","aaa"));
-        people.add(new CafeItem("카페라떼",3000,"","bbb"));
+                    // uuid가 아래와 같은 경우만 add함///////////////////////////////////////////////////
+                    guest = (String) snapshot.child("guest").getValue();
+                    if(guest.equals("63cf6c6d-86ef-4647-b941-1b0bf187065f")){
+                        Map items = (Map)snapshot.child("items").child("0").getValue();
+                        String today=(String)snapshot.child("today").getValue();
+
+                        // 필요 없음
+                        /*
+                        Map<String,Double> emotion=(Map)snapshot.child("emotion").getValue();
+                        Map<String,Double> weather=(Map)snapshot.child("weather").getValue();
+                        */
+                        // Map tt = (Map)snapshot.child("items").child("0").getValue();
+                        // Toast.makeText(getActivity(), tt.get("name")+"메뉴임", Toast.LENGTH_SHORT).show();
+
+
+                        //String imageUrl=(String)snapshot.child("imageUrl").getValue();
+
+                        // 객체 형태로 받아와야 함. 오류...
+                        //Order ciObject = dataSnapshot.getValue(Order.class);
+                        Person p=new Person(items,today);
+                        people.add(p);
+                        Toast.makeText(getApplicationContext(), "현재"+today, Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+                // for문 다 수행 후 어댑터 설정
+                adapter.setItems(people);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
 
         Toast.makeText(this, "음료 추가", Toast.LENGTH_SHORT).show();
@@ -63,12 +101,12 @@ public class OrderedListActivity extends AppCompatActivity {
     }
     private static class CafeItemAdapter extends RecyclerView.Adapter<OrderedListActivity.CafeItemAdapter.CafeItemViewHolder> {
         interface OnCafeItemClickListener {
-            void onCafeItemClicked(CafeItem model);
+            void onCafeItemClicked(Person model);
         }
 
         private OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener mListener;
 
-        private List<CafeItem> mItems = new ArrayList<>();
+        private List<Person> mItems = new ArrayList<>();
 
         public CafeItemAdapter() {}
 
@@ -76,7 +114,7 @@ public class OrderedListActivity extends AppCompatActivity {
             mListener = listener;
         }
 
-        public void setItems(List<CafeItem> items) {
+        public void setItems(List<Person> items) {
             this.mItems = items;
             notifyDataSetChanged();
         }
@@ -91,7 +129,7 @@ public class OrderedListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if (mListener != null) {
-                        final CafeItem item = mItems.get(viewHolder.getAdapterPosition());
+                        final Person item = mItems.get(viewHolder.getAdapterPosition());
                         mListener.onCafeItemClicked(item);
                     }
                 }
@@ -101,11 +139,13 @@ public class OrderedListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull OrderedListActivity.CafeItemAdapter.CafeItemViewHolder holder, int position) {
-            CafeItem item = mItems.get(position);
+            Person item = mItems.get(position);
             // TODO : 데이터를 뷰홀더에 표시하시오
-            holder.name.setText(item.getName());
-            holder.price.setText(item.getPrice()+"");
-            holder.img.setText(item.getImageUrl()+"");
+            holder.guest.setText(item.date);
+
+            Map<String,Double> op=(Map)item.map.get("options");
+
+            holder.items.setText(item.map.get("name")+"(휘핑 :"+op.get("휘핑")+" / 샷 : "+op.get("샷")+")");
         }
 
         @Override
@@ -115,17 +155,27 @@ public class OrderedListActivity extends AppCompatActivity {
 
         public static class CafeItemViewHolder extends RecyclerView.ViewHolder {
             // TODO : 뷰홀더 완성하시오
-            TextView name;
-            TextView price;
-            TextView img;
+            TextView guest;
+            TextView items;
+            //TextView img;
 
             public CafeItemViewHolder(@NonNull View itemView) {
                 super(itemView);
                 // TODO : 뷰홀더 완성하시오
-                name=itemView.findViewById(R.id.name_text);
-                price=itemView.findViewById(R.id.price_text);
-                img=itemView.findViewById(R.id.img_text);
+                guest=itemView.findViewById(R.id.name_text);
+                items=itemView.findViewById(R.id.price_text);
+              //  img=itemView.findViewById(R.id.img_text);
             }
+        }
+    }
+    // 테스트
+    class Person {
+        Map map;
+        String date="aa";
+        public Person(){}
+        public Person(Map map,String date){
+            this.map=map;
+            this.date=date;
         }
     }
 }

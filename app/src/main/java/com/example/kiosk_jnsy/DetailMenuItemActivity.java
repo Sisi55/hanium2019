@@ -1,11 +1,15 @@
 package com.example.kiosk_jnsy;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -13,19 +17,79 @@ import com.example.kiosk_jnsy.databinding.ActivityDetailMenuItemBinding;
 import com.example.kiosk_jnsy.model.CafeItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DetailMenuItemActivity extends AppCompatActivity {
 
     ActivityDetailMenuItemBinding binding;
-
+    Map<String,Double> options;
+    ArrayList<CafeItem> shoplist;
+    // 지연 세부 메뉴
+    private Spinner spinner1;
+    ArrayList<String> shotList;
+    ArrayAdapter<String> arrayAdapter;
+    private Spinner spinner2;
+    ArrayList<String> whipList;
+    ArrayAdapter<String> arrayAdapter2;
     // 장바구니 배열
     // 단,!!!!!!!! 사용자가 바뀌면 초기화 해주어야 한다.
-    ArrayList<CafeItem> shoplist;
+
     CafeItem model; // 클릭한 메뉴
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_menu_item);
+        options=new HashMap<String,Double>();
+
+        // 지연 샷에 대한 스피너 추가
+        shotList = new ArrayList<>();
+        shotList.add("0.5");
+        shotList.add("1.0");
+        shotList.add("1.5");
+        shotList.add("2.0");
+
+        arrayAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, shotList);
+
+        spinner1=(Spinner)findViewById(R.id.spinner1);
+        spinner1.setAdapter(arrayAdapter);
+        spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(),shotList.get(i)+"가 선택되었습니다.",
+                        Toast.LENGTH_SHORT).show();
+                options.put("샷",Double.parseDouble(shotList.get(i)));
+                model.setOptions(options);
+
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+
+        // 지연 휘핑에 대한 스피너 추가
+        whipList = new ArrayList<>();
+        whipList.add("0.0");
+        whipList.add("0.5");
+        whipList.add("1.0");
+        whipList.add("2.0");
+
+        arrayAdapter2 = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, whipList);
+
+        spinner2=(Spinner)findViewById(R.id.spinner2);
+        spinner2.setAdapter(arrayAdapter2);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(),whipList.get(i)+"가 선택되었습니다.",
+                        Toast.LENGTH_SHORT).show();
+                options.put("휘핑",Double.parseDouble(whipList.get(i)));
+                model.setOptions(options);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         // 해시 키값 알면 해당 데이터 가져올 수 있나 ?
         // 테스트

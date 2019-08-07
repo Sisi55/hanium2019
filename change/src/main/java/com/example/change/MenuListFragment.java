@@ -76,47 +76,7 @@ public class MenuListFragment extends Fragment {
         // storage
         mStorageRef= FirebaseStorage.getInstance().getReference("Image");
 
-     /*
-        ch=(Button)findViewById(R.id.choosebtn);
-        up=(Button)findViewById(R.id.uploadbtn);
-        down=(Button)findViewById(R.id.download);
-        img=(ImageView)findViewById(R.id.imageview);
-        ch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              fileChooser();
-            }
-        });
-        up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(uploadTask!=null&&uploadTask.isInProgress()){
-                    // 파일이 올라가는 중임을 암시
-                    Toast.makeText(MenuListActivity.this,"upload in progress",Toast.LENGTH_LONG).show();
-                }else{
-                    fileUploader();
-                }
-            }
-        });
-        down.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               download();
-            }
-        });
 
-
-        // 데이터베이스 쓰기
-        button = (Button) findViewById(R.id.btn1);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("MainActivity", "Button - onClickListener");
-                //FirebaseDatabase.getInstance().getReference().push().setValue(new CafeItem("바닐라 라떼",3000,"url3"));
-            }
-        });// 버튼 이벤트 리스너
-
-*/
 
         // 리사이클러뷰
 
@@ -172,14 +132,6 @@ public class MenuListFragment extends Fragment {
                     citems.add(new CafeItem(name,price,imageUrl,body));
                     Log.d("현재 들어감",citems.size()+"");
 
-                    /*
-                    if(ciObject!=null) {
-
-                        Log.d("데이터1",ciObject.getName());
-                        Log.d("데이터2", message+"이다");
-                       // Log.d("데이터3", ciObject.getPrice() + "이다");
-                    }
-                    */
 
                 }
                 // for문 다 수행 후 어댑터 설정

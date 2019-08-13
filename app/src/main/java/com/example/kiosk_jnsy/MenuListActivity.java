@@ -29,6 +29,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -94,6 +99,8 @@ public class MenuListActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     CafeItem ci = new CafeItem("변경필요", 5000, task.getResult().toString(),"상세설명");
                                                     //mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(key).setValue(friendlyMessage);
+
+                                                    //FirebaseFirestore.getInstance().collection("").add(ci);
                                                     FirebaseDatabase.getInstance().getReference().push().setValue(ci);
                                                 }
                                             }
@@ -148,6 +155,36 @@ public class MenuListActivity extends AppCompatActivity {
         Log.d("현재",citems.size()+"");
 
 
+        FirebaseFirestore.getInstance().collection("menu").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                               // Log.d(TAG, document.getId() + " => " + document.getData().get("name"));
+                               // CafeItem ccc=document.getData();
+                               String name = (String)document.getData().get("name");
+                                Long pricen = (Long)document.getData().get("price");
+                                String body=(String)document.getData().get("body");
+                                int price=pricen.intValue();
+                                //int price=100000;
+                                String imageUrl=(String)document.getData().get("imageUrl");
+
+                                // 객체 형태로 받아와야 함. 오류...
+                                //CafeItem ciObject = dataSnapshot.getValue(CafeItem.class);
+                                citems.add(new CafeItem(name,price,imageUrl,body));
+                                Log.d("현재 들어감",citems.size()+"");
+                            }
+                            // for문 다 수행 후 어댑터 설정
+                            adapter.setItems(citems);
+
+                        } else {
+                            Log.d("dd", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+/*
         // 데이터베이스 읽기 #2. Single ValueEventListener
         FirebaseDatabase.getInstance().getReference().child("menu").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -179,6 +216,7 @@ public class MenuListActivity extends AppCompatActivity {
 
             }
         });
+        */
         // 파이어베이스 입출력 : 출처: https://stack07142.tistory.com/282 [Hello World]
 
 

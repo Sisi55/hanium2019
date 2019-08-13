@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -114,7 +115,8 @@ public class RegisterMenuActivity extends AppCompatActivity {
                                                     int price=Integer.parseInt(input_price.getText().toString());
                                                     CafeItem ci = new CafeItem(name, price, task.getResult().toString(),"상세설명");
                                                     //mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(key).setValue(friendlyMessage);
-                                                    FirebaseDatabase.getInstance().getReference().child("menu").push().setValue(ci);
+                                                    //FirebaseDatabase.getInstance().getReference().child("menu").push().setValue(ci);
+                                                    FirebaseFirestore.getInstance().collection("menu").add(ci);
                                                 }
                                             }
                                         });

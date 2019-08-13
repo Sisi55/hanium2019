@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,34 +64,21 @@ public class OrderedListActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                // uuid가 아래와 같은 경우만 add함///////////////////////////////////////////////////
-
                                 guest = (String) (String)document.getData().get("guest");
                                 if(guest.equals("63cf6c6d-86ef-4647-b941-1b0bf187065f")){
-                                   // Map items = (Map)snapshot.child("items").child("0").getValue();
-                                    /////////////////////////////////////////////////////////////////////////////////////
-                                    //Map items = document.getData().get("items").collection("0");
+
                                     List list = (List) document.getData().get("items");
                                     HashMap items = (HashMap) list.get(0);
-
-
+                                    HashMap map;
+                                    List allList=(List) document.getData().get("items");
                                    ///////////////////////////////////////////////////////////////////////////////////////
                                     String today=(String)document.getData().get("today");
                                     // 필요 없음
-                        /*
-                        Map<String,Double> emotion=(Map)snapshot.child("emotion").getValue();
-                        Map<String,Double> weather=(Map)snapshot.child("weather").getValue();
-                        */
-                                    // Map tt = (Map)snapshot.child("items").child("0").getValue();
-                                    // Toast.makeText(getActivity(), tt.get("name")+"메뉴임", Toast.LENGTH_SHORT).show();
+                                    for(int k=0;k<list.size();k++){
+                                        Person p =new Person((Map)allList.get(k),today);
+                                        people.add(p);
+                                    }
 
-
-                                    //String imageUrl=(String)snapshot.child("imageUrl").getValue();
-
-                                    // 객체 형태로 받아와야 함. 오류...
-                                    //Order ciObject = dataSnapshot.getValue(Order.class);
-                                    Person p=new Person(items,today);
-                                    people.add(p);
                                     Toast.makeText(getApplicationContext(), "현재"+today, Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -103,49 +91,7 @@ public class OrderedListActivity extends AppCompatActivity {
                         }
                     }
                 });
- /*
-        FirebaseDatabase.getInstance().getReference().child("order").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
 
-                    // uuid가 아래와 같은 경우만 add함///////////////////////////////////////////////////
-                    guest = (String) snapshot.child("guest").getValue();
-                    if(guest.equals("63cf6c6d-86ef-4647-b941-1b0bf187065f")){
-                        Map items = (Map)snapshot.child("items").child("0").getValue();
-                        String today=(String)snapshot.child("today").getValue();
-
-                        // 필요 없음
-                        /*
-                        Map<String,Double> emotion=(Map)snapshot.child("emotion").getValue();
-                        Map<String,Double> weather=(Map)snapshot.child("weather").getValue();
-                        */
-                        // Map tt = (Map)snapshot.child("items").child("0").getValue();
-                        // Toast.makeText(getActivity(), tt.get("name")+"메뉴임", Toast.LENGTH_SHORT).show();
-
-
-                        //String imageUrl=(String)snapshot.child("imageUrl").getValue();
-
-                        // 객체 형태로 받아와야 함. 오류...
-                        //Order ciObject = dataSnapshot.getValue(Order.class);
-        /*
-                        Person p=new Person(items,today);
-                        people.add(p);
-                        Toast.makeText(getApplicationContext(), "현재"+today, Toast.LENGTH_SHORT).show();
-                    }
-
-
-                }
-                // for문 다 수행 후 어댑터 설정
-                adapter.setItems(people);
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-*/
 
         Toast.makeText(this, "음료 추가", Toast.LENGTH_SHORT).show();
 
@@ -195,7 +141,6 @@ public class OrderedListActivity extends AppCompatActivity {
             Person item = mItems.get(position);
             // TODO : 데이터를 뷰홀더에 표시하시오
             holder.guest.setText(item.date);
-
             Map<String,Double> op=(Map)item.map.get("options");
 
             holder.items.setText(item.map.get("name")+"(휘핑 :"+op.get("휘핑")+" / 샷 : "+op.get("샷")+")");

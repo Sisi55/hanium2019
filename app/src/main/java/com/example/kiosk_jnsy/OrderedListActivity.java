@@ -13,13 +13,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kiosk_jnsy.model.CafeItem;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +57,53 @@ public class OrderedListActivity extends AppCompatActivity {
         CafeItem realmenu[]=new CafeItem[9];
 
         //final List<CafeItem> people=new ArrayList<>();
+        FirebaseFirestore.getInstance().collection("order").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                // uuid가 아래와 같은 경우만 add함///////////////////////////////////////////////////
 
+                                guest = (String) (String)document.getData().get("guest");
+                                if(guest.equals("63cf6c6d-86ef-4647-b941-1b0bf187065f")){
+                                   // Map items = (Map)snapshot.child("items").child("0").getValue();
+                                    /////////////////////////////////////////////////////////////////////////////////////
+                                    //Map items = document.getData().get("items").collection("0");
+                                    List list = (List) document.getData().get("items");
+                                    HashMap items = (HashMap) list.get(0);
+
+
+                                   ///////////////////////////////////////////////////////////////////////////////////////
+                                    String today=(String)document.getData().get("today");
+                                    // 필요 없음
+                        /*
+                        Map<String,Double> emotion=(Map)snapshot.child("emotion").getValue();
+                        Map<String,Double> weather=(Map)snapshot.child("weather").getValue();
+                        */
+                                    // Map tt = (Map)snapshot.child("items").child("0").getValue();
+                                    // Toast.makeText(getActivity(), tt.get("name")+"메뉴임", Toast.LENGTH_SHORT).show();
+
+
+                                    //String imageUrl=(String)snapshot.child("imageUrl").getValue();
+
+                                    // 객체 형태로 받아와야 함. 오류...
+                                    //Order ciObject = dataSnapshot.getValue(Order.class);
+                                    Person p=new Person(items,today);
+                                    people.add(p);
+                                    Toast.makeText(getApplicationContext(), "현재"+today, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            // for문 다 수행 후 어댑터 설정
+                            adapter.setItems(people);
+
+
+                        } else {
+                            Log.d("dd", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+ /*
         FirebaseDatabase.getInstance().getReference().child("order").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -76,6 +128,7 @@ public class OrderedListActivity extends AppCompatActivity {
 
                         // 객체 형태로 받아와야 함. 오류...
                         //Order ciObject = dataSnapshot.getValue(Order.class);
+        /*
                         Person p=new Person(items,today);
                         people.add(p);
                         Toast.makeText(getApplicationContext(), "현재"+today, Toast.LENGTH_SHORT).show();
@@ -92,7 +145,7 @@ public class OrderedListActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
+*/
 
         Toast.makeText(this, "음료 추가", Toast.LENGTH_SHORT).show();
 

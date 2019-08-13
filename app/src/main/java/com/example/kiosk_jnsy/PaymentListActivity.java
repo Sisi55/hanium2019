@@ -22,6 +22,7 @@ import com.example.kiosk_jnsy.model.CafeItem;
 import com.example.kiosk_jnsy.model.Order;
 import com.example.kiosk_jnsy.setting.AppSetting;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -125,7 +126,9 @@ public class PaymentListActivity extends AppCompatActivity {
                 try {
                     String guest= AppSetting.personUUID;
                     Order order = new Order(emotion,weather,mArrayList,today,guest);
-                    FirebaseDatabase.getInstance().getReference().child("order").push().setValue(order);
+                    //
+                    //FirebaseDatabase.getInstance().getReference().child("order").push().setValue(order);
+                    FirebaseFirestore.getInstance().collection("order").add(order);
                 }catch(Exception e){
                     Log.d("예외",e.getMessage());
                 }

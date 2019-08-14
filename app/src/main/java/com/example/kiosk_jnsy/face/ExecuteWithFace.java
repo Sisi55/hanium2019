@@ -535,16 +535,17 @@ public class ExecuteWithFace {
 */
 
 // 여기서도 ui 접근가능한데
+            Log.e("   getPerson:  ", ""+person.name); // 체크
+
+/*
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-
-                    ((CameraActivity)activity).addTextToEditText("이름: "+person.name);
-
-//                    Log.e("   getPerson>UUID:  ", ""+person.personId); // 체크
-
+//                    ((CameraActivity)activity).addTextToEditText("이름: "+person.name);
+                    Log.e("   getPerson:  ", ""+person.name); // 체크
                 }
             });
+*/
 
 /*
             // 일단은 일련의 순서로 작성하지만
@@ -692,7 +693,7 @@ public class ExecuteWithFace {
             Log.e("   add face", "");
 
             if(AppSetting.trainRequestFlag == true){ // add face 다 하면?
-                new AboutPersonGroup.TrainPersonGroupTask(fragment).execute();
+                new AboutPersonGroup.TrainPersonGroupTask(activity).execute();
                 AppSetting.trainRequestFlag = false; // 사용하고 초기화
                 ((CameraActivity)activity).intentToMain();
             }

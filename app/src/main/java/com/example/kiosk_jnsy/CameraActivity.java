@@ -30,6 +30,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -43,6 +44,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.kiosk_jnsy.face.AboutPersonGroup;
 import com.example.kiosk_jnsy.face.ExecuteWithFace;
@@ -60,27 +62,11 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-public class CameraActivity extends AppCompatActivity {
+public class CameraActivity extends AppCompatActivity
+        implements ActivityCompat.OnRequestPermissionsResultCallback{
 
     Button btn; EditText editText; EditText editName;
-    private ImageReader mImageReader;
-    private Handler mBackgroundHandler;
-    private int mSensorOrientation; // 카메라 센서 방향
-    private static final String TAG = "CameraActivity";
-    private static final int MAX_PREVIEW_WIDTH = 1920; // 누구맘 ?
-    private static final int MAX_PREVIEW_HEIGHT = 1080;
-    private Size mPreviewSize;
-    private AutoFitTextureView mTextureView;
-    private boolean mFlashSupported;
-    private String mCameraId;
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
-    private CaptureRequest.Builder mPreviewRequestBuilder;
-    private static final int STATE_WAITING_LOCK = 1;
-    private static final int STATE_PREVIEW = 0;
-    private int mState = STATE_PREVIEW;
-    private CameraCaptureSession mCaptureSession;
-//    boolean camefromMain = false;
-
+    View alertView;
 
     public void CaptureFace(){
         // 대화상자 출력 "카메라에 얼굴나오게"
@@ -88,10 +74,13 @@ public class CameraActivity extends AppCompatActivity {
                 .setTitle("카메라에 얼굴이 나오게 해주세요!")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+
+                        Log.e("   Camera","capture face");
 /*
                         AppSetting.registeredPersonFlag=true;
                         takePicture(); // 사진 찍는다 > 콜백3
 */
+
                         // if-else 카메라
                         if(AppSetting.registeredPersonFlag == true){
                             takePicture(); // 사진 찍는다 > 콜백3
@@ -102,6 +91,7 @@ public class CameraActivity extends AppCompatActivity {
                             startCaptureThread();
                             // 10번 찍겠지
                         }
+
                     }
                 }).show();
 
@@ -109,34 +99,46 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     public void intentToMain(){
+        Log.e("   Camera","intent to Main");
+        AppSetting.camefromCamera = true;
         startActivity(new Intent(this, MainActivity.class));
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        mTextureView = (AutoFitTextureView) findViewById(R.id.texture);
+//        View view = inflater.inflate(R.layout.fragment_camera2_basic, container, false);
         editText = (EditText) findViewById(R.id.edit);
+        mTextureView = (AutoFitTextureView) findViewById(R.id.texture);
+
 
 /*
-        // camera
-        getSupportFragmentManager().beginTransaction()
-//                .addToBackStack(null)
-                .replace(R.id.head, Camera2BasicFragment.newInstance())
-                .commit();
-*/
         if(AppSetting.camefromMain == true){
+            Log.e("   Camera","came from main");
             CaptureFace();
             AppSetting.camefromMain=false; // 사용하고 나면 초기화
         }
+*/
+
 
     }
 
     public void addTextToEditText(String str){ // 진행사항 출력하는 함수
         String tempStr = editText.getText().toString() + "\n" + str; // 개행하고 붙인다
         editText.setText(tempStr);
+
+/*
+        new AlertDialog.Builder(getContext())
+                .setTitle("카메라에 얼굴이 나오게 해주세요!")
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                }).show();
+*/
 
     }
     //end method
@@ -150,25 +152,24 @@ public class CameraActivity extends AppCompatActivity {
         public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
             openCamera(width, height);
 
-            //AppSetting.personGroupId = "cafetest"; // 앱 초기 설정하는 파일도 필요한것같다
-            //new AboutPersonGroup.CreatePersonGroupTask(Camera2BasicFragment.this).execute(""); // 그룹id 전달
+            if(AppSetting.camefromMain == true){
+                Log.e("   Camera","came from main");
+                CaptureFace();
+                AppSetting.camefromMain=false; // 사용하고 나면 초기화
+            }
+
+
 /*
-            if(*/
-/*그룹이 없으면*//*
-){
-                new AboutPersonGroup.CreatePersonGroupTask(CameraActivity.this).execute(""); // 그룹id 전달
+            if(AppSetting.registeredPersonFlag == true){
+                takePicture(); // 사진 찍는다 > 콜백3
+                // 한번 찍는다
+
+            }else{
+
+                startCaptureThread();
+                // 10번 찍겠지
             }
 */
-//            // 그룹이 없으면 자동으로 생성해줄거야
-//            new AboutPersonGroup.GetPersonGroupTask(CameraActivity.this);
-
-
-//            showAlertDialog();
-
-            /* 지우지마요 */
-//            new AboutPersonGroup.TrainPersonGroupTask(Camera2BasicFragment.this).execute();
-//            new AboutPersonGroup.ListPersonGroupTask(Camera2BasicFragment.this).execute();
-//            new AboutPerson.ListPersonTask(Camera2BasicFragment.this).execute();
 
         }// goto open camera
 
@@ -206,8 +207,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 try{
                     sleep(1500);
-                }catch (Exception e){
-                    Log.e("   thread error","");}
+                }catch (Exception e){Log.e("   thread error","");}
 
                 takePicture();
 
@@ -223,8 +223,6 @@ public class CameraActivity extends AppCompatActivity {
             //end for
             AppSetting.trainRequestFlag = true;
             takePicture();
-
-            // 대화상자 출력
         }
         //end method
     }
@@ -244,8 +242,8 @@ public class CameraActivity extends AppCompatActivity {
         setUpCameraOutputs(width, height); // 어떤걸 가로,세로 설정하는거지 ? 프리뷰,텍스쳐뷰 등
         configureTransform(width, height);
 
-        Activity activity = this;
-        CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+//        Activity activity = getActivity();
+        CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
         try {
 
@@ -268,14 +266,14 @@ public class CameraActivity extends AppCompatActivity {
     // from : onSurfaceTextureSizeChanged,  openCamera
     private void configureTransform(int viewWidth, int viewHeight) { // 음...?
 
-        Activity activity = this;
+//        Activity activity = getActivity();
 
-        if (null == mTextureView || null == mPreviewSize || null == activity) {
+        if (null == mTextureView || null == mPreviewSize) {
             return;
         }
         //end if
 
-        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+        int rotation = getWindowManager().getDefaultDisplay().getRotation();
         Matrix matrix = new Matrix();
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
         RectF bufferRect = new RectF(0, 0, mPreviewSize.getHeight(), mPreviewSize.getWidth());
@@ -297,14 +295,24 @@ public class CameraActivity extends AppCompatActivity {
 
         mTextureView.setTransform(matrix);
     }
-    //end method
+
+    private ImageReader mImageReader;
+    private Handler mBackgroundHandler;
+    private int mSensorOrientation; // 카메라 센서 방향
+    private static final String TAG = "Camera2BasicFragment";
+    private static final int MAX_PREVIEW_WIDTH = 1920; // 누구맘 ?
+    private static final int MAX_PREVIEW_HEIGHT = 1080;
+    private Size mPreviewSize;
+    private AutoFitTextureView mTextureView;
+    private boolean mFlashSupported;
+    private String mCameraId;
 
     // from: open camera
     @SuppressWarnings("SuspiciousNameCombination")
     private void setUpCameraOutputs(int width, int height) {// 매개는 무슨 역할 ?
 
-        Activity activity = this;
-        CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
+//        Activity activity = getActivity();
+        CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
         try {
 
@@ -340,7 +348,7 @@ public class CameraActivity extends AppCompatActivity {
 
 
                 // Find out if we need to swap dimension to get the preview size relative to sensor coordinate.
-                int displayRotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+                int displayRotation = getWindowManager().getDefaultDisplay().getRotation();
                 //noinspection ConstantConditions
                 mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION); // 센서 방향 얻
                 boolean swappedDimensions = false; // 초기화
@@ -364,7 +372,7 @@ public class CameraActivity extends AppCompatActivity {
                 }
 
                 Point displaySize = new Point();
-                activity.getWindowManager().getDefaultDisplay().getSize(displaySize); // 화면 크기 ?
+                getWindowManager().getDefaultDisplay().getSize(displaySize); // 화면 크기 ?
 
                 int rotatedPreviewWidth = width; // 매개 width, height
                 int rotatedPreviewHeight = height;
@@ -430,13 +438,10 @@ public class CameraActivity extends AppCompatActivity {
         } catch (NullPointerException e) {
             // Currently an NPE is thrown when the Camera2API is used but not supported on the
             // device this code runs.
-
             ErrorDialog.newInstance(getString(R.string.camera_error))
                     .show(getSupportFragmentManager(), FRAGMENT_DIALOG);
-
         }
     }
-    //end method
 
     // from: set up camera outputs
     private static Size chooseOptimalSize(Size[] choices, int textureViewWidth, int textureViewHeight, // 초기 texture
@@ -491,7 +496,6 @@ public class CameraActivity extends AppCompatActivity {
 
 //        return Collections.min(Arrays.asList(choices), new CompareSizesByArea()); // test 제일 작은거 반환
     }
-    //end method
 
     // from: set up camera outputs. 콜백3
     private final ImageReader.OnImageAvailableListener mOnImageAvailableListener
@@ -529,33 +533,11 @@ public class CameraActivity extends AppCompatActivity {
             // 가설: input stream 은 한 번 사용하면 사라진다. 휘발성.
             // 그러면, byte[] bytes를 전달하며 input stream으로 변환하여 사용하면 어떨까 ?
             inputStream = new ByteArrayInputStream(bytes);
-/* 지우지마요
-            int atemp=-1;
-            try{
-                atemp = inputStream.available();
 
-            }catch(Exception e){
-                Log.e("  availe error","");
-            }
-            final int a = atemp;
-
-            // input stream 전송해야 한다  아 이흐름 기억안난다다
-
-            final int w=mImage.getWidth();  final int h=mImage.getHeight();
-            final int l=bytes.length;
-            // 이미지 사이즈 출력
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    addTextToEditText("image size"+ w+" "+h+" "+l+" "+a);
-                }
-            });
-*/
             // 최초 대화상자에서 플래그 설정했다
             if(AppSetting.registeredPersonFlag == true){
                 // 등록된 사람이면
                 new ExecuteWithFace.DetectAndIdentifyTask(bytes, CameraActivity.this).execute(inputStream);
-                intentToMain();
             }else{
                 // 처음온 사람이면 10번 사진 등록하겠지 최소 등록횟수 찾아봐야 하나 ? 아 정확도 출력하라고..
                 new ExecuteWithFace.DetectAndAddFaceTask(bytes,CameraActivity.this).execute();
@@ -570,7 +552,37 @@ public class CameraActivity extends AppCompatActivity {
         }
         //end method
     }
-    //end class
+
+    // from: set up camera outpus
+    public static class ErrorDialog extends DialogFragment {
+
+        private static final String ARG_MESSAGE = "message";
+
+        public static ErrorDialog newInstance(String message) {
+            ErrorDialog dialog = new ErrorDialog();
+            Bundle args = new Bundle();
+            args.putString(ARG_MESSAGE, message);
+            dialog.setArguments(args);
+            return dialog;
+        }
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Activity activity = getActivity();
+
+            // 대화상자 반환 : 분문 + 버튼1
+            return new AlertDialog.Builder(activity)
+                    .setMessage(getArguments().getString(ARG_MESSAGE))
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            activity.finish();
+                        }
+                    })
+                    .create();
+        }
+    }
 
     // from: set up camera output
     static class CompareSizesByArea implements Comparator<Size> {
@@ -592,16 +604,48 @@ public class CameraActivity extends AppCompatActivity {
         // if else 가 뭘 위한건지는 모르겠다
         if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
             // 대화상자 출력
-
             new ConfirmationDialog().show(getSupportFragmentManager(), FRAGMENT_DIALOG);
-
         } else {
             requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
         }
     }
-    //end method
 
-    // 자원 점유 관련
+    private static final int REQUEST_CAMERA_PERMISSION = 1;
+
+    // from: request caemra permission
+    public static class ConfirmationDialog extends DialogFragment {
+
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            final Fragment parent = getParentFragment();
+
+            // 대화상자 출력하는듯 ?  :본문 + 버튼2
+            return new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.request_permission)
+
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            parent.requestPermissions(new String[]{Manifest.permission.CAMERA},
+                                    REQUEST_CAMERA_PERMISSION);
+                        }
+                    })
+
+                    .setNegativeButton(android.R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Activity activity = parent.getActivity();
+                                    if (activity != null) {
+                                        activity.finish();
+                                    }
+                                }
+                            })
+                    .create();
+        }
+    }
+
     private Semaphore mCameraOpenCloseLock = new Semaphore(1);
 
     private CameraDevice mCameraDevice;
@@ -631,9 +675,9 @@ public class CameraActivity extends AppCompatActivity {
             mCameraOpenCloseLock.release();
             cameraDevice.close();
             mCameraDevice = null;
-            Activity activity = CameraActivity.this;
-            if (null != activity) {
-                activity.finish();
+//            Activity activity = getActivity();
+            if (null != CameraActivity.this) {
+                finish();
             }
         }
 
@@ -701,9 +745,7 @@ public class CameraActivity extends AppCompatActivity {
                         @Override
                         public void onConfigureFailed(
                                 @NonNull CameraCaptureSession cameraCaptureSession) {
-/*
                             showToast("Failed");
-*/
                         }
                     }, null
             );
@@ -714,7 +756,6 @@ public class CameraActivity extends AppCompatActivity {
         }
         //end try catch
     }
-    //end method
 
     //from: create camera review session, unlockFocus,  captureStillPicture
     private void setAutoFlash(CaptureRequest.Builder requestBuilder) {
@@ -724,13 +765,18 @@ public class CameraActivity extends AppCompatActivity {
                     CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
         }
     }
-    //end method
 
     //from : onclick
-    public void takePicture() {
+    private void takePicture() {
         lockFocus();
     }
     //end method
+
+    private CaptureRequest.Builder mPreviewRequestBuilder;
+    private static final int STATE_WAITING_LOCK = 1;
+    private static final int STATE_PREVIEW = 0;
+    private int mState = STATE_PREVIEW;
+    private CameraCaptureSession mCaptureSession;
 
     //from : take picuture
     private void lockFocus() { // 사진 찍는 함수 !
@@ -752,7 +798,6 @@ public class CameraActivity extends AppCompatActivity {
         }
         //end try catch
     }
-    //end method
 
     //from: create capture session
     private CameraCaptureSession.CaptureCallback mCaptureCallback
@@ -822,12 +867,11 @@ public class CameraActivity extends AppCompatActivity {
         }
 
     };
-    //end 콜백2 아니다
 
     private void captureStillPicture() {
         try {
-            final Activity activity = this;
-            if (null == activity || null == mCameraDevice) {
+//            final Activity activity = getActivity();
+            if (null == mCameraDevice) {
                 return;
             }
             // This is the CaptureRequest.Builder that we use to take a picture.
@@ -841,7 +885,7 @@ public class CameraActivity extends AppCompatActivity {
             setAutoFlash(captureBuilder);
 
             // Orientation
-            int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+            int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(rotation));
 
             // capture 완료하면 호출되는 메소드 ?
@@ -852,9 +896,10 @@ public class CameraActivity extends AppCompatActivity {
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-//                    showToast("사진 capture");
+                    showToast("사진 capture");
 //                    Log.d(TAG, mFile.toString());
                     unlockFocus();
+
                 }
             };
 
@@ -865,7 +910,6 @@ public class CameraActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    //end
 
     private int getOrientation(int rotation) {
         // Sensor orientation is 90 for most devices, or 270 for some devices (eg. Nexus 5X)
@@ -892,7 +936,6 @@ public class CameraActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    //end method
 
     private void runPrecaptureSequence() {
         try {
@@ -927,10 +970,8 @@ public class CameraActivity extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults.length != 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-
                 ErrorDialog.newInstance(getString(R.string.request_permission))
                         .show(getSupportFragmentManager(), FRAGMENT_DIALOG);
-
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -944,7 +985,6 @@ public class CameraActivity extends AppCompatActivity {
         stopBackgroundThread();
         super.onPause();
     }
-    //end method
 
     //from on pause
     private void closeCamera() {
@@ -971,7 +1011,6 @@ public class CameraActivity extends AppCompatActivity {
             mCameraOpenCloseLock.release();
         }
     }
-    //end method
 
     private HandlerThread mBackgroundThread;
 
@@ -988,18 +1027,53 @@ public class CameraActivity extends AppCompatActivity {
     }
     //end method
 
+    private void showToast(final String text) {
+//        final Activity activity = getActivity();
+
+        if (CameraActivity.this != null) {
+
+            CameraActivity.this.runOnUiThread(new Runnable() { // get activity() 해서 run on ui thread()
+                @Override
+                public void run() {
+                    Toast.makeText(CameraActivity.this, text, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        //end if
+    }
+
+/*
+    @Override
+    public void onViewCreated(final View view, Bundle savedInstanceState) {
+
+        view.findViewById(R.id.picture).setOnClickListener(this);
+//        view.findViewById(R.id.info).setOnClickListener(this);
+        mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
+    }
+    //end on view created
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mFile = new File(getActivity().getExternalFilesDir(null), "pic.jpg");
+    }
+*/
+
     @Override
     public void onResume() {
         super.onResume();
         startBackgroundThread();
 
+        // When the screen is turned off and turned back on, the SurfaceTexture is already
+        // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
+        // a camera and start preview from here (otherwise, we wait until the surface is ready in
+        // the SurfaceTextureListener).
         if (mTextureView.isAvailable()) {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
     }
-    //end on resune
 
     //from: on resume
     private void startBackgroundThread() {
@@ -1011,72 +1085,6 @@ public class CameraActivity extends AppCompatActivity {
     }
     //end start background thread
 
-    // from: set up camera outpus
-    public static class ErrorDialog extends DialogFragment {
-
-        private static final String ARG_MESSAGE = "message";
-
-        public static ErrorDialog newInstance(String message) {
-            ErrorDialog dialog = new ErrorDialog();
-            Bundle args = new Bundle();
-            args.putString(ARG_MESSAGE, message);
-            dialog.setArguments(args);
-            return dialog;
-        }
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Activity activity = getActivity();
-
-            // 대화상자 반환 : 분문 + 버튼1
-            return new AlertDialog.Builder(activity)
-                    .setMessage(getArguments().getString(ARG_MESSAGE))
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            activity.finish();
-                        }
-                    })
-                    .create();
-        }
-    }
-    //end class
-
-    // from: request caemra permission
-    public static class ConfirmationDialog extends DialogFragment {
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            final Fragment parent = getParentFragment();
-
-            // 대화상자 출력하는듯 ?  :본문 + 버튼2
-            return new AlertDialog.Builder(getActivity())
-                    .setMessage(R.string.request_permission)
-
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            parent.requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                    REQUEST_CAMERA_PERMISSION);
-                        }
-                    })
-
-                    .setNegativeButton(android.R.string.cancel,
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Activity activity = parent.getActivity();
-                                    if (activity != null) {
-                                        activity.finish();
-                                    }
-                                }
-                            })
-                    .create();
-        }
-    }
-    //end class
 
 
 }

@@ -187,16 +187,6 @@ public class Camera2BasicFragment extends Fragment
         public void onSurfaceTextureAvailable(SurfaceTexture texture, int width, int height) {
             openCamera(width, height);
 
-            AppSetting.personGroupId = "cafetest"; // 앱 초기 설정하는 파일도 필요한것같다
-            //new AboutPersonGroup.CreatePersonGroupTask(Camera2BasicFragment.this).execute(""); // 그룹id 전달
-
-//            showAlertDialog();
-
-/* 지우지마요 */
-//            new AboutPersonGroup.TrainPersonGroupTask(Camera2BasicFragment.this).execute();
-//            new AboutPersonGroup.ListPersonGroupTask(Camera2BasicFragment.this).execute();
-//            new AboutPerson.ListPersonTask(Camera2BasicFragment.this).execute();
-
         }// goto open camera
 
         @Override
@@ -562,28 +552,7 @@ public class Camera2BasicFragment extends Fragment
             // 가설: input stream 은 한 번 사용하면 사라진다. 휘발성.
             // 그러면, byte[] bytes를 전달하며 input stream으로 변환하여 사용하면 어떨까 ?
             inputStream = new ByteArrayInputStream(bytes);
-/* 지우지마요
-            int atemp=-1;
-            try{
-                atemp = inputStream.available();
 
-            }catch(Exception e){
-                Log.e("  availe error","");
-            }
-            final int a = atemp;
-
-            // input stream 전송해야 한다  아 이흐름 기억안난다다
-
-            final int w=mImage.getWidth();  final int h=mImage.getHeight();
-            final int l=bytes.length;
-            // 이미지 사이즈 출력
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    addTextToEditText("image size"+ w+" "+h+" "+l+" "+a);
-                }
-            });
-*/
             // 최초 대화상자에서 플래그 설정했다
             if(AppSetting.registeredPersonFlag == true){
                 // 등록된 사람이면

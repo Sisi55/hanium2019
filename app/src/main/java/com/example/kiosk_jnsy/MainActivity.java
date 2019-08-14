@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.example.kiosk_jnsy.databinding.ActivityMainBinding;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     EditText editName;
 
     private void showRegisterDialog(){
-        new AlertDialog.Builder(this/*getContext()*/)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this/*getContext()*/)
                 .setTitle("얼굴 등록하셨나요?")
                 //.setView(alertView)
                 //.setMessage("10번 사진 찍습니다!")
@@ -44,7 +45,12 @@ public class MainActivity extends AppCompatActivity {
                         showGetPermissionDialog();
                     }
                 }
-        ).show();
+        );
+
+
+        // 되려나 된다 모달리스
+        builder.show().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
     }
 
     public void intentToCameraActivity(){
@@ -121,15 +127,21 @@ public class MainActivity extends AppCompatActivity {
 //        new AboutPersonGroup.GetPersonGroupTask(MainActivity.this);
 //        new AboutPersonGroup.CreatePersonGroupTask(this).execute(AppSetting.personGroupId); // 그룹id 전달
 
-        Log.e("   group id", AppSetting.personGroupId);
+//        Log.e("  Main group id", AppSetting.personGroupId);
 
         LayoutInflater inflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         alertView = inflater.inflate(R.layout.alertview_name, null); // 이게 되려나 ?
 
         editName = (EditText) alertView.findViewById(R.id.edit_name);
 
-        // 대화상자 출력한다
-        showRegisterDialog(); // 얼굴 등록했는지 -> 얼굴 인식할건지
+        if(AppSetting.camefromCamera != true){
+            // 시나리오: Main > Camera > Main
+            // 자칫하면 무한루프가 발생할 수 있으므로 체크한다
+
+            // 대화상자 출력한다
+            showRegisterDialog(); // 얼굴 등록했는지 -> 얼굴 인식할건지
+            AppSetting.camefromCamera = false; // 사용하고 초기화
+        }
 
 
 

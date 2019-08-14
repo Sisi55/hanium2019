@@ -19,6 +19,7 @@ public class AppSetting {
 
     public static String emotion=null;
     public static boolean camefromMain = false;
+    public static boolean camefromCamera = false;
     public static boolean isSetPersonUUID=false;
 
 }

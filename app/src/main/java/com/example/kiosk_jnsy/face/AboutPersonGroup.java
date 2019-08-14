@@ -1,5 +1,6 @@
 package com.example.kiosk_jnsy.face;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,7 +9,8 @@ import android.util.Log;
 
 //import com.example.change.Camera2BasicFragment;
 //import com.example.change.setting.AppSetting;
-import com.example.kiosk_jnsy.Camera2BasicFragment;
+import com.example.kiosk_jnsy.CameraActivity;
+import com.example.kiosk_jnsy.MainActivity;
 import com.example.kiosk_jnsy.setting.AppSetting;
 import com.microsoft.projectoxford.face.contract.LargePersonGroup;
 
@@ -73,8 +75,10 @@ public class AboutPersonGroup {
     public static class GetPersonGroupTask extends AsyncTask<Void, Void, LargePersonGroup> {
 
         Fragment fragment;
+        Activity activity;
 
         // 생성자
+        public GetPersonGroupTask(Activity activity){this.activity=activity;}
         public GetPersonGroupTask(Fragment fragment) {
             this.fragment = fragment;
         }
@@ -115,9 +119,8 @@ public class AboutPersonGroup {
                 },0);
 */
 
-//                new AboutPersonGroup.CreatePersonGroupTask(fragment).execute(AppSetting.personGroupId); // 그룹id 전달
+                new AboutPersonGroup.CreatePersonGroupTask(activity).execute(AppSetting.personGroupId); // 그룹id 전달
 
-                return;
             }
         }
     }
@@ -127,7 +130,11 @@ public class AboutPersonGroup {
     public static class CreatePersonGroupTask extends AsyncTask<String, String, String> {
 
         Fragment fragment;
+        Activity activity;
 
+        public CreatePersonGroupTask(Activity activity) {
+            this.activity = activity;
+        }
         public CreatePersonGroupTask(Fragment fragment) {
             this.fragment = fragment;
         }
@@ -148,14 +155,15 @@ public class AboutPersonGroup {
 
             } catch (final Exception e) {
 
-/* 지우지마요
+
                 handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                     @Override
                     public void run() {
-                        ((Camera2BasicFragment)fragment).addTextToEditText("create try catch "+e.getMessage()+"\n");
+//                        ((MainActivity)activity).addTextToEditText("create try catch "+e.getMessage()+"\n");
+                        Log.e(" error create", e.getMessage());
                     }
                 },0);
-*/
+
                 return null;
             }
         }
@@ -167,7 +175,7 @@ public class AboutPersonGroup {
             Log.e("   create person group", "");
 
             if (result != null) {
-//                ((Camera2BasicFragment)fragment).addTextToEditText("create ok\n");
+                ((CameraActivity)activity).addTextToEditText("create group ok\n");
             }
         }
     }
@@ -176,9 +184,13 @@ public class AboutPersonGroup {
     public static class TrainPersonGroupTask extends AsyncTask<Void, String, Boolean> {
 
         Fragment fragment;
+        Activity activity;
 
         public TrainPersonGroupTask(Fragment fragment) {
             this.fragment = fragment;
+        }
+        public TrainPersonGroupTask(Activity activity) {
+            this.activity = activity;
         }
 
         @Override
@@ -210,7 +222,7 @@ public class AboutPersonGroup {
             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                 @Override
                 public void run() {
-                    ((Camera2BasicFragment)fragment).addTextToEditText("train request\n");
+                    ((CameraActivity)activity).addTextToEditText("train request\n");
                 }
             },0);
 

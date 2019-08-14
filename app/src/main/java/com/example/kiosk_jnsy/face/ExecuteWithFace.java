@@ -1,5 +1,6 @@
 package com.example.kiosk_jnsy.face;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -9,7 +10,7 @@ import android.util.Log;
 
 //import com.example.change.Camera2BasicFragment;
 //import com.example.change.setting.AppSetting;
-import com.example.kiosk_jnsy.Camera2BasicFragment;
+import com.example.kiosk_jnsy.CameraActivity;
 import com.example.kiosk_jnsy.setting.AppSetting;
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.contract.Emotion;
@@ -45,7 +46,13 @@ public class ExecuteWithFace {
         InputStream inputStream;
         boolean detectFlag = false;
         byte[] bytes;
-        // 생성자
+        Activity activity;
+        public DetectAndAddFaceTask(byte[] bytes, final Activity activity) {
+            this.bytes = bytes;
+            this.activity = activity;
+            inputStream = new ByteArrayInputStream(bytes);
+        }
+            // 생성자
         public DetectAndAddFaceTask(byte[] bytes, final Fragment fragment) {
             this.bytes=bytes;  this.fragment=fragment;
             inputStream = new ByteArrayInputStream(bytes);
@@ -94,10 +101,10 @@ public class ExecuteWithFace {
 
                 // detect 가 여러 얼굴 탐지하는 똑똑한 함수였구나
                 return AppSetting.faceServiceClient.detect(inputStream,true,false,
-                        null);
-                /*new FaceServiceClient.FaceAttributeType[] {
+                        new FaceServiceClient.FaceAttributeType[] {
                                 FaceServiceClient.FaceAttributeType.Emotion
-                        }*/
+                        });
+
 
             }
             catch (final Exception ex) // 여기서 오류가 났다  detect 자체가 실행되지 않았다 이유가 뭐지
@@ -121,14 +128,16 @@ public class ExecuteWithFace {
             if(faces != null){
                 detectFlag = true; // 사람있다
             }
-/*
-            String result_emotion = getEmotion(faces[0].faceAttributes.emotion);
 
+            if(null != faces[0].faceAttributes.emotion){
+                AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
+            }
+/*
             ((Camera2BasicFragment)fragment).addTextToEditText("감정: "+result_emotion);
 */
             // add face
             new AddFaceTask(/*전역:create 후 저장*/UUID.fromString(AppSetting.personUUID),
-                    bytes, /*faces[0],*/ fragment, detectFlag).execute();
+                    bytes, /*faces[0],*/ activity/*fragment*/, detectFlag).execute();
 //            ((Camera2BasicFragment)fragment).addTextToEditText("new add face task");
         }
         private String getEmotion(Emotion emotion){
@@ -189,10 +198,16 @@ public class ExecuteWithFace {
         Fragment fragment;
         boolean detectFlag = false;
         byte[] bytes;
+        Activity activity;
 
         // 생성자
         public DetectAndIdentifyTask(byte[] bytes, Fragment fragment) {
             this.bytes=bytes;  this.fragment=fragment;
+            this.inputStream = new ByteArrayInputStream(bytes);
+        }
+
+        public DetectAndIdentifyTask(byte[] bytes, Activity activity) {
+            this.bytes=bytes;  this.activity=activity;
             this.inputStream = new ByteArrayInputStream(bytes);
         }
         public DetectAndIdentifyTask(InputStream in, Context context){
@@ -252,10 +267,12 @@ public class ExecuteWithFace {
             facesDetected = new UUID[faces.length];
 
             //일단 첫 번째 사람 감정만 출력해본다
-            String result_emotion = getEmotion(faces[0].faceAttributes.emotion);
+            if(null != faces[0].faceAttributes.emotion){
+                AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
+            }
 
-            ((Camera2BasicFragment)fragment).addTextToEditText("감정: "+result_emotion);
-
+//            ((Camera2BasicFragment)fragment).addTextToEditText("감정: "+result_emotion);
+//            ((CameraActivity)activity).addTextToEditText("감정: "+result_emotion);
 
             for(int i=0;i<facesDetected.length;i++){
                 facesDetected[i] = faces[i].faceId;
@@ -303,7 +320,9 @@ public class ExecuteWithFace {
                             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                                 @Override
                                 public void run() {
-                                    ((Camera2BasicFragment)fragment).addTextToEditText("train status failed");
+//                                    ((Camera2BasicFragment)fragment).addTextToEditText("train status failed");
+                                    ((CameraActivity)activity).addTextToEditText("train status failed");
+
                                 }
                             },0);
 
@@ -316,7 +335,7 @@ public class ExecuteWithFace {
                             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                                 @Override
                                 public void run() {
-                                    ((Camera2BasicFragment)fragment).addTextToEditText("train status running ok ?");
+                                    ((CameraActivity)activity).addTextToEditText("train status running ok ?");
                                 }
                             },0);
 
@@ -327,7 +346,7 @@ public class ExecuteWithFace {
                             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                                 @Override
                                 public void run() {
-                                    ((Camera2BasicFragment)fragment).addTextToEditText("train status succeeded");
+                                    ((CameraActivity)activity).addTextToEditText("train status succeeded");
                                 }
                             },0);
 
@@ -351,7 +370,7 @@ public class ExecuteWithFace {
                         handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                             @Override
                             public void run() {
-                                ((Camera2BasicFragment)fragment).addTextToEditText("  d-identify try catch:\n"+ e.getMessage()+"\n");
+                                ((CameraActivity)activity).addTextToEditText("  d-identify try catch:\n"+ e.getMessage()+"\n");
                             }
                         },0);
 
@@ -380,21 +399,21 @@ public class ExecuteWithFace {
 
                             // 여기서 get person
                             // "uuid: "+identifyResults[i].candidates.get(0).personId
-                            new GetPersonTask(fragment/*, identifyResults[i].candidates.get(0).personId*/).execute(identifyResults[i].candidates.get(0).personId);
+                            new GetPersonTask(activity/*, identifyResults[i].candidates.get(0).personId*/).execute(identifyResults[i].candidates.get(0).personId);
 
 
-                            ((Camera2BasicFragment)fragment).addTextToEditText("정확도:"+identifyResults[i].candidates.get(0).confidence);
+                            ((CameraActivity)activity).addTextToEditText("정확도:"+identifyResults[i].candidates.get(0).confidence);
 //                            identifyResults[i].candidates.get(0).personId
                             AppSetting.personUUID = identifyResults[i].candidates.get(0).personId.toString();
                             AppSetting.trainRequestFlag=true; // true하면 사용한 곳에서 자동으로 false 초기화한다
                             // 여기 add face
                             new AddFaceTask(/*전역:create 후 저장*/UUID.fromString(AppSetting.personUUID),
-                                    bytes, /*faces[0],*/ fragment, detectFlag).execute();
+                                    bytes, /*faces[0],*/ activity, detectFlag).execute();
 // get person 추가하면 name도 얻을 수 있다
 // 바로 아래에 있다
 
                         }else{
-                            ((Camera2BasicFragment)fragment).addTextToEditText("등록안됨");
+                            ((CameraActivity)activity).addTextToEditText("등록안됨");
                         }
                         //end if else
                     }
@@ -462,6 +481,7 @@ public class ExecuteWithFace {
         InputStream inputStream; Face face;
         Context mainActivity;
         Fragment fragment;
+        Activity activity;
 
         public GetPersonTask(){}
 
@@ -480,6 +500,9 @@ public class ExecuteWithFace {
             inputStream = in; this.face = face;
 //            mainActivity = context;
             this.fragment = fragment;
+        }
+        public GetPersonTask(Activity activity){
+            this.activity = activity;
         }
 
         public GetPersonTask(Fragment fragment){
@@ -516,7 +539,7 @@ public class ExecuteWithFace {
                 @Override
                 public void run() {
 
-                    ((Camera2BasicFragment)fragment).addTextToEditText("이름: "+person.name);
+                    ((CameraActivity)activity).addTextToEditText("이름: "+person.name);
 
 //                    Log.e("   getPerson>UUID:  ", ""+person.personId); // 체크
 
@@ -563,6 +586,7 @@ public class ExecuteWithFace {
         Fragment fragment;
         boolean detectFlag;
         byte[] bytes;
+        Activity activity;
         // 얼굴 하나 add 할 생성자
         AddFaceTask(UUID personId, byte[] bytes, /*Face face, */final Fragment fragment, boolean detectFlag) {
             this.personId = personId;  /*this.inputStream = inputStream;*/  /*this.face = face;*/  this.fragment=fragment;  this.detectFlag=detectFlag;
@@ -585,6 +609,13 @@ public class ExecuteWithFace {
             });
 */
         }
+        AddFaceTask(UUID personId, byte[] bytes, /*Face face, */final Activity activity, boolean detectFlag) {
+            this.personId = personId;  /*this.inputStream = inputStream;*/  /*this.face = face;*/
+            this.activity = activity;
+            this.detectFlag = detectFlag;
+            this.bytes = bytes;
+            this.inputStream = new ByteArrayInputStream(bytes);
+        }
         AddFaceTask(UUID personId, InputStream inputStream, Face face, final Fragment fragment, boolean detectFlag) {
             this.personId = personId;  this.inputStream = inputStream;  this.face = face;  this.fragment=fragment;  this.detectFlag=detectFlag;
             int atemp=-1;
@@ -598,7 +629,7 @@ public class ExecuteWithFace {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    ((Camera2BasicFragment)fragment).addTextToEditText("add face image size"+a);
+                    ((CameraActivity)activity).addTextToEditText("add face image size"+a);
                 }
             });
         }
@@ -639,7 +670,7 @@ public class ExecuteWithFace {
                 handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                     @Override
                     public void run() {
-                        ((Camera2BasicFragment)fragment).addTextToEditText("add face try failed "+e.getMessage());
+                        ((CameraActivity)activity).addTextToEditText("add face try failed "+e.getMessage());
                         Log.e("add face try failed ",""+e.getMessage());
                     }
                 },0);
@@ -653,18 +684,19 @@ public class ExecuteWithFace {
         protected void onPostExecute(Boolean result) {
 
             if (result == false) { // 실패하면
-                ((Camera2BasicFragment)fragment).addTextToEditText("add face 실패");
+                ((CameraActivity)activity).addTextToEditText("add face 실패");
                 return;
             }
 
             // 성공 로그
             Log.e("   add face", "");
 
-            if(AppSetting.trainRequestFlag == true){
+            if(AppSetting.trainRequestFlag == true){ // add face 다 하면?
                 new AboutPersonGroup.TrainPersonGroupTask(fragment).execute();
                 AppSetting.trainRequestFlag = false; // 사용하고 초기화
+                ((CameraActivity)activity).intentToMain();
             }
-            ((Camera2BasicFragment)fragment).addTextToEditText("add face 성공");
+            ((CameraActivity)activity).addTextToEditText("add face 성공");
         }
     }
     //end add face task

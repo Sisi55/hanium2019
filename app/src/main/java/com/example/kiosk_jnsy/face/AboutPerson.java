@@ -1,20 +1,26 @@
 package com.example.kiosk_jnsy.face;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
 //import com.example.change.Camera2BasicFragment;
 //import com.example.change.model.UserDTO;
 //import com.example.change.setting.AppSetting;
-import com.example.kiosk_jnsy.Camera2BasicFragment;
+import com.example.kiosk_jnsy.CameraActivity;
+import com.example.kiosk_jnsy.MainActivity;
 import com.example.kiosk_jnsy.model.UserDTO;
 import com.example.kiosk_jnsy.setting.AppSetting;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.microsoft.projectoxford.face.contract.CreatePersonResult;
 import com.microsoft.projectoxford.face.contract.Face;
 import com.microsoft.projectoxford.face.contract.Person;
@@ -35,6 +41,7 @@ public class AboutPerson {
     //ListPersonTask
     public static class ListPersonTask extends AsyncTask<Void, Void, Person[]> {
         Fragment fragment;
+        Activity activity;
         // 생성자
         public ListPersonTask(Fragment fragment){
             this.fragment=fragment;
@@ -71,7 +78,7 @@ public class AboutPerson {
             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                 @Override
                 public void run() {
-                    ((Camera2BasicFragment)fragment).addTextToEditText(strr+"\n");
+                    ((CameraActivity)activity).addTextToEditText(strr+"\n");
                 }
             },0);
 
@@ -85,6 +92,7 @@ public class AboutPerson {
         InputStream inputStream;
         Face face;
         Fragment fragment;
+        Activity activity;
 
         public CreatePersonTask(Fragment fragment){
             this.fragment=fragment;
@@ -93,6 +101,10 @@ public class AboutPerson {
         public CreatePersonTask(String name, Fragment fragment){
             personName = name;
             this.fragment=fragment;
+        }
+        public CreatePersonTask(String name, Activity activity){
+            personName = name;
+            this.activity=activity;
         }
 
         public CreatePersonTask(String name, InputStream inputStream, Face face){
@@ -123,7 +135,7 @@ public class AboutPerson {
                 return createPersonResult.personId;
 
             } catch (Exception e) {
-                Log.e("   error", "create person"); // 오류 로그 찍는다
+                Log.e("   error", e.getMessage()); // 오류 로그 찍는다
 
 /* 지우지마요
                 handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
@@ -145,27 +157,10 @@ public class AboutPerson {
             }//end if
 
             UserDTO user = new UserDTO(personName,personId.toString());
+
             // 객체 DB에 저장 user 밑에 personName, personId
-            FirebaseDatabase.getInstance().getReference()
-                    .child("user")
-                    .push()
-                    .setValue(/*저장할 객체*/user, new DatabaseReference.CompletionListener() {
-
-
-                        @Override
-                        public void onComplete(DatabaseError databaseError,
-                                               DatabaseReference databaseReference) {
-
-                            Log.e("   init DB 버거", "성공");
-/*
-                            handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
-                                @Override
-                                public void run() {
-                                    ((Camera2BasicFragment)fragment).addTextToEditText("person DB 저장");
-                                }
-                            },0);
-*/
-                        }});
+            FirebaseFirestore.getInstance().collection("test-user")
+                    .add(user);
 
             Log.e("   create person", "");
 
@@ -178,6 +173,8 @@ public class AboutPerson {
             },0);
 */
             AppSetting.personUUID = personId.toString(); // 전역으로 저장
+//            AppSetting.isSetPersonUUID = true;
+            ((MainActivity)activity).intentToCameraActivity();
 
             // 사진 10장 추가 // 함수로 스레드 기동 위임
 //            ((Camera2BasicFragment)fragment).startCaptureThread();

@@ -3,6 +3,8 @@ package com.example.kiosk_jnsy.setting;
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.FaceServiceRestClient;
 
+import java.util.Map;
+
 public class AppSetting {
 
     // ms 계정 연동
@@ -17,9 +19,10 @@ public class AppSetting {
     // 마지막 사진 찍고 모델 train 요청하는 플래그
     // 사용하고 false 설정해야 한다
 
-    public static String emotion=null;
+//    public static String emotion=null;
     public static boolean camefromMain = false;
     public static boolean camefromCamera = false;
     public static boolean isSetPersonUUID=false;
 
+    public static Map<String,Double> emotion=null;
 }

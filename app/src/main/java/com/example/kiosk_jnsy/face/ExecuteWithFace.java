@@ -129,9 +129,13 @@ public class ExecuteWithFace {
                 detectFlag = true; // 사람있다
             }
 
+            AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
+
+/*
             if(null != faces[0].faceAttributes.emotion){
                 AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
             }
+*/
 /*
             ((Camera2BasicFragment)fragment).addTextToEditText("감정: "+result_emotion);
 */
@@ -140,7 +144,8 @@ public class ExecuteWithFace {
                     bytes, /*faces[0],*/ activity/*fragment*/, detectFlag).execute();
 //            ((Camera2BasicFragment)fragment).addTextToEditText("new add face task");
         }
-        private String getEmotion(Emotion emotion){
+
+        private Map<String,Double> getEmotion(Emotion emotion){
             Map<String, Double> emotionMap = new HashMap<>();
             emotionMap.put("anger",emotion.anger);
             emotionMap.put("contempt",emotion.contempt);
@@ -155,9 +160,15 @@ public class ExecuteWithFace {
             // map 내림차 정렬
             Iterator iterator = sortByValue(emotionMap/* map */).iterator(); // 내림차 정렬
             // 값으로 내림차 정렬된 키가 들어있는 Iterator
-            String maxValueKey = (String) iterator.next();
 
-            return maxValueKey + ": "+ emotionMap.get(maxValueKey);
+
+            Map<String,Double> temp = new HashMap<>();
+            String maxValueKey = (String) iterator.next();//1번째
+            temp.put(maxValueKey, emotionMap.get(maxValueKey));
+            maxValueKey = (String) iterator.next();//2번째
+            temp.put(maxValueKey, emotionMap.get(maxValueKey));
+
+            return temp;
             //감정: 점수 형태로 가장 최대 하나만 반환하자
         }
         // 예상 점수 내림차 정렬한다
@@ -427,7 +438,7 @@ public class ExecuteWithFace {
         }
         //end post method
 
-        private String getEmotion(Emotion emotion){
+        private Map<String,Double> getEmotion(Emotion emotion){
             Map<String, Double> emotionMap = new HashMap<>();
             emotionMap.put("anger",emotion.anger);
             emotionMap.put("contempt",emotion.contempt);
@@ -442,9 +453,15 @@ public class ExecuteWithFace {
             // map 내림차 정렬
             Iterator iterator = sortByValue(emotionMap/* map */).iterator(); // 내림차 정렬
             // 값으로 내림차 정렬된 키가 들어있는 Iterator
-            String maxValueKey = (String) iterator.next();
 
-            return maxValueKey + ": "+ emotionMap.get(maxValueKey);
+
+            Map<String,Double> temp = new HashMap<>();
+            String maxValueKey = (String) iterator.next();//1번째
+            temp.put(maxValueKey, emotionMap.get(maxValueKey));
+            maxValueKey = (String) iterator.next();//2번째
+            temp.put(maxValueKey, emotionMap.get(maxValueKey));
+
+            return temp;
             //감정: 점수 형태로 가장 최대 하나만 반환하자
         }
         // 예상 점수 내림차 정렬한다

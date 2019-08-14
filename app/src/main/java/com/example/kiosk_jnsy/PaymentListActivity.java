@@ -101,8 +101,10 @@ public class PaymentListActivity extends AppCompatActivity {
                 Log.d("결과온","설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
                 //tv.setText("설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
                 // 아무 데이터 넣을게요
+/*
                 Map<String,Double> emotion=new HashMap<String,Double>();
                 emotion.put("happiness",0.9);
+*/
                 // 감정 최고기록 받아오기ㅠㅠㅠㅠ
                 //String result_emotion = getEmotion(faces[0].faceAttributes.emotion);
 
@@ -125,7 +127,7 @@ public class PaymentListActivity extends AppCompatActivity {
                 // 파이어베이스DB에 주문 기록 추가
                 try {
                     String guest= AppSetting.personUUID;
-                    Order order = new Order(emotion,weather,mArrayList,today,guest);
+                    Order order = new Order(AppSetting.emotion,weather,mArrayList,today,guest);
                     //
                     //FirebaseDatabase.getInstance().getReference().child("order").push().setValue(order);
                     FirebaseFirestore.getInstance().collection("order").add(order);

@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kiosk_jnsy.model.CafeItem;
+import com.example.kiosk_jnsy.setting.AppSetting;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -65,13 +66,13 @@ public class OrderedListActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 guest = (String) (String)document.getData().get("guest");
-                                if(guest.equals("63cf6c6d-86ef-4647-b941-1b0bf187065f")){
+                                if(guest.equals(AppSetting.personUUID)){
 
                                     List list = (List) document.getData().get("items");
                                     HashMap items = (HashMap) list.get(0);
                                     HashMap map;
                                     List allList=(List) document.getData().get("items");
-                                   ///////////////////////////////////////////////////////////////////////////////////////
+                                    ///////////////////////////////////////////////////////////////////////////////////////
                                     String today=(String)document.getData().get("today");
                                     // 필요 없음
                                     for(int k=0;k<list.size();k++){
@@ -162,7 +163,7 @@ public class OrderedListActivity extends AppCompatActivity {
                 // TODO : 뷰홀더 완성하시오
                 guest=itemView.findViewById(R.id.name_text);
                 items=itemView.findViewById(R.id.price_text);
-              //  img=itemView.findViewById(R.id.img_text);
+                //  img=itemView.findViewById(R.id.img_text);
             }
         }
     }

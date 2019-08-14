@@ -1,3 +1,6 @@
+/*인증오류 얼마나 걸릴지를 모르겠어서요ㅠㅠ 미안
+// paymentlist activity입니다.. 아까 appsetting.emotion을 new order부분만 수정하면 됩니다..
+*/
 package com.example.kiosk_jnsy;
 // 유빈
 import android.content.DialogInterface;
@@ -101,10 +104,8 @@ public class PaymentListActivity extends AppCompatActivity {
                 Log.d("결과온","설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
                 //tv.setText("설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
                 // 아무 데이터 넣을게요
-/*
                 Map<String,Double> emotion=new HashMap<String,Double>();
                 emotion.put("happiness",0.9);
-*/
                 // 감정 최고기록 받아오기ㅠㅠㅠㅠ
                 //String result_emotion = getEmotion(faces[0].faceAttributes.emotion);
 
@@ -127,7 +128,19 @@ public class PaymentListActivity extends AppCompatActivity {
                 // 파이어베이스DB에 주문 기록 추가
                 try {
                     String guest= AppSetting.personUUID;
-                    Order order = new Order(AppSetting.emotion,weather,mArrayList,today,guest);
+                    String orderToString="";
+                    String name;
+                    Map<String,Double> m;
+                    CafeItem it;
+                    for(int x=0;x<mArrayList.size();x++){
+                        it=mArrayList.get(x);
+                        name=(String)it.getName();
+                        m=(Map)it.getOptions();
+                        double o1=m.get("휘핑");
+                        double o2=m.get("샷");
+                        orderToString=orderToString+name+"/휘핑:"+o1+"/샷:"+o2+"/";
+                    }
+                    Order order = new Order(AppSetting.emotion,weather,mArrayList,today,guest,orderToString);
                     //
                     //FirebaseDatabase.getInstance().getReference().child("order").push().setValue(order);
                     FirebaseFirestore.getInstance().collection("order").add(order);

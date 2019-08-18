@@ -1,1 +1,1 @@
-include ':app', ':change', ':ceo'
+include ':app', ':change', ':ceo', ':personalize'

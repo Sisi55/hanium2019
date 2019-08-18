@@ -77,6 +77,9 @@ public class RegisterMenuActivity extends AppCompatActivity {
                 }else{
                     fileUploader();
                 }
+
+                startActivity(new Intent(RegisterMenuActivity.this, MainActivity.class));
+
             }
         });
 

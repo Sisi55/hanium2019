@@ -6,7 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Camera;
+import android.os.AsyncTask;
 import android.service.media.CameraPrewarmService;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,7 +20,20 @@ import android.widget.EditText;
 import com.example.kiosk_jnsy.databinding.ActivityMainBinding;
 import com.example.kiosk_jnsy.face.AboutPerson;
 import com.example.kiosk_jnsy.face.AboutPersonGroup;
+import com.example.kiosk_jnsy.model.UserDTO;
 import com.example.kiosk_jnsy.setting.AppSetting;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -118,6 +133,12 @@ public class MainActivity extends AppCompatActivity {
         ).show();
     }
 
+/*
+    class GetPreferenceMapTask extends AsyncTask<Void,Void,M>{
+
+    }
+*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,13 +155,57 @@ public class MainActivity extends AppCompatActivity {
 
         editName = (EditText) alertView.findViewById(R.id.edit_name);
 
+        // person UUID 없으면 버튼 비활성화
+        if(AppSetting.personUUID == null){
+            binding.btnOrderedList.setEnabled(false);
+            binding.btnHomeRecom.setEnabled(false);
+        }else{
+            binding.btnOrderedList.setEnabled(true);
+            binding.btnHomeRecom.setEnabled(true);
+
+        }
+
         if(AppSetting.camefromCamera != true){
             // 시나리오: Main > Camera > Main
             // 자칫하면 무한루프가 발생할 수 있으므로 체크한다
+            // 앱이 처음 시작된 상태
 
             // 대화상자 출력한다
             showRegisterDialog(); // 얼굴 등록했는지 -> 얼굴 인식할건지
             AppSetting.camefromCamera = false; // 사용하고 초기화
+        }else{
+            //카메라에서 인텐트 발생해서 온거면
+
+            // 카메라 화면에서 이동해서 AppSetting에 UUID 저장되있으면
+            // 서버에 보내서 추천 정보 가져와야한다.
+
+            if(AppSetting.personUUID != null && AppSetting.isSetPersonalRecom==false){
+                // 컬렉션에서 여러 문서 가져오기
+                FirebaseFirestore.getInstance().collection("user")
+                        .whereEqualTo("personUUID", AppSetting.personUUID)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        AppSetting.documentID = document.getId();
+                                        AppSetting.itemPreferences = (Map<String,Integer>) document.getData().get("itemPreference");
+                                        Log.e("   record", AppSetting.itemPreferences+" id:"+AppSetting.documentID);
+                                        break; // 한번만 실행되게 한다
+                                    }
+                                }
+                            }
+                        });
+                // 메뉴가 동적으로 추가될 수 있으니까
+                // 메뉴를 클릭하면 키로 유무 확인하고, 있으면 값 증가, 없으면 키 생성해서 값 할당
+                AppSetting.isSetPersonalRecom=true; // Map 가져오는 것도 한번만
+
+            }
+
+
+
         }
 
 

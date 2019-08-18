@@ -13,7 +13,7 @@ public class AppSetting {
     public static FaceServiceClient faceServiceClient = new FaceServiceRestClient(apiEndpoint, subscriptionKey);
 
     public static String personGroupId="cafetest"; // test 그룹
-    public static String personUUID=""; // test 그룹
+    public static String personUUID=null; // test 그룹
     public static boolean registeredPersonFlag = false;
     public static boolean trainRequestFlag = false; // 처음 등록한 사람
     // 마지막 사진 찍고 모델 train 요청하는 플래그
@@ -25,4 +25,14 @@ public class AppSetting {
     public static boolean isSetPersonUUID=false;
 
     public static Map<String,Double> emotion=null;
+
+    public static Map<String,Integer> itemPreferences=null;
+    public static String documentID=null;
+    public static boolean isSetPersonalRecom=false;
+
+    public static final int PREFERENCE_CLICK = 1;
+    public static final int PREFERENCE_SHOPLIST = 3;
+    public static final int PREFERENCE_ORDER = 5;
+
+
 }

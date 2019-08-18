@@ -24,7 +24,10 @@ import android.widget.Toast;
 import com.example.kiosk_jnsy.model.CafeItem;
 import com.example.kiosk_jnsy.model.Order;
 import com.example.kiosk_jnsy.setting.AppSetting;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
@@ -157,6 +160,32 @@ public class PaymentListActivity extends AppCompatActivity {
                                     }
                                 });
                 builder.show();
+
+                // 선호도
+                for(CafeItem item:mArrayList){
+                    incrementPreferences(item.getName(), AppSetting.PREFERENCE_ORDER); // 선호도 +5 증가
+                }
+
+                // DB 갱신
+                FirebaseFirestore.getInstance().collection("user")
+                        .document(AppSetting.documentID)
+                        .update("itemPreference", AppSetting.itemPreferences)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("pay_db_update", "DocumentSnapshot successfully updated!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("pay_db_update", "Error updating document", e);
+                            }
+                        });
+
+
+                // 주문하면 Main으로 이동한다
+                startActivity(new Intent(PaymentListActivity.this, MainActivity.class));
             }
         });
 
@@ -174,6 +203,18 @@ public class PaymentListActivity extends AppCompatActivity {
 
 
     }
+
+    private void incrementPreferences(String ItemName, int score){
+        // 멤버 model과 AppSetting.itemPreferences 이용한다
+
+        if(AppSetting.itemPreferences.keySet().contains(ItemName)==true){
+            int value = AppSetting.itemPreferences.get(ItemName);
+            AppSetting.itemPreferences.put(ItemName, value+score); // 1 증가
+        }else{
+            AppSetting.itemPreferences.put(ItemName, score); // 1 할당
+        }
+    }
+
 
     class PaymentListAdapter extends RecyclerView.Adapter<PaymentListAdapter.ListViewHolder> {
 

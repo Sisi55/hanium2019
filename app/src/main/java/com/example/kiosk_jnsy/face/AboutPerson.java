@@ -159,7 +159,7 @@ public class AboutPerson {
             UserDTO user = new UserDTO(personName,personId.toString());
 
             // 객체 DB에 저장 user 밑에 personName, personId
-            FirebaseFirestore.getInstance().collection("test-user")
+            FirebaseFirestore.getInstance().collection("user")
                     .add(user);
 
             Log.e("   create person", "");

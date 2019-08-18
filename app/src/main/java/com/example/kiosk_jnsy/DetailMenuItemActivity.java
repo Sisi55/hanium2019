@@ -15,9 +15,11 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.kiosk_jnsy.databinding.ActivityDetailMenuItemBinding;
 import com.example.kiosk_jnsy.model.CafeItem;
+import com.example.kiosk_jnsy.setting.AppSetting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class DetailMenuItemActivity extends AppCompatActivity {
@@ -96,6 +98,8 @@ public class DetailMenuItemActivity extends AppCompatActivity {
 
         // 지연 : 인텐트 테스트/////
         model=(CafeItem)getIntent().getSerializableExtra("detail");
+        // 선호도 +1
+        incrementPreferences(AppSetting.PREFERENCE_CLICK);
 
         // 지연 : 인텐트 테스트/////
         // 인텐트에서 받아온 정보 출력
@@ -122,6 +126,11 @@ public class DetailMenuItemActivity extends AppCompatActivity {
         binding.btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // 리스트에 담긴 아이템 루프돌면서 - 아니지 여기는 상세 페이지
+                // incrementPreferences(3); 호출한다
+                // AppSetting.PREFERENCE_SHOPLIST
+                incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
 
                 // 세부 옵션 선택은 나중에 하자.
                 // 해당 메뉴를 arraylist에 넣는다.
@@ -157,5 +166,16 @@ public class DetailMenuItemActivity extends AppCompatActivity {
 
 
     }//end onCreate
+
+    private void incrementPreferences(int score){
+        // 멤버 model과 AppSetting.itemPreferences 이용한다
+
+        if(AppSetting.itemPreferences.keySet().contains(model.getName())==true){
+            int value = AppSetting.itemPreferences.get(model.getName());
+            AppSetting.itemPreferences.put(model.getName(), value+score); // 1 증가
+        }else{
+            AppSetting.itemPreferences.put(model.getName(), score); // 1 할당
+        }
+    }
 
 }//end Activity

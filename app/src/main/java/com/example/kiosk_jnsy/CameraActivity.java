@@ -507,6 +507,7 @@ public class CameraActivity extends AppCompatActivity
 //            mBackgroundHandler.post( new ImageSaver(reader.acquireNextImage(), mFile)); // 파일에 저장안하니까 수정 !
 //            mBackgroundHandler.post(  new ImageSend(reader.acquireNextImage()) );
             mBackgroundHandler.post(  new ImageSend( reader.acquireLatestImage() ) );
+            Log.e("   camera", "콜백3");
 
         }
     };

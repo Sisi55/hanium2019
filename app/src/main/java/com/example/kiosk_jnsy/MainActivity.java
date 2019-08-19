@@ -155,16 +155,20 @@ public class MainActivity extends AppCompatActivity {
 
         editName = (EditText) alertView.findViewById(R.id.edit_name);
 
+/*
         // person UUID 없으면 버튼 비활성화
         if(AppSetting.personUUID == null){
             binding.btnOrderedList.setEnabled(false);
             binding.btnHomeRecom.setEnabled(false);
+//            PaymentListActivity.order_btn.setEnabled(false);
         }else{
             binding.btnOrderedList.setEnabled(true);
             binding.btnHomeRecom.setEnabled(true);
 
         }
+*/
 
+/*
         if(AppSetting.camefromCamera != true){
             // 시나리오: Main > Camera > Main
             // 자칫하면 무한루프가 발생할 수 있으므로 체크한다
@@ -207,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+*/
 
 
 

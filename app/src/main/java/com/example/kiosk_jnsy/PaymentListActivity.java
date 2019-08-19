@@ -68,17 +68,19 @@ public class PaymentListActivity extends AppCompatActivity {
     String humidity;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_list);
 
-/*
-        if(AppSetting.personUUID != null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
+
+        order_btn=(Button)findViewById(R.id.order_btn);
+        if(AppSetting.personUUID == null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
             // 주문할 수도 없게 ?
             order_btn.setEnabled(false);
         }
-*/
+
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_main_list);
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -104,7 +106,6 @@ public class PaymentListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        order_btn=(Button)findViewById(R.id.order_btn);
         // 결제 버튼을 누르면 파이어베이스에 Order을 올린다.
         order_btn.setOnClickListener(new View.OnClickListener() {
             @Override

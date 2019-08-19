@@ -73,7 +73,12 @@ public class PaymentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment_list);
 
-
+/*
+        if(AppSetting.personUUID != null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
+            // 주문할 수도 없게 ?
+            order_btn.setEnabled(false);
+        }
+*/
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_main_list);
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -161,28 +166,14 @@ public class PaymentListActivity extends AppCompatActivity {
                                 });
                 builder.show();
 
-                // 선호도
-                for(CafeItem item:mArrayList){
-                    incrementPreferences(item.getName(), AppSetting.PREFERENCE_ORDER); // 선호도 +5 증가
+                if(AppSetting.personUUID != null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
+                    // 선호도
+                    for(CafeItem item:mArrayList){
+                        incrementPreferences(item.getName(), AppSetting.PREFERENCE_ORDER); // 선호도 +5 증가
+                    }
+                    // DB 갱신
+                    updateDB();
                 }
-
-                // DB 갱신
-                FirebaseFirestore.getInstance().collection("user")
-                        .document(AppSetting.documentID)
-                        .update("itemPreference", AppSetting.itemPreferences)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d("pay_db_update", "DocumentSnapshot successfully updated!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w("pay_db_update", "Error updating document", e);
-                            }
-                        });
-
 
                 // 주문하면 Main으로 이동한다
                 startActivity(new Intent(PaymentListActivity.this, MainActivity.class));
@@ -201,6 +192,25 @@ public class PaymentListActivity extends AppCompatActivity {
         Timer timer = new Timer();
         timer.schedule(addTask, 0, Interval*60*1000); // 0초후 첫실행, Iterval 분마다 실행
 
+
+    }
+
+    private void updateDB(){
+        FirebaseFirestore.getInstance().collection("user")
+                .document(AppSetting.documentID)
+                .update("itemPreference", AppSetting.itemPreferences)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("pay_db_update", "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("pay_db_update", "Error updating document", e);
+                    }
+                });
 
     }
 

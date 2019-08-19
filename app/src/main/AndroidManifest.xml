@@ -15,8 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CameraActivity"></activity>
-        <!-- tools:replace="android:appComponentFactory" -->
+        <activity android:name=".HomeRecomActivity"></activity>
+        <activity android:name=".CameraActivity" /> <!-- tools:replace="android:appComponentFactory" -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />

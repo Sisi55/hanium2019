@@ -238,5 +238,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // 나 추천 누르면 화면 이동
+        binding.btnHomeRecom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, HomeRecomActivity.class));
+            }
+        });
     }//end onCreate
 }//end Activity

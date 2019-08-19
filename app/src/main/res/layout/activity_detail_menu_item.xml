@@ -10,8 +10,8 @@
         <!-- 필요하다 생각되었을 때 다시 수정하면 되니까 우선 이것부터 해보자 -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_weight="7"
             android:orientation="horizontal">
 
             <ImageView
@@ -78,10 +78,11 @@
         <!-- 담기 + 목록 버튼 -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
 
             android:orientation="horizontal"
-            android:gravity="right">
+            android:gravity="right"
+            android:layout_weight="1">
 
             <!-- 비율맞출 투명한 버튼 -->
             <Button
@@ -107,6 +108,96 @@
                 android:text="목록"/>
 
         </LinearLayout>
+
+        <!--추천 목록 출력한다-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="3">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="아이템CF"/>
+                <TextView
+                    android:id="@+id/tv_itemCF_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:text="메뉴이름"/>
+                <TextView
+                    android:id="@+id/tv_itemCF_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:text="메뉴가격"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="아이템 필터링"/>
+                <TextView
+                    android:id="@+id/tv_itemFiltering_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:text="메뉴이름"/>
+                <TextView
+                    android:id="@+id/tv_itemFiltering_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:text="메뉴가격"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="랜덤"/>
+                <TextView
+                    android:id="@+id/tv_itemRandom_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:text="메뉴이름"/>
+                <TextView
+                    android:id="@+id/tv_itemRandom_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:text="메뉴가격"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
 
 
     </LinearLayout>

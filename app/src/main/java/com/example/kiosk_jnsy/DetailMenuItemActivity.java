@@ -3,6 +3,7 @@ package com.example.kiosk_jnsy;
 import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,9 @@ import com.bumptech.glide.Glide;
 import com.example.kiosk_jnsy.databinding.ActivityDetailMenuItemBinding;
 import com.example.kiosk_jnsy.model.CafeItem;
 import com.example.kiosk_jnsy.setting.AppSetting;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,8 +102,12 @@ public class DetailMenuItemActivity extends AppCompatActivity {
 
         // 지연 : 인텐트 테스트/////
         model=(CafeItem)getIntent().getSerializableExtra("detail");
-        // 선호도 +1
-        incrementPreferences(AppSetting.PREFERENCE_CLICK);
+
+        if(AppSetting.personUUID != null){// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
+            // 선호도 +1
+            incrementPreferences(AppSetting.PREFERENCE_CLICK);
+
+        }
 
         // 지연 : 인텐트 테스트/////
         // 인텐트에서 받아온 정보 출력
@@ -127,10 +135,9 @@ public class DetailMenuItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // 리스트에 담긴 아이템 루프돌면서 - 아니지 여기는 상세 페이지
-                // incrementPreferences(3); 호출한다
-                // AppSetting.PREFERENCE_SHOPLIST
-                incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
+                if(AppSetting.personUUID != null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
+                    incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
+                }
 
                 // 세부 옵션 선택은 나중에 하자.
                 // 해당 메뉴를 arraylist에 넣는다.
@@ -176,6 +183,27 @@ public class DetailMenuItemActivity extends AppCompatActivity {
         }else{
             AppSetting.itemPreferences.put(model.getName(), score); // 1 할당
         }
+        updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요
     }
+
+    private void updateDB(){
+        FirebaseFirestore.getInstance().collection("user")
+                .document(AppSetting.documentID)
+                .update("itemPreference", AppSetting.itemPreferences)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("pay_db_update", "DocumentSnapshot successfully updated!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("pay_db_update", "Error updating document", e);
+                    }
+                });
+
+    }
+
 
 }//end Activity

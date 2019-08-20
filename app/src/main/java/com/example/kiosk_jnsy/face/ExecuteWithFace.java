@@ -450,6 +450,7 @@ public class ExecuteWithFace {
             emotionMap.put("sadness",emotion.sadness);
             emotionMap.put("surprise",emotion.surprise);
 
+
             // map 내림차 정렬
             Iterator iterator = sortByValue(emotionMap/* map */).iterator(); // 내림차 정렬
             // 값으로 내림차 정렬된 키가 들어있는 Iterator

@@ -4,6 +4,7 @@ import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.FaceServiceRestClient;
 
 import java.util.Map;
+import java.util.UUID;
 
 public class AppSetting {
 
@@ -13,7 +14,7 @@ public class AppSetting {
     public static FaceServiceClient faceServiceClient = new FaceServiceRestClient(apiEndpoint, subscriptionKey);
 
     public static String personGroupId="cafetest"; // test 그룹
-    public static String personUUID=null; // test 그룹
+    public static String personUUID = null; // test 그룹
     public static boolean registeredPersonFlag = false;
     public static boolean trainRequestFlag = false; // 처음 등록한 사람
     // 마지막 사진 찍고 모델 train 요청하는 플래그

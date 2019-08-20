@@ -33,7 +33,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -139,6 +141,50 @@ public class MainActivity extends AppCompatActivity {
     }
 */
 
+    private void tempForYB(){
+        // 유빈쓰를 위해 임시 생성
+        AppSetting.personUUID = UUID.randomUUID().toString();
+
+        Map<String, Double> emotionMap = new HashMap<>();
+        emotionMap.put("happiness",0.97);
+        emotionMap.put("neutral",0.03);
+        AppSetting.emotion = emotionMap;
+
+        UserDTO user = new UserDTO("유빈", AppSetting.personUUID);
+
+        // 객체 DB에 저장 user 밑에 personName, personId
+        FirebaseFirestore.getInstance().collection("user")
+                .add(user);
+
+        // 추천 데이터 관련
+        if(AppSetting.personUUID != null && AppSetting.isSetPersonalRecom==false) {
+
+            // 컬렉션에서 여러 문서 가져오기
+            FirebaseFirestore.getInstance().collection("user")
+                    .whereEqualTo("personUUID", AppSetting.personUUID)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                            if (task.isSuccessful()) {
+
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    AppSetting.documentID = document.getId();
+                                    AppSetting.itemPreferences = (Map<String, Integer>) document.getData().get("itemPreference");
+                                    Log.e("   record", AppSetting.itemPreferences + " id:" + AppSetting.documentID);
+                                    break; // 한번만 실행되게 한다
+                                }
+                            }
+                        }
+                    });
+            // 메뉴가 동적으로 추가될 수 있으니까
+            // 메뉴를 클릭하면 키로 유무 확인하고, 있으면 값 증가, 없으면 키 생성해서 값 할당
+            AppSetting.isSetPersonalRecom = true; // Map 가져오는 것도 한번만
+        }
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +195,10 @@ public class MainActivity extends AppCompatActivity {
 //        new AboutPersonGroup.CreatePersonGroupTask(this).execute(AppSetting.personGroupId); // 그룹id 전달
 
 //        Log.e("  Main group id", AppSetting.personGroupId);
+
+        // 유빈쓰를 위해 임시 생성
+        tempForYB();
+
 
         LayoutInflater inflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         alertView = inflater.inflate(R.layout.alertview_name, null); // 이게 되려나 ?

@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void tempForYB(){
         // 유빈쓰를 위해 임시 생성
-        AppSetting.personUUID = UUID.randomUUID().toString();
+        AppSetting.personUUID = "a056b551-622b-46f8-8620-731a66bc5be8";
 
         Map<String, Double> emotionMap = new HashMap<>();
         emotionMap.put("happiness",0.97);

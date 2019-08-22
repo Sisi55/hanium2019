@@ -161,6 +161,7 @@ public class DetailMenuItemActivity extends AppCompatActivity {
    //                 incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
                 }
 
+
                 // 세부 옵션 선택은 나중에 하자.
                 // 해당 메뉴를 arraylist에 넣는다.
                 if((ArrayList<CafeItem>) getIntent().getSerializableExtra("shoplist")!=null){
@@ -172,7 +173,14 @@ public class DetailMenuItemActivity extends AppCompatActivity {
                     newList.add(model);
                     // 그다음에 shoplist를 intent에 추가한다.
                     Intent intent = new Intent(DetailMenuItemActivity.this, PaymentListActivity.class);
+
                     intent.putExtra("shoplist",newList);
+
+                    //Log.d("로깅","메뉴리스트액티비티:shoplist인텐트에 담긴 개수"+shoplist.size());
+
+                    // 메뉴 개수...
+                    HashMap<CafeItem,Integer> m=(HashMap<CafeItem,Integer>)getIntent().getSerializableExtra("m_count");
+                    intent.putExtra("m_count",m);
                     startActivity(intent);
                     // 이 리스트에 추가하면 되고
                 }else{
@@ -181,6 +189,8 @@ public class DetailMenuItemActivity extends AppCompatActivity {
                     // 위에서 생성한 리스트를 넣으면 된다...
                     Intent intent = new Intent(DetailMenuItemActivity.this, PaymentListActivity.class);
                     intent.putExtra("shoplist",shoplist);
+                    HashMap<CafeItem,Integer> m=(HashMap<CafeItem,Integer>)getIntent().getSerializableExtra("m_count");
+                    intent.putExtra("m_count",m);
                     startActivity(intent);
                 }
 

@@ -32,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -40,18 +41,27 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 public class PaymentListActivity extends AppCompatActivity {
 
+    private ArrayList<CafeItem> over; // 하나씩 더 더해지는 것을 방지
     private RecyclerView mRecyclerView;
     private ArrayList<CafeItem> mArrayList; // 인텐트로 받아올 값
     private PaymentListAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private Button add_menu;
     private Button order_btn;
+    private Button plus_btn;
+    private TextView price_tv;
+    private TextView count_tv;
+    private HashMap<CafeItem,Integer> menucount; // 개수
 
     private int count = -1;
     // 지연 : 날씨 타이머에 대한 변수들///////
@@ -66,8 +76,6 @@ public class PaymentListActivity extends AppCompatActivity {
     String temp=null;
     String speed;
     String humidity;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +96,99 @@ public class PaymentListActivity extends AppCompatActivity {
 
         // MainActivity에서 RecyclerView의 데이터에 접근시 사용됩니다.
         // mArrayList = new ArrayList<>();
-        // 지연 : intet 값 받아오기
+        // 지연 : intet 값 받아오기 일단 받아오기
+        menucount=(HashMap<CafeItem, Integer>)getIntent().getSerializableExtra("m_count");
         mArrayList=(ArrayList<CafeItem>) getIntent().getSerializableExtra("shoplist");
-        Toast.makeText(this, mArrayList.size()+"", Toast.LENGTH_SHORT).show();
+
+
+        // 지연 : plus 위한 처리
+        if(menucount==null){
+            // menucount가 없다면== 해시맵이 만들어진적이 없는 첫 주문이라면?
+            menucount=new HashMap<CafeItem,Integer>();
+            Toast.makeText(this, "완전 첫주문", Toast.LENGTH_LONG).show();
+            // 중복 제거할 게 없지. 주문에 한개도 없었던 거니까
+            // 방금 선택한 객체를 해시맵에 넣자/
+            for(int i=0;i<mArrayList.size();i++){
+                // 해당 객체가 한번도 세지지 않은 상황이라면...
+                if(!(menucount.containsKey(mArrayList.get(i)))){
+                    // 해당객체 : 1 의 형태로 map에 넣는다.
+                    Toast.makeText(this, "이건 처음넣는다!", Toast.LENGTH_LONG).show();
+                    menucount.put(mArrayList.get(i),1);
+                }// 해당 객체가 한번이라도 세어진 상황이라면... value=1이겠지
+
+                else{
+                    int n=menucount.get(mArrayList.get(i))+1;
+                    Log.d("띠용","1111111111");
+                    menucount.put(mArrayList.get(i),n);
+                    Toast.makeText(this, "주문기록 있는 상황에서 메뉴판에서 다시 추가", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+        }
+        else{
+            over=new ArrayList<CafeItem>();
+            // menucount가 있다면== 해시맵이 만들어진적 있는 주문이라면?
+            // 방금 선택되서 결정된 리스트에서 각각의 수를 해시맵에 저장하자.
+            // 만약 없다면 해시맵에 "이름:1"로 저장하고
+            // 만약 있다면 해시맵에 "이름:#"로 저장하자
+            for(int i=0;i<mArrayList.size();i++){
+                // 해당 객체가 한번도 세지지 않은 상황이라면...
+                // 해당 객체가 한번이라도 세어진 상황이라면... value=1이겠지
+                if((menucount.containsKey(mArrayList.get(i)))){
+                    int n=menucount.get(mArrayList.get(i));
+
+                    Log.d("띠용","222222222"+mArrayList.get(i).getName());
+                    menucount.put(mArrayList.get(i),n+1);
+                    over.add(mArrayList.get(i));// 넣어둠
+                    Log.d("시발","시발");
+                    Toast.makeText(this, "주문기록 있는 상황에서 메뉴판에서 다시 추가", Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+                    // 해당객체 : 1 의 형태로 map에 넣는다.
+                    Log.d("띠용","33333333333"+mArrayList.get(i).getName());
+                    Toast.makeText(this, "이건 처음넣는다!", Toast.LENGTH_SHORT).show();
+                    menucount.put(mArrayList.get(i),1);
+                }
+
+
+            }//endfor
+
+            // over 중복 제거
+            // 지연 : mArraylist의 중복 객체들을 제거
+            List<CafeItem> correct_over =over; // ProxyBean들을 담고 있는 proxy list
+            ArrayList<CafeItem> corrected_over = new ArrayList<CafeItem>(new HashSet<CafeItem>(correct_over));
+            over=corrected_over;
+
+            for(int i=0;i<over.size();i++){
+                if(menucount.containsKey(over.get(i))){
+                    int x=menucount.get(over.get(i));
+                    menucount.put(over.get(i),x-1);
+                }
+            }
+        }
+
+
+
+        // 어댑터에 넣기 전 중복 된건 지우고 보여주자!!
+        // 지연 : mArraylist의 중복 객체들을 제거
+        Log.d("시발","시발전"+mArrayList.size());
+        Toast.makeText(this, "전전:"+mArrayList.size(), Toast.LENGTH_LONG).show();
+
+        // 지연 : mArraylist의 중복 객체들을 제거
+        List<CafeItem> plist =mArrayList; // ProxyBean들을 담고 있는 proxy list
+
+       // System.out.println("before size:"+ plist.size());
+
+        ArrayList<CafeItem> sliet = new ArrayList<CafeItem>(new HashSet<CafeItem>(plist));
+        mArrayList=sliet;
+
+
+
+        Log.d("시발","시발후"+mArrayList.size());
+        Toast.makeText(this, "후후kk:"+mArrayList.size(), Toast.LENGTH_LONG).show();
+
         // RecyclerView를 위해 CustomAdapter를 사용합니다.
         mAdapter = new PaymentListAdapter(mArrayList);
         mRecyclerView.setAdapter(mAdapter);
@@ -103,6 +201,7 @@ public class PaymentListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PaymentListActivity.this, MenuListActivity.class);
                 intent.putExtra("shoplist",mArrayList); // 지연 : 담은 메뉴 상태 유지
+                intent.putExtra("m_count",menucount); // 지연 : 담은 메뉴 개수상태 유지
                 startActivity(intent);
             }
         });
@@ -114,6 +213,7 @@ public class PaymentListActivity extends AppCompatActivity {
                 //tv.setText("설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
                 // 아무 데이터 넣을게요
                 Map<String,Double> emotion=new HashMap<String,Double>();
+                // 잠시만여-지연
                 emotion.put("happiness",0.9);
                 // 감정 최고기록 받아오기ㅠㅠㅠㅠ
                 //String result_emotion = getEmotion(faces[0].faceAttributes.emotion);
@@ -235,11 +335,17 @@ public class PaymentListActivity extends AppCompatActivity {
         {
             protected TextView order;
             protected Button delete;
+            protected TextView count;
+            protected TextView price;
+            protected Button plus;
 
             public ListViewHolder(View view){
                 super(view);
                 order=(TextView)view.findViewById(R.id.list_tv);
                 delete=(Button)view.findViewById(R.id.delete_btn);
+                plus=(Button)view.findViewById(R.id.plus_btn);
+                price=(TextView)view.findViewById(R.id.price_tv);
+                count=(TextView)view.findViewById(R.id.count_tv);
             }
         }
 
@@ -264,17 +370,28 @@ public class PaymentListActivity extends AppCompatActivity {
 
             final int pos = position;
 
-            viewholder.order.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-
+            viewholder.order.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             viewholder.order.setGravity(View.TEXT_ALIGNMENT_CENTER); // 지연 : CENTER 수정
-
-            viewholder.order.setText(mList.get(position).getName()); // 지연 : getOrder() 수정
-
+            viewholder.order.setText(mList.get(position).getName()+mList.get(position).getOptions()); // 지연 : getOrder() 수정
             viewholder.delete.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v){
                     deleteItemFromList(v,pos);
                 }
             });
+            viewholder.plus.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v){
+                    plusThisItem(v,pos);
+                }
+            });
+
+            // 현재 수량
+            viewholder.count.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            viewholder.count.setGravity(View.TEXT_ALIGNMENT_CENTER); // 지연 : CENTER 수정
+            viewholder.count.setText(menucount.get(mList.get(position))+""); // 지연 : getOrder() 수정
+            // 해당메뉴가격
+            viewholder.price.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+            viewholder.price.setGravity(View.TEXT_ALIGNMENT_CENTER); // 지연 : CENTER 수정
+            viewholder.price.setText(mList.get(position).getPrice()+"");
         }
 
         @Override
@@ -290,7 +407,8 @@ public class PaymentListActivity extends AppCompatActivity {
                     .setPositiveButton("CONFIRM",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    mList.remove(position);
+                                    //mList.remove(position);
+                                    mArrayList.remove(position);
                                     notifyDataSetChanged();
                                 }
                             })
@@ -300,6 +418,46 @@ public class PaymentListActivity extends AppCompatActivity {
                     });
             builder.show();
         }
+
+        private void plusThisItem(View v, final int position) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+            builder.setMessage("이 메뉴를 추가 하겠습니까?")
+                    .setCancelable(false)
+                    .setPositiveButton("CONFIRM",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // 리스트에 해당 메뉴 추가하기
+                                    CafeItem current=mList.get(position);
+                                    mArrayList.add(current);
+                                    //mList.add(current);
+                                    int c=menucount.get(current);
+                                    menucount.put(current,c+1);
+
+
+                                    // 지연 : mArraylist의 중복 객체들을 제거
+                                    ArrayList<CafeItem> result=new ArrayList<CafeItem>();
+                                    for(int i=0;i<mArrayList.size();i++){
+                                        if(!result.contains(mArrayList.get(i))){
+                                            result.add(mArrayList.get(i));
+                                        }
+
+                                    }
+                                    mArrayList=result;
+
+                                    mAdapter = new PaymentListAdapter(mArrayList);
+                                    mRecyclerView.setAdapter(mAdapter);
+                                  //  mList.remove(position);
+                                    notifyDataSetChanged();
+                                }
+                            })
+                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                        }
+                    });
+            builder.show();
+        }
+
 
 
     }

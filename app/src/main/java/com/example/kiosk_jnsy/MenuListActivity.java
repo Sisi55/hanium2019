@@ -47,6 +47,7 @@ import com.google.firebase.storage.UploadTask;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -54,7 +55,6 @@ import static java.lang.String.valueOf;
 
 // 이미지 업로드 https://www.youtube.com/watch?v=6u0gzjth4IE
 public class MenuListActivity extends AppCompatActivity {
-
 
     // tts추가
     private TextToSpeech mTTS;
@@ -176,7 +176,19 @@ public class MenuListActivity extends AppCompatActivity {
                 speak(model.getName());
                 ArrayList<CafeItem> shoplist=(ArrayList<CafeItem>) getIntent().getSerializableExtra("shoplist");
 
+                if(shoplist==null)
+                    Log.d("로깅","첫주문");
+                else
+                    Log.d("로깅","메뉴리스트액티비티:shoplist인텐트에 담긴 개수"+shoplist.size());
+
+                // 메뉴 개수...
+                HashMap<CafeItem,Integer> m=(HashMap<CafeItem,Integer>)getIntent().getSerializableExtra("m_count");
+                if(m==null)
+                    Toast.makeText(MenuListActivity.this, "맵에 아무것도 없음", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MenuListActivity.this, "맵에 있음", Toast.LENGTH_SHORT).show();
                 intent.putExtra("shoplist",shoplist); // 지연 : 고대로 보냄
+                intent.putExtra("m_count",m);
                 startActivity(intent);
 
             }

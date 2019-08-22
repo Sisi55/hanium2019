@@ -3,6 +3,7 @@ package com.example.kiosk_jnsy.model;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 // 메뉴 아이템 모델
 public class CafeItem implements Serializable { // 인텐트에 객체를 전달하기 위해 Serializable
@@ -42,9 +43,44 @@ public class CafeItem implements Serializable { // 인텐트에 객체를 전달
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CafeItem)) return false;
+        CafeItem cafeItem = (CafeItem) o;
+        return getPrice() == cafeItem.getPrice() &&
+                Objects.equals(getName(), cafeItem.getName()) &&
+                Objects.equals(getBody(), cafeItem.getBody()) &&
+                Objects.equals(photoUrl, cafeItem.photoUrl) &&
+                Objects.equals(getImageUrl(), cafeItem.getImageUrl()) &&
+                Objects.equals(getOptions(), cafeItem.getOptions());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getPrice(), getBody(), photoUrl, getImageUrl(), getOptions());
+    }
+
+    // 이름이 같으면 같은 객체로 인식하게끔 오버라이딩
+/*
+    @Override
+
+    public int hashCode() {
+        return name.hashCode();
+    }
 
 
 
+    @Override
+
+    public boolean equals(Object obj) {
+        if(!(obj instanceof CafeItem)) {
+            return false;
+        }
+        CafeItem s = (CafeItem) obj;
+        return name.equals(s.name);
+    }
+*/
     public int getPrice() {
         return price;
     }

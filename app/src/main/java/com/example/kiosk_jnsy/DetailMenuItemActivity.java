@@ -48,6 +48,19 @@ public class DetailMenuItemActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_menu_item);
         options=new HashMap<String,Double>();
 
+        // 나추천 설정 : 제일 많이 먹은 메뉴를 보여줄때
+        // 지연 : 인텐트 테스트/////
+        if((String)getIntent().getStringExtra("test")!=null) {
+            Log.d("test", (String) getIntent().getStringExtra("test"));
+            String name=(String) getIntent().getStringExtra("name");
+            int price=(Integer)getIntent().getIntExtra("price",0);
+            double op1d=(Double)getIntent().getDoubleExtra("op1d",0);
+
+
+        }
+        model=(CafeItem)getIntent().getSerializableExtra("detail");
+        // 나추천 설정
+
         // 지연 샷에 대한 스피너 추가
         shotList = new ArrayList<>();
         shotList.add("0.5");
@@ -105,7 +118,8 @@ public class DetailMenuItemActivity extends AppCompatActivity {
 
         if(AppSetting.personUUID != null){// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
             // 선호도 +1
-            incrementPreferences(AppSetting.PREFERENCE_CLICK);
+            // 잠시만여
+      //      incrementPreferences(AppSetting.PREFERENCE_CLICK);
 
         }
 
@@ -136,7 +150,8 @@ public class DetailMenuItemActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(AppSetting.personUUID != null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
-                    incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
+                    // 잠시만여
+   //                 incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
                 }
 
                 // 세부 옵션 선택은 나중에 하자.
@@ -183,7 +198,8 @@ public class DetailMenuItemActivity extends AppCompatActivity {
         }else{
             AppSetting.itemPreferences.put(model.getName(), score); // 1 할당
         }
-        updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요
+        // 잠시만여
+  //      updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요
     }
 
     private void updateDB(){

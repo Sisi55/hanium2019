@@ -58,7 +58,7 @@ public class PaymentListActivity extends AppCompatActivity {
     int desIndex;
     TextView tv;
     TimerTask addTask;
-    private int Interval=1;
+    private int Interval=10; // 10분마다 날씨 받아오는 동작함.
     Timer timer;
 
     // 지연 : DB에 저장할 Order객체 속 날씨 정보

@@ -385,9 +385,12 @@ public class PaymentListActivity extends AppCompatActivity {
             });
 
             // 현재 수량
+
             viewholder.count.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             viewholder.count.setGravity(View.TEXT_ALIGNMENT_CENTER); // 지연 : CENTER 수정
             viewholder.count.setText(menucount.get(mList.get(position))+""); // 지연 : getOrder() 수정
+
+
             // 해당메뉴가격
             viewholder.price.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             viewholder.price.setGravity(View.TEXT_ALIGNMENT_CENTER); // 지연 : CENTER 수정
@@ -404,15 +407,29 @@ public class PaymentListActivity extends AppCompatActivity {
 
             builder.setMessage("메뉴를 삭제하겠습니까?")
                     .setCancelable(false)
-                    .setPositiveButton("CONFIRM",
+                    .setPositiveButton("확인",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     //mList.remove(position);
-                                    mArrayList.remove(position);
-                                    notifyDataSetChanged();
+                                    // 리스트에 해당 메뉴 추가하기
+
+                                    CafeItem current2=mList.get(position);
+                                    //mArrayList.remove(current2);
+
+                                    //mList.add(current);
+                                    int c=menucount.get(current2);
+                                    menucount.put(current2,c-1);
+                                    if(menucount.get(current2)==0){
+                                        mArrayList.remove(current2);
+                                        menucount.remove(current2);
+                                    }//0이라고 아예 없어지는게 아님 키는 남아있으므로 키지워줌
+
+
+                                    mAdapter = new PaymentListAdapter(mArrayList);
+                                    mRecyclerView.setAdapter(mAdapter);
                                 }
                             })
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         }
                     });
@@ -424,7 +441,7 @@ public class PaymentListActivity extends AppCompatActivity {
 
             builder.setMessage("이 메뉴를 추가 하겠습니까?")
                     .setCancelable(false)
-                    .setPositiveButton("CONFIRM",
+                    .setPositiveButton("확인",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
                                     // 리스트에 해당 메뉴 추가하기
@@ -451,7 +468,7 @@ public class PaymentListActivity extends AppCompatActivity {
                                     notifyDataSetChanged();
                                 }
                             })
-                    .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("취소", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                         }
                     });

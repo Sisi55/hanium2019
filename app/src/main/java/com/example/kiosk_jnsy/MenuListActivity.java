@@ -2,6 +2,7 @@ package com.example.kiosk_jnsy;
 // 지연 : 메뉴등록을 할때는 주석된 것을 풀어야 함. 또한 xml에서도 수정이 필요함.
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.kiosk_jnsy.model.CafeItem; // package model : CafeItem
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -267,10 +270,24 @@ public class MenuListActivity extends AppCompatActivity {
             holder.name.setText(item.getName());
             holder.price.setText(item.getPrice()+"");
             // holder.cafe_imageview.setImageResource();
+            /*
             Glide.with(holder.cafe_imageview.getContext())
                     .load(item.getImageUrl())
                     .into(holder.cafe_imageview);
             //String imageUrl = friendlyMessage.getImageUrl();
+            Context context=holder.cafe_imageview.getContext();
+           */
+
+            // 이미지 속도 처리
+            Glide
+                    .with(holder.cafe_imageview.getContext())
+                    .load(item.getImageUrl())
+                    .apply(new RequestOptions()
+                            .placeholder(R.mipmap.ic_launcher)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .fitCenter())
+                    .into(holder.cafe_imageview);
+
         }
 
         @Override

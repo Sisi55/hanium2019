@@ -14,6 +14,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.kiosk_jnsy.databinding.ActivityDetailMenuItemBinding;
 import com.example.kiosk_jnsy.model.CafeItem;
 import com.example.kiosk_jnsy.setting.AppSetting;
@@ -133,7 +135,12 @@ public class DetailMenuItemActivity extends AppCompatActivity {
         // 이미지
         Glide.with(binding.imgMenu.getContext())
                 .load(model.getImageUrl())
+                .apply(new RequestOptions()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .fitCenter())
                 .into(binding.imgMenu);
+
 
         // 목록 버튼 누르면 뒤로 가기
         binding.btnBack.setOnClickListener(new View.OnClickListener() {

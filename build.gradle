@@ -10,6 +10,14 @@ buildscript {
 
 
     }
+    /*repositories {
+	    maven {
+	        url "https://jitpack.io"
+	    }
+	}
+	dependencies {
+	    compile 'com.github.ozodrukh:CircularReveal:(latest-release)@aar'
+	}*/
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.0'
         classpath 'com.google.gms:google-services:4.2.0'

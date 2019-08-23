@@ -1,10 +1,11 @@
 // order.java
 package com.example.kiosk_jnsy.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Order {
+public class Order implements Serializable {
     private Map<String,Double> emotion; // 감정
     private Map<String,Double> weather; // 날씨
     ArrayList<CafeItem> items; // 선택한 메뉴들

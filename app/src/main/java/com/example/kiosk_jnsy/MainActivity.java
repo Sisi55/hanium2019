@@ -16,10 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.kiosk_jnsy.databinding.ActivityMainBinding;
 import com.example.kiosk_jnsy.face.AboutPerson;
 import com.example.kiosk_jnsy.face.AboutPersonGroup;
+import com.example.kiosk_jnsy.model.CafeItem;
 import com.example.kiosk_jnsy.model.UserDTO;
 import com.example.kiosk_jnsy.setting.AppSetting;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,6 +46,14 @@ public class MainActivity extends AppCompatActivity {
     View alertView;
     String name;
     EditText editName;
+
+    String result; // 나 추천 결과
+    String myname; // 나 추천 결과 이름
+    String arr[];// 나 추천 split
+    Intent intent; // 나 추천 인텐트
+    Map<String,Double> map;
+    CafeItem myresult;//  나 추천 인텐트로 보낼 객체
+    HashMap<String,Integer> rank;
 
     private void showRegisterDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this/*getContext()*/)
@@ -294,11 +304,95 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // 나 추천 누르면 화면 이동
+        // 나 추천 누르면 화면 이동- 시현쓰코드
+        /*
         binding.btnHomeRecom.setOnClickListener(new View.OnClickListener() {
             @Override
+            public void onClick(View v) {*/
+        // 나 추천 누르면 화면 이동
+        binding.btnMyReco.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, HomeRecomActivity.class));
+
+                FirebaseFirestore.getInstance().collection("order").get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    rank=new HashMap<>();
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        String str = (String)document.getData().get("guest");
+                                        // 잠시만여-지연
+                                        // 카메라 연동되면 AppSetting.personUUID로 바꿀예정
+                                        if(str.equals("a056b551-622b-46f8-8620-731a66bc5be8")){
+                                            String orderToString=(String)document.getData().get("orderToString");
+
+                                            // rank 맵에 이미 있다면 있는값에 추가
+                                            if(rank.get(orderToString)!=null){
+                                                int num=rank.get(orderToString);
+                                                Toast.makeText(MainActivity.this, orderToString+"추가", Toast.LENGTH_SHORT).show();
+                                                rank.put(orderToString,num+1);
+                                            }// 없다면 1로 추가
+                                            else {
+                                                rank.put(orderToString, 1);
+                                            }
+                                        }
+                                    }
+                                    // rank 맵에서 value가 가장 큰 엔트리 찾기. 정렬하는 코드는 삭제함.
+                                    Map.Entry<String, Integer> maxEntry = null;
+                                    for (Map.Entry<String,Integer> entry : rank.entrySet())
+                                    {
+                                        if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0)
+                                        {
+                                            maxEntry = entry;
+                                        }
+                                    }
+                                    result=maxEntry.getKey();
+                                    // 엔트리 결과를 처리
+                                    arr=result.split("/");
+                                    // arr[0] : 메뉴이름
+
+                                    // 이 메뉴의 손님의 옵션 설정
+                                    String[] op1=arr[1].split(":"); // option1 휘핑:0.0
+                                    final double op1d=Double.parseDouble(op1[1]);
+                                    String[] op2=arr[2].split(":"); // option2
+                                    final double op2d=Double.parseDouble(op2[1]);
+
+                                    // 객체 생성해서 인텐트로 보냄
+                                    map=new HashMap<String,Double>();
+                                    map.put("휘핑",op1d);
+                                    map.put("샷",op2d);
+
+                                    // 이메뉴의 이미지 url 필요
+                                    FirebaseFirestore.getInstance().collection("menu").get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        // 메뉴정보 추출
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                            // 메뉴 이름 바꿔야 함..
+                                                            if((myname=(String)document.getData().get("name")).equals(arr[0])) {
+                                                                Long pricen = (Long) document.getData().get("price");
+                                                                String body = (String) document.getData().get("body");
+                                                                int price = pricen.intValue();
+                                                                String imageUrl = (String) document.getData().get("imageUrl");
+                                                                myresult=new CafeItem(myname, price, imageUrl, body);
+                                                                Intent intent = new Intent(MainActivity.this, DetailMenuItemActivity.class);
+
+                                                                intent.putExtra("detail",myresult);
+                                                                startActivity(intent);
+                                                                break;
+                                                            }
+                                                        }
+                                                    } else { }
+                                                }
+                                            });
+                                } else {
+                                    Log.d("dd", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
             }
         });
     }//end onCreate

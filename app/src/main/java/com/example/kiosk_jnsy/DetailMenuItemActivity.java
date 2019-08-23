@@ -14,6 +14,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.kiosk_jnsy.databinding.ActivityDetailMenuItemBinding;
 import com.example.kiosk_jnsy.model.CafeItem;
 import com.example.kiosk_jnsy.setting.AppSetting;
@@ -47,6 +49,19 @@ public class DetailMenuItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_menu_item);
         options=new HashMap<String,Double>();
+
+        // 나추천 설정 : 제일 많이 먹은 메뉴를 보여줄때
+        // 지연 : 인텐트 테스트/////
+        if((String)getIntent().getStringExtra("test")!=null) {
+            Log.d("test", (String) getIntent().getStringExtra("test"));
+            String name=(String) getIntent().getStringExtra("name");
+            int price=(Integer)getIntent().getIntExtra("price",0);
+            double op1d=(Double)getIntent().getDoubleExtra("op1d",0);
+
+
+        }
+        model=(CafeItem)getIntent().getSerializableExtra("detail");
+        // 나추천 설정
 
         // 지연 샷에 대한 스피너 추가
         shotList = new ArrayList<>();
@@ -105,7 +120,8 @@ public class DetailMenuItemActivity extends AppCompatActivity {
 
         if(AppSetting.personUUID != null){// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
             // 선호도 +1
-            incrementPreferences(AppSetting.PREFERENCE_CLICK);
+            // 잠시만여
+      //      incrementPreferences(AppSetting.PREFERENCE_CLICK);
 
         }
 
@@ -119,7 +135,12 @@ public class DetailMenuItemActivity extends AppCompatActivity {
         // 이미지
         Glide.with(binding.imgMenu.getContext())
                 .load(model.getImageUrl())
+                .apply(new RequestOptions()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .fitCenter())
                 .into(binding.imgMenu);
+
 
         // 목록 버튼 누르면 뒤로 가기
         binding.btnBack.setOnClickListener(new View.OnClickListener() {
@@ -136,8 +157,10 @@ public class DetailMenuItemActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if(AppSetting.personUUID != null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
-                    incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
+                    // 잠시만여
+   //                 incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
                 }
+
 
                 // 세부 옵션 선택은 나중에 하자.
                 // 해당 메뉴를 arraylist에 넣는다.
@@ -150,7 +173,14 @@ public class DetailMenuItemActivity extends AppCompatActivity {
                     newList.add(model);
                     // 그다음에 shoplist를 intent에 추가한다.
                     Intent intent = new Intent(DetailMenuItemActivity.this, PaymentListActivity.class);
+
                     intent.putExtra("shoplist",newList);
+
+                    //Log.d("로깅","메뉴리스트액티비티:shoplist인텐트에 담긴 개수"+shoplist.size());
+
+                    // 메뉴 개수...
+                    HashMap<CafeItem,Integer> m=(HashMap<CafeItem,Integer>)getIntent().getSerializableExtra("m_count");
+                    intent.putExtra("m_count",m);
                     startActivity(intent);
                     // 이 리스트에 추가하면 되고
                 }else{
@@ -159,6 +189,8 @@ public class DetailMenuItemActivity extends AppCompatActivity {
                     // 위에서 생성한 리스트를 넣으면 된다...
                     Intent intent = new Intent(DetailMenuItemActivity.this, PaymentListActivity.class);
                     intent.putExtra("shoplist",shoplist);
+                    HashMap<CafeItem,Integer> m=(HashMap<CafeItem,Integer>)getIntent().getSerializableExtra("m_count");
+                    intent.putExtra("m_count",m);
                     startActivity(intent);
                 }
 
@@ -183,7 +215,8 @@ public class DetailMenuItemActivity extends AppCompatActivity {
         }else{
             AppSetting.itemPreferences.put(model.getName(), score); // 1 할당
         }
-        updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요
+        // 잠시만여
+  //      updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요
     }
 
     private void updateDB(){

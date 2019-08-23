@@ -2,8 +2,11 @@ package com.example.kiosk_jnsy;
 // 지연 : 메뉴등록을 할때는 주석된 것을 풀어야 함. 또한 xml에서도 수정이 필요함.
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.kiosk_jnsy.model.CafeItem; // package model : CafeItem
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,13 +47,17 @@ import com.google.firebase.storage.UploadTask;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import static java.lang.String.valueOf;
 
 // 이미지 업로드 https://www.youtube.com/watch?v=6u0gzjth4IE
 public class MenuListActivity extends AppCompatActivity {
 
+    // tts추가
+    private TextToSpeech mTTS;
 
     List<CafeItem> citems; // 메뉴판 객체들을 담은 arraylist
     CafeItemAdapter adapter;
@@ -128,6 +137,25 @@ public class MenuListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_list);
+
+        // tts추가
+        mTTS=new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status==TextToSpeech.SUCCESS){
+                    int result=mTTS.setLanguage(Locale.GERMAN);
+                    if(result==TextToSpeech.LANG_MISSING_DATA
+                            ||result==TextToSpeech.LANG_NOT_SUPPORTED){
+                        Log.e("tts","language not supported");
+                    }
+                    else{
+                        //mButtonSpeak.setEnabled(true);
+                    }
+                }else{
+                    Log.e("tts","initialized failed");
+                }
+            }
+        });
         citems=new ArrayList<CafeItem>();
 
         // storage
@@ -144,9 +172,23 @@ public class MenuListActivity extends AppCompatActivity {
                 //Toast.makeText(MenuListActivity.this, model.getName()+" 상세정보 보기", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MenuListActivity.this, DetailMenuItemActivity.class);
                 intent.putExtra("detail",model);
+                // tts : 메뉴명 말하기
+                speak(model.getName());
                 ArrayList<CafeItem> shoplist=(ArrayList<CafeItem>) getIntent().getSerializableExtra("shoplist");
 
+                if(shoplist==null)
+                    Log.d("로깅","첫주문");
+                else
+                    Log.d("로깅","메뉴리스트액티비티:shoplist인텐트에 담긴 개수"+shoplist.size());
+
+                // 메뉴 개수...
+                HashMap<CafeItem,Integer> m=(HashMap<CafeItem,Integer>)getIntent().getSerializableExtra("m_count");
+                if(m==null)
+                    Toast.makeText(MenuListActivity.this, "맵에 아무것도 없음", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(MenuListActivity.this, "맵에 있음", Toast.LENGTH_SHORT).show();
                 intent.putExtra("shoplist",shoplist); // 지연 : 고대로 보냄
+                intent.putExtra("m_count",m);
                 startActivity(intent);
 
             }
@@ -267,10 +309,24 @@ public class MenuListActivity extends AppCompatActivity {
             holder.name.setText(item.getName());
             holder.price.setText(item.getPrice()+"");
             // holder.cafe_imageview.setImageResource();
+            /*
             Glide.with(holder.cafe_imageview.getContext())
                     .load(item.getImageUrl())
                     .into(holder.cafe_imageview);
             //String imageUrl = friendlyMessage.getImageUrl();
+            Context context=holder.cafe_imageview.getContext();
+           */
+
+            // 이미지 속도 처리
+            Glide
+                    .with(holder.cafe_imageview.getContext())
+                    .load(item.getImageUrl())
+                    .apply(new RequestOptions()
+                            .placeholder(R.mipmap.ic_launcher)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .fitCenter())
+                    .into(holder.cafe_imageview);
+
         }
 
         @Override
@@ -294,4 +350,31 @@ public class MenuListActivity extends AppCompatActivity {
         }
     }//CafeItemAdapter 클래스
 
+
+    private void speak(String text){
+
+        /*
+      //  float speed=(float)mSeekBarSpeed.getProgress()/50;
+      //  if(speed<0.1) speed=0.1f;
+
+        mTTS.setPitch(pitch);
+        mTTS.setSpeechRate(speed);
+        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH,null);
+*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mTTS.speak(text,TextToSpeech.QUEUE_FLUSH,null,null);
+        } else {
+            mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+    @Override
+    protected void onDestroy() {
+
+        if(mTTS!=null){
+            mTTS.stop();
+            mTTS.shutdown();
+        }
+        super.onDestroy();
+    }
 }

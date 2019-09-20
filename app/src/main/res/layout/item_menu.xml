@@ -3,19 +3,20 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="0dp"
-        android:gravity="center_horizontal"
-        android:layout_weight="1"
+    <Button
+        android:id="@+id/name_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/name_text"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:background="#F5F6CE"
+        android:gravity="center" />
 
-        android:gravity="center_horizontal"
-        android:id="@+id/price_text"/>
+    <Button
+        android:id="@+id/price_text"
+        android:background="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" />
 
 </LinearLayout>

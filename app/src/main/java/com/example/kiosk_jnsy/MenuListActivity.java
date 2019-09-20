@@ -323,7 +323,7 @@ public class MenuListActivity extends AppCompatActivity {
                     .load(item.getImageUrl())
                     .apply(new RequestOptions()
                             .placeholder(R.mipmap.ic_launcher)
-                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .fitCenter())
                     .into(holder.cafe_imageview);
 

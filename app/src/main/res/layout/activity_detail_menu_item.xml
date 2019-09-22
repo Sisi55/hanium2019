@@ -150,6 +150,14 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="아이템CF"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/imageview_cf"
+                    android:scaleType="fitCenter"
+                    android:layout_height="0dp"
+                    android:layout_weight="4"/>
+
                 <TextView
                     android:id="@+id/tv_itemCF_name"
                     android:layout_width="match_parent"
@@ -176,20 +184,28 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:text="아이템 필터링"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/imageview_we_sim"
+                    android:scaleType="fitCenter"
+                    android:layout_height="0dp"
+                    android:layout_weight="4"/>
                 <TextView
-                    android:id="@+id/tv_itemFiltering_name"
+                    android:id="@+id/tv_we_sim_name"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
                     android:text="메뉴이름"/>
                 <TextView
-                    android:id="@+id/tv_itemFiltering_price"
+                    android:id="@+id/tv_we_sim_price"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="2"
                     android:text="메뉴가격"/>
 
             </LinearLayout>
+<!--
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -216,6 +232,7 @@
                     android:text="메뉴가격"/>
 
             </LinearLayout>
+-->
 
 
         </LinearLayout>

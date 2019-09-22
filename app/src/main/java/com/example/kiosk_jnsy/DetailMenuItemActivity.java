@@ -19,16 +19,22 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.kiosk_jnsy.databinding.ActivityDetailMenuItemBinding;
 import com.example.kiosk_jnsy.model.CafeItem;
 import com.example.kiosk_jnsy.setting.AppSetting;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class DetailMenuItemActivity extends AppCompatActivity {
+public class DetailMenuItemActivity extends AppCompatActivity implements View.OnClickListener{
 
     ActivityDetailMenuItemBinding binding;
     Map<String,Double> options;
@@ -44,11 +50,114 @@ public class DetailMenuItemActivity extends AppCompatActivity {
     // 단,!!!!!!!! 사용자가 바뀌면 초기화 해주어야 한다.
 
     CafeItem model; // 클릭한 메뉴
+
+    CafeItem item2;
+    private void print_CFRecom_result() {
+
+        String cf_json = AppSetting.response_CF_overall;
+
+        try {
+
+            Log.e("  print recom detail2", AppSetting.response_CF_overall);
+
+            JSONObject jsonObj = new JSONObject(cf_json);
+            String sim_json  = jsonObj.get("items_sim").toString(); // dict
+            jsonObj = new JSONObject(sim_json); // {"꼬미": "삼계탕", "라떼": "꼬미", "삼계탕": "꼬미", "아메리카노": "꼬미"}
+            String cf_result_itemName = jsonObj.get(model.getName()).toString();
+
+            FirebaseFirestore.getInstance().collection("menu")
+                    .whereEqualTo("name", cf_result_itemName)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
+//                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                    // 쿼리 가져온거 반복
+                                    item2 = document.toObject(CafeItem.class);
+
+                                    binding.tvItemCFName.setText(item2.getName());
+                                    binding.tvItemCFPrice.setText(item2.getPrice()+"");
+                                    Glide.with(DetailMenuItemActivity.this)
+                                            .load(item2.getImageUrl())
+                                            .into(binding.imageviewCf);
+
+                                }
+                            }
+                        }
+                    });
+
+        }catch (Exception e){
+            Log.e(" recom activity", e.getMessage());
+        }
+
+    }
+
+    CafeItem item1;
+    private void print_weSim_result() {
+
+        String we_sim_json = AppSetting.response_weather_emotion_matrix; // {"꼬미": "삼계탕", "라떼": "삼계탕", "삼계탕": "라떼", "아메리카노": "삼계탕"}
+
+        try {
+
+            Log.e("  print recom detail1", AppSetting.response_weather_emotion_matrix);
+
+            JSONObject jsonObj = new JSONObject(we_sim_json);
+            String result_itemName = jsonObj.get(model.getName()).toString(); // 메뉴 이름
+
+            FirebaseFirestore.getInstance().collection("menu")
+                    .whereEqualTo("name", result_itemName)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
+//                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                    // 쿼리 가져온거 반복
+                                    item1 = document.toObject(CafeItem.class);
+                                    binding.tvWeSimName.setText(item1.getName());
+                                    binding.tvWeSimPrice.setText(item1.getPrice()+"");
+                                    Glide.with(DetailMenuItemActivity.this)
+                                            .load(item1.getImageUrl())
+                                            .into(binding.imageviewWeSim);
+
+                                }
+                            }
+                        }
+                    });
+
+//            textView1.setText(xgb_result_itemName );
+
+        } catch (Exception e) {
+            Log.e(" recom activity", e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v==binding.tvItemCFName || v==binding.tvItemCFPrice || v==binding.imageviewCf) {
+            Intent intent = new Intent(DetailMenuItemActivity.this, DetailMenuItemActivity.class);
+            intent.putExtra("detail", item2);
+            startActivity(intent);
+        }else if(v==binding.tvWeSimName || v==binding.tvWeSimPrice || v==binding.imageviewWeSim){
+            Intent intent = new Intent(DetailMenuItemActivity.this, DetailMenuItemActivity.class);
+            intent.putExtra("detail", item1);
+            startActivity(intent);
+
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_menu_item);
         options=new HashMap<String,Double>();
+
 
         // 나추천 설정 : 제일 많이 먹은 메뉴를 보여줄때
         // 지연 : 인텐트 테스트/////
@@ -62,6 +171,17 @@ public class DetailMenuItemActivity extends AppCompatActivity {
         }
         model=(CafeItem)getIntent().getSerializableExtra("detail");
         // 나추천 설정
+
+
+        // 이벤트 등록
+        binding.tvWeSimName.setOnClickListener(this);
+        binding.tvWeSimPrice.setOnClickListener(this);
+        binding.imageviewWeSim.setOnClickListener(this);
+        binding.tvItemCFName.setOnClickListener(this);
+        binding.tvItemCFPrice.setOnClickListener(this);
+        binding.imageviewCf.setOnClickListener(this);
+
+
 
         // 지연 샷에 대한 스피너 추가
         shotList = new ArrayList<>();
@@ -117,6 +237,10 @@ public class DetailMenuItemActivity extends AppCompatActivity {
 
         // 지연 : 인텐트 테스트/////
         model=(CafeItem)getIntent().getSerializableExtra("detail");
+
+        // 추천 내역 파싱
+        print_CFRecom_result(); // model 받아오고 실행해야 한다
+        print_weSim_result();
 
         if(AppSetting.personUUID != null){// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
             // 선호도 +1
@@ -220,6 +344,7 @@ public class DetailMenuItemActivity extends AppCompatActivity {
     }
 
     private void updateDB(){
+
         FirebaseFirestore.getInstance().collection("user")
                 .document(AppSetting.documentID)
                 .update("itemPreference", AppSetting.itemPreferences)

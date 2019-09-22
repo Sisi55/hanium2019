@@ -11,7 +11,9 @@ import android.util.Log;
 //import com.example.change.Camera2BasicFragment;
 //import com.example.change.setting.AppSetting;
 import com.example.kiosk_jnsy.CameraActivity;
+import com.example.kiosk_jnsy.PaymentListActivity;
 import com.example.kiosk_jnsy.setting.AppSetting;
+import com.example.kiosk_jnsy.util.Recom;
 import com.microsoft.projectoxford.face.FaceServiceClient;
 import com.microsoft.projectoxford.face.contract.Emotion;
 import com.microsoft.projectoxford.face.contract.Face;
@@ -19,8 +21,15 @@ import com.microsoft.projectoxford.face.contract.IdentifyResult;
 import com.microsoft.projectoxford.face.contract.Person;
 import com.microsoft.projectoxford.face.contract.TrainingStatus;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -129,7 +138,7 @@ public class ExecuteWithFace {
                 detectFlag = true; // 사람있다
             }
 
-            AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
+//            AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
 
 /*
             if(null != faces[0].faceAttributes.emotion){
@@ -279,7 +288,7 @@ public class ExecuteWithFace {
 
             //일단 첫 번째 사람 감정만 출력해본다
             if(null != faces[0].faceAttributes.emotion){
-                AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
+                /*AppSetting.emotion = */getEmotion(faces[0].faceAttributes.emotion);
             }
 
 //            ((Camera2BasicFragment)fragment).addTextToEditText("감정: "+result_emotion);
@@ -287,7 +296,7 @@ public class ExecuteWithFace {
 
             for(int i=0;i<facesDetected.length;i++){
                 facesDetected[i] = faces[i].faceId;
-                Log.e("   detect>UUID:  ", ""+facesDetected[i]); // 체크
+//                Log.e("   detect>UUID:  ", ""+facesDetected[i]); // 체크
 //                ((Camera2BasicFragment)fragment).addTextToEditText("\n"+"   detect>ok "+faces[i].faceRectangle.width+","+faces[i].faceRectangle.height);
 
             }
@@ -416,13 +425,18 @@ public class ExecuteWithFace {
                             ((CameraActivity)activity).addTextToEditText("정확도:"+identifyResults[i].candidates.get(0).confidence);
 //                            identifyResults[i].candidates.get(0).personId
                             AppSetting.personUUID = identifyResults[i].candidates.get(0).personId.toString();
+                            Log.e("  identify-UUID", AppSetting.personUUID);
                             AppSetting.trainRequestFlag=true; // true하면 사용한 곳에서 자동으로 false 초기화한다
                             // 여기 add face
                             new AddFaceTask(/*전역:create 후 저장*/UUID.fromString(AppSetting.personUUID),
                                     bytes, /*faces[0],*/ activity, detectFlag).execute();
 // get person 추가하면 name도 얻을 수 있다
 // 바로 아래에 있다
-
+                            // uuid 필요한 추천 내역 가져온다
+                            new Recom.RecomItemCFTask().execute();
+                            // 날씨 받아오기 실행
+                            new GetDataJSON().execute();
+//
                         }else{
                             ((CameraActivity)activity).addTextToEditText("등록안됨");
                         }
@@ -445,7 +459,7 @@ public class ExecuteWithFace {
             emotionMap.put("disgust",emotion.disgust);
             emotionMap.put("fear",emotion.fear);
 
-            emotionMap.put("happiness",emotion.happiness);
+            emotionMap.put("happiness",emotion.happiness); // "happiness" "neutral"
             emotionMap.put("neutral",emotion.neutral);
             emotionMap.put("sadness",emotion.sadness);
             emotionMap.put("surprise",emotion.surprise);
@@ -459,8 +473,15 @@ public class ExecuteWithFace {
             Map<String,Double> temp = new HashMap<>();
             String maxValueKey = (String) iterator.next();//1번째
             temp.put(maxValueKey, emotionMap.get(maxValueKey));
+            AppSetting.emotion1 = new HashMap<>();
+            AppSetting.emotion1.put(maxValueKey, emotionMap.get(maxValueKey));
+
+
             maxValueKey = (String) iterator.next();//2번째
             temp.put(maxValueKey, emotionMap.get(maxValueKey));
+            AppSetting.emotion2 = new HashMap<>();
+            AppSetting.emotion2.put(maxValueKey, emotionMap.get(maxValueKey));
+
 
             return temp;
             //감정: 점수 형태로 가장 최대 하나만 반환하자
@@ -719,5 +740,73 @@ public class ExecuteWithFace {
         }
     }
     //end add face task
+    // 지연 : 날씨 json 받아오는 클래스////////////////////////////////////////////////////////
+    // 호출은
+    static class GetDataJSON extends AsyncTask<Void, Void, String> {
+        // public GetDataJSON()
+        @Override
+        protected String doInBackground(Void... params) {
+            //
+            // 날씨 받아올 url
+            String uri = "http://api.openweathermap.org/data/2.5/weather?lat=37.652490&lon=127.013178&mode=json&APPID=41d82c8172c1c237afb77833d08a8a59";
+            BufferedReader bufferedReader = null;
+            StringBuilder sb = new StringBuilder();
+            String json;
+            try{
+                URL url = new URL(uri);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                while ((json = bufferedReader.readLine()) != null) {
+                    sb.append(json + "\n");
+                }
+                return sb.toString().trim();
+            }catch(Exception e){
+                Log.d("오류",e.getMessage());
+                return "e.getMessage()";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // myJSON = result; // Activity 멤버 변수
+            try{
+                //JSONObject jsonObj = ggggnew JSONObject(result);
+                //peoples = jsonObj.getJSONArray(TAG_RESULTS); // peoples는 Activity 멤버 JsonArray
+                // tag results는 json dict의 key겠지 ? value-리스트를 가져온다는 소리
+                // 일단 매개 result 를 출력하는 정도로만 시도해보자
+
+                //Toast.makeText(getActivity().getApplicationContext(), "날씨 갱신함", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+                //description="초기";
+
+
+                JSONArray jarray = new JSONObject(result).getJSONArray("weather");
+                JSONObject jObject = jarray.getJSONObject(0);
+                String description = jObject.optString("description");
+
+                JSONObject main=new JSONObject(result).getJSONObject("main");
+                AppSetting.recom_weather_humidity = main.optString("humidity");
+                AppSetting.recom_weather_temp = main.optString("temp");
+
+                JSONObject wind=new JSONObject(result).getJSONObject("wind");
+                AppSetting.recom_weather_speed= wind.optString("speed");
+
+                // 추천 받아온다
+                new Recom.RecomXGBTask().execute();
+
+
+                //Toast.makeText(getActivity().getApplicationContext(), temp_d+"입니다.", Toast.LENGTH_SHORT).show();
+
+                Log.d("날씨 갱신결과","설명 >>"+description+"\n온도 >>"+AppSetting.recom_weather_temp+"\n습도 >>"+AppSetting.recom_weather_humidity+"\n풍속 >>"+AppSetting.recom_weather_speed);
+                //tv.setText("설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
+
+                // 추천내역 받아온다
+
+            }catch(Exception e){
+
+            }
+        }
+    }
+
 
 }//end class

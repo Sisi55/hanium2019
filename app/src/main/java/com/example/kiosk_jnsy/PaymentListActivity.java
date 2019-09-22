@@ -231,7 +231,7 @@ public class PaymentListActivity extends AppCompatActivity {
 
                 // calender로 현재 날짜 알아오기
                 SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
-                String format_time1 = format1.format (System.currentTimeMillis());
+                String format_time1 = format1.format(System.currentTimeMillis());
                 String today=format_time1;
 
                 // 파이어베이스DB에 주문 기록 추가
@@ -271,14 +271,14 @@ public class PaymentListActivity extends AppCompatActivity {
                 if(AppSetting.personUUID != null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
                     // 선호도
                     for(CafeItem item:mArrayList){
-                        incrementPreferences(item.getName(), AppSetting.PREFERENCE_ORDER); // 선호도 +5 증가
+//                        incrementPreferences(item.getName(), AppSetting.PREFERENCE_ORDER); // 선호도 +5 증가
                     }
                     // DB 갱신
                     updateDB();
                 }
 
                 // 주문하면 Main으로 이동한다
-                startActivity(new Intent(PaymentListActivity.this, MainActivity.class));
+//                startActivity(new Intent(PaymentListActivity.this, MainActivity.class));
             }
         });
 
@@ -475,8 +475,6 @@ public class PaymentListActivity extends AppCompatActivity {
                     });
             builder.show();
         }
-
-
 
     }
     // 지연 : 날씨 json 받아오는 클래스////////////////////////////////////////////////////////

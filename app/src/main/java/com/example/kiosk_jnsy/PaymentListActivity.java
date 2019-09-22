@@ -474,12 +474,7 @@ public class PaymentListActivity extends AppCompatActivity {
                     });
             builder.show();
         }
-<<<<<<< HEAD
 
-
-
-=======
->>>>>>> sisi_insert_recom
     }
     // 지연 : 날씨 json 받아오는 클래스////////////////////////////////////////////////////////
     // 호출은

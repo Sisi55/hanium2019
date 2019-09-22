@@ -77,12 +77,18 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
                                     // 쿼리 가져온거 반복
                                     item2 = document.toObject(CafeItem.class);
+                                    if(item2 == null){
+                                        binding.tvItemCFName.setVisibility(View.INVISIBLE);
+                                        binding.tvItemCFPrice.setVisibility(View.INVISIBLE);
+                                        binding.imageviewCf.setVisibility(View.INVISIBLE);
 
-                                    binding.tvItemCFName.setText(item2.getName());
-                                    binding.tvItemCFPrice.setText(item2.getPrice()+"");
-                                    Glide.with(DetailMenuItemActivity.this)
-                                            .load(item2.getImageUrl())
-                                            .into(binding.imageviewCf);
+                                    }else{
+                                        binding.tvItemCFName.setText(item2.getName());
+                                        binding.tvItemCFPrice.setText(item2.getPrice()+"");
+                                        Glide.with(DetailMenuItemActivity.this)
+                                                .load(item2.getImageUrl())
+                                                .into(binding.imageviewCf);
+                                    }
 
                                 }
                             }
@@ -91,6 +97,14 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
         }catch (Exception e){
             Log.e(" recom activity", e.getMessage());
+            binding.tvItemCFName.setVisibility(View.INVISIBLE);
+            binding.tvItemCFPrice.setVisibility(View.INVISIBLE);
+            binding.imageviewCf.setVisibility(View.INVISIBLE);
+            // .setOnClickListener(null);
+            binding.tvItemCFName.setOnClickListener(null);
+            binding.tvItemCFPrice.setOnClickListener(null);
+            binding.imageviewCf.setOnClickListener(null);
+
         }
 
     }
@@ -119,11 +133,20 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
                                     // 쿼리 가져온거 반복
                                     item1 = document.toObject(CafeItem.class);
-                                    binding.tvWeSimName.setText(item1.getName());
-                                    binding.tvWeSimPrice.setText(item1.getPrice()+"");
-                                    Glide.with(DetailMenuItemActivity.this)
-                                            .load(item1.getImageUrl())
-                                            .into(binding.imageviewWeSim);
+
+                                    if(item1 == null){
+                                        binding.tvWeSimName.setVisibility(View.INVISIBLE);
+                                        binding.tvWeSimPrice.setVisibility(View.INVISIBLE);
+                                        binding.imageviewWeSim.setVisibility(View.INVISIBLE); // GONE
+
+                                    }else{
+                                        binding.tvWeSimName.setText(item1.getName());
+                                        binding.tvWeSimPrice.setText(item1.getPrice()+"");
+                                        Glide.with(DetailMenuItemActivity.this)
+                                                .load(item1.getImageUrl())
+                                                .into(binding.imageviewWeSim);
+                                    }
+
 
                                 }
                             }
@@ -134,6 +157,16 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
         } catch (Exception e) {
             Log.e(" recom activity", e.getMessage());
+            binding.tvWeSimName.setVisibility(View.INVISIBLE);
+            binding.tvWeSimPrice.setVisibility(View.INVISIBLE);
+            binding.imageviewWeSim.setVisibility(View.INVISIBLE); // GONE
+
+            // .setOnClickListener(null);
+            binding.tvWeSimName.setOnClickListener(null);
+            binding.tvWeSimPrice.setOnClickListener(null);
+            binding.imageviewWeSim.setOnClickListener(null); // GONE
+
+
         }
 
     }

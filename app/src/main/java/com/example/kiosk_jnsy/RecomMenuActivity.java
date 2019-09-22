@@ -96,11 +96,18 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
                                     // 쿼리 가져온거 반복
                                     item1 = document.toObject(CafeItem.class);
-                                    textView1.setText(item1.getName());
-                                    textView1_price.setText(item1.getPrice()+"");
-                                    Glide.with(RecomMenuActivity.this)
-                                            .load(item1.getImageUrl())
-                                            .into(imageView1);
+                                    if(item1 == null){
+                                        textView1.setVisibility(View.INVISIBLE);
+                                        textView1_price.setVisibility(View.INVISIBLE);
+                                        imageView1.setVisibility(View.INVISIBLE);
+                                    }else{
+                                        textView1.setText(item1.getName());
+                                        textView1_price.setText(item1.getPrice()+"");
+                                        Glide.with(RecomMenuActivity.this)
+                                                .load(item1.getImageUrl())
+                                                .into(imageView1);
+
+                                    }
 
                                 }
                             }
@@ -111,6 +118,14 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
         } catch (Exception e) {
             Log.e(" recom activity", e.getMessage());
+            textView1.setVisibility(View.INVISIBLE);
+            textView1_price.setVisibility(View.INVISIBLE);
+            imageView1.setVisibility(View.INVISIBLE);
+
+            textView1.setOnClickListener(null);
+            textView1_price.setOnClickListener(null);
+            imageView1.setOnClickListener(null);
+
         }
 
     }
@@ -137,11 +152,18 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
                                     // 쿼리 가져온거 반복
                                     item2 = document.toObject(CafeItem.class);
-                                    textView2.setText(item2.getName());
-                                    textView2_price.setText(item2.getPrice()+"");
-                                    Glide.with(RecomMenuActivity.this)
-                                            .load(item2.getImageUrl())
-                                            .into(imageView2);
+                                    if(item2 == null){
+                                        textView2.setVisibility(View.INVISIBLE);
+                                        textView2_price.setVisibility(View.INVISIBLE);
+                                        imageView2.setVisibility(View.INVISIBLE);
+                                    }else{
+                                        textView2.setText(item2.getName());
+                                        textView2_price.setText(item2.getPrice()+"");
+                                        Glide.with(RecomMenuActivity.this)
+                                                .load(item2.getImageUrl())
+                                                .into(imageView2);
+
+                                    }
 
                                 }
                             }
@@ -150,6 +172,16 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
         }catch (Exception e){
             Log.e(" recom activity", e.getMessage());
+            textView2.setVisibility(View.INVISIBLE);
+            textView2_price.setVisibility(View.INVISIBLE);
+            imageView2.setVisibility(View.INVISIBLE);
+
+            //  .setOnClickListener(null);
+            textView2.setOnClickListener(null);
+            textView2_price.setOnClickListener(null);
+            imageView2.setOnClickListener(null);
+
+
         }
 
     }

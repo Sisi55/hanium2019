@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+/*
     private void tempForYB(){
         // 유빈쓰를 위해 임시 생성
         AppSetting.personUUID = "a056b551-622b-46f8-8620-731a66bc5be8";
@@ -166,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 //        Log.e("  Main group id", AppSetting.personGroupId);
 
         // 유빈쓰를 위해 임시 생성
-        tempForYB();
+        /*tempForYB();*/
 
 
         LayoutInflater inflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE );

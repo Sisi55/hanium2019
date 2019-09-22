@@ -4,28 +4,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <!-- 이미지 + 메뉴 이름 + 상세 설정 -->
         <!-- 필요하다 생각되었을 때 다시 수정하면 되니까 우선 이것부터 해보자 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="7"
-            android:orientation="horizontal">
+            android:layout_weight="6"
+            android:orientation="horizontal"
+            android:layout_margin="8dp">
 
             <ImageView
                 android:id="@+id/img_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                />
 
             <!-- 메뉴이름 + 체크박스 그룹 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:layout_margin="8dp">
 
                 <TextView
                     android:id="@+id/tv_menuTitle"
@@ -43,7 +47,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -57,7 +62,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -82,7 +88,8 @@
 
             android:orientation="horizontal"
             android:gravity="right"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_margin="8dp">
 
             <!-- 비율맞출 투명한 버튼 -->
             <Button
@@ -114,14 +121,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_weight="3">
+            android:layout_weight="2"
+            android:layout_margin="8dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:padding="15dp">
+                android:padding="15dp"
+                android:layout_margin="8dp"
+                android:elevation="4dp"
+                android:background="#ffffff"
+                >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -140,13 +152,13 @@
                     android:id="@+id/tv_itemCF_name"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:text="메뉴이름"/>
                 <TextView
                     android:id="@+id/tv_itemCF_price"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:text="메뉴가격"/>
 
             </LinearLayout>
@@ -155,7 +167,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:padding="15dp">
+                android:padding="15dp"
+                android:layout_margin="8dp"
+                android:elevation="4dp"
+                android:background="#ffffff">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -173,13 +188,13 @@
                     android:id="@+id/tv_we_sim_name"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:text="메뉴이름"/>
                 <TextView
                     android:id="@+id/tv_we_sim_price"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:text="메뉴가격"/>
 
             </LinearLayout>

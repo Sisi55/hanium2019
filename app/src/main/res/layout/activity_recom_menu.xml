@@ -7,7 +7,8 @@
     tools:context=".RecomMenuActivity"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="40dp">
+    android:paddingVertical="20dp"
+    android:paddingHorizontal="70dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -17,12 +18,16 @@
         />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
         android:padding="15dp"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+
+        android:elevation="4dp"
+        android:background="#ffffff"
+        >
 
 <!--
         <TextView
@@ -42,25 +47,30 @@
             android:id="@+id/tv_item1_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:text="메뉴이름"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:gravity="center"/>
         <TextView
             android:id="@+id/tv_item1_price"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:text="2200"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:gravity="center"
+            />
 
     </LinearLayout>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
         android:padding="15dp"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:elevation="4dp"
+        android:background="#ffffff">
 
 <!--
         <TextView
@@ -80,16 +90,18 @@
             android:id="@+id/tv_item2_name"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:text="메뉴이름"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:gravity="center"/>
         <TextView
             android:id="@+id/tv_item2_price"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:text="1800"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:gravity="center"/>
 
     </LinearLayout>
 

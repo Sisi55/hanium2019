@@ -131,7 +131,7 @@ public class PaymentListActivity extends AppCompatActivity {
 
                 // calender로 현재 날짜 알아오기
                 SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
-                String format_time1 = format1.format (System.currentTimeMillis());
+                String format_time1 = format1.format(System.currentTimeMillis());
                 String today=format_time1;
 
                 // 파이어베이스DB에 주문 기록 추가
@@ -300,8 +300,6 @@ public class PaymentListActivity extends AppCompatActivity {
                     });
             builder.show();
         }
-
-
     }
     // 지연 : 날씨 json 받아오는 클래스////////////////////////////////////////////////////////
     // 호출은

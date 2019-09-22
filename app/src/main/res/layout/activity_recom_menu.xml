@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecomMenuActivity"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="40dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="덕우에게 추천합니다~"
+        android:textSize="20dp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:layout_margin="10dp">
+
+<!--
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="아이템CF"/>
+-->
+        <ImageView
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:id="@+id/imageview1"
+            android:scaleType="fitCenter"
+            android:layout_height="0dp"
+            android:layout_weight="4"/>
+        <TextView
+            android:id="@+id/tv_item1_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:text="메뉴이름"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/tv_item1_price"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:text="2200"
+            android:textSize="20dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="15dp"
+        android:layout_margin="10dp">
+
+<!--
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="아이템CF"/>
+-->
+        <ImageView
+            android:layout_width="match_parent"
+            android:gravity="center_horizontal"
+            android:id="@+id/imageview2"
+            android:scaleType="fitCenter"
+            android:layout_height="0dp"
+            android:layout_weight="4"/>
+        <TextView
+            android:id="@+id/tv_item2_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:text="메뉴이름"
+            android:textSize="20dp"/>
+        <TextView
+            android:id="@+id/tv_item2_price"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:text="1800"
+            android:textSize="20dp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

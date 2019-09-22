@@ -175,7 +175,8 @@ public class AboutPersonGroup {
             Log.e("   create person group", "");
 
             if (result != null) {
-                ((CameraActivity)activity).addTextToEditText("create group ok\n");
+//                ((Activity)activity).addTextToEditText("create group ok\n");
+                Log.e("  create group", ": ok");
             }
         }
     }

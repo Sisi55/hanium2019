@@ -5,12 +5,13 @@
                 android:layout_height="80dp"
                 android:clickable="true"
                 android:background="@drawable/menu_item_selector"
-    android:padding="10dp">
+    android:padding="20dp">
 
     <ImageView
+        android:layout_margin="10dp"
         android:id="@+id/menu_item_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"/>
 
 

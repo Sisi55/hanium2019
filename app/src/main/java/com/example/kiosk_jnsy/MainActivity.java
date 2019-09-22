@@ -1,53 +1,84 @@
 package com.example.kiosk_jnsy;
-
+//import com.sidemenu.model.SlideMenuItem;
+import com.example.kiosk_jnsy.util.ViewAnimator;
+import android.animation.Animator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
-import android.graphics.Camera;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
-import android.service.media.CameraPrewarmService;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+//import android.widget.ViewAnimator;
 
-import com.example.kiosk_jnsy.databinding.ActivityMainBinding;
+//import com.example.kiosk_jnsy.databinding.ActivityMainBinding;
 import com.example.kiosk_jnsy.face.AboutPerson;
-import com.example.kiosk_jnsy.face.AboutPersonGroup;
+import com.example.kiosk_jnsy.fragment.ContentFragment;
+import com.example.kiosk_jnsy.interfaces.Resourceble;
+import com.example.kiosk_jnsy.interfaces.ScreenShotable;
 import com.example.kiosk_jnsy.model.CafeItem;
+
+import com.example.kiosk_jnsy.model.SlideMenuItem;
+
 import com.example.kiosk_jnsy.model.Order;
+
 import com.example.kiosk_jnsy.model.UserDTO;
 import com.example.kiosk_jnsy.setting.AppSetting;
 import com.example.kiosk_jnsy.util.Recom;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+//import io.codetail.animation.ViewAnimationUtils;
 
-    ActivityMainBinding binding;
+
+public class MainActivity extends AppCompatActivity  {
+
+
+    //ActivityMainBinding binding;
     boolean iamRegistered = false;
     View alertView;
     String name;
@@ -62,10 +93,40 @@ public class MainActivity extends AppCompatActivity {
     CafeItem myresult;//  나 추천 인텐트로 보낼 객체
     HashMap<String,Integer> rank;
 
+    ImageButton btnOrderedList;
+    ImageButton btnMyReco;
+    // 왼쪽 바
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
+    private List<SlideMenuItem> list = new ArrayList<>();
+    private ViewAnimator viewAnimator;
+    private int res = R.drawable.content_music;
+    private LinearLayout linearLayout;
+    ///////////
 
+    private void showRegisterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this/*getContext()*/)
+                .setTitle("얼굴 등록하셨나요?")
+                //.setView(alertView)
+                //.setMessage("10번 사진 찍습니다!")
+                .setPositiveButton("네", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        AppSetting.registeredPersonFlag = true;
+                        showGetPermissionDialog();
+                    }
+                }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                AppSetting.registeredPersonFlag = false;
+                                showGetPermissionDialog();
+                            }
+                        }
+                );
+        // 되려나 된다 모달리스
+        builder.show().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 
-
-
+    }
     // temp
     CafeItem item;
     Map<String,Double> weather;
@@ -172,7 +233,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        setContentView(R.layout.activity_main);
+
+       // binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 
 
@@ -194,6 +258,8 @@ public class MainActivity extends AppCompatActivity {
 
         // 유빈쓰를 위해 임시 생성
         /*tempForYB();*/
+        //tempForYB();
+        //
 
 
         LayoutInflater inflater = (LayoutInflater) getSystemService( Context.LAYOUT_INFLATER_SERVICE );
@@ -202,14 +268,17 @@ public class MainActivity extends AppCompatActivity {
         editName = (EditText) alertView.findViewById(R.id.edit_name);
 
 
+        btnOrderedList=(ImageButton)findViewById(R.id.btn_orderedList);
+        btnMyReco=(ImageButton)findViewById(R.id.btn_my_reco);
         // person UUID 없으면 버튼 비활성화
         if(AppSetting.personUUID == null){
-            binding.btnOrderedList.setEnabled(false);
-            binding.btnMyReco.setEnabled(false);
+            btnOrderedList.setEnabled(false);
+            btnMyReco.setEnabled(false);
 //            PaymentListActivity.order_btn.setEnabled(false);
         }else{
-            binding.btnOrderedList.setEnabled(true);
-            binding.btnMyReco.setEnabled(true);
+
+            btnOrderedList.setEnabled(true);
+            btnMyReco.setEnabled(true);
 
         }
 
@@ -263,9 +332,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     private void intentClickBtn(){
+
         // 타 추천 클릭하면 화면 이동
-        binding.btnOtherReco.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnOtherReco=(ImageButton)findViewById(R.id.btn_other_reco);
+        btnOtherReco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, RecomMenuActivity.class);
@@ -275,7 +348,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         // 메뉴판 클릭하면 화면 이동
-        binding.btnMenuList.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnMenuList=(ImageButton)findViewById(R.id.btn_menuList);
+        btnMenuList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, MenuListActivity.class);
@@ -284,21 +358,24 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // 주문기록 클릭하면 화면 이동
-        binding.btnOrderedList.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnOrderedList=(ImageButton)findViewById(R.id.btn_orderedList);
+        btnOrderedList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, OrderedListActivity.class);
                 startActivity(intent);
             }
         });
-
+/*
         // 나 추천 누르면 화면 이동- 시현쓰코드
-        /*
-        binding.btnHomeRecom.setOnClickListener(new View.OnClickListener() {
+        Button btnHomeRecom=(Button)findViewById(R.id.btn_my_reco);
+        btnHomeRecom.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {*/
+            public void onClick(View v) {
+  */
         // 나 추천 누르면 화면 이동
-        binding.btnMyReco.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnMyReco=(ImageButton)findViewById(R.id.btn_my_reco);
+        btnMyReco.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -312,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
                                         String str = (String)document.getData().get("guest");
                                         // 잠시만여-지연
                                         // 카메라 연동되면 AppSetting.personUUID로 바꿀예정
-                                        if(str.equals("a056b551-622b-46f8-8620-731a66bc5be8")){
+                                        if(str.equals(AppSetting.personUUID)){
                                             String orderToString=(String)document.getData().get("orderToString");
 
                                             // rank 맵에 이미 있다면 있는값에 추가
@@ -384,7 +461,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+
+
+
+     //   viewAnimator = new ViewAnimator<>(this, list, contentFragment, drawerLayout, this);
+
+        //titanic.cancel();
+    }//end onCreate
+    // 왼쪽 바
+
+
+
+    // 왼쪽 바
+
+
+
+
 
     private void showGetPermissionDialog(){
         // 얼굴 등록했다고 말했으면 iamRegistered =true,
@@ -446,30 +538,7 @@ public class MainActivity extends AppCompatActivity {
         ).show();
     }
 
-    private void showRegisterDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this/*getContext()*/)
-                .setTitle("얼굴 등록하셨나요?")
-                //.setView(alertView)
-                //.setMessage("10번 사진 찍습니다!")
-                .setPositiveButton("네", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        AppSetting.registeredPersonFlag = true;
-                        showGetPermissionDialog();
-                    }
-                }).setNegativeButton("아니요", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                AppSetting.registeredPersonFlag = false;
-                                showGetPermissionDialog();
-                            }
-                        }
-                );
 
-
-        // 되려나 된다 모달리스
-        builder.show().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
-    }
 
     public void intentToCameraActivity(){
         AppSetting.camefromMain = true;

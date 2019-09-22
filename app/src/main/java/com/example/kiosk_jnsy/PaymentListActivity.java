@@ -261,6 +261,7 @@ public class PaymentListActivity extends AppCompatActivity {
                 builder.setMessage("주문되었습니다")
                         .setCancelable(false)
                         .setPositiveButton("확인",
+
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                     }
@@ -422,7 +423,7 @@ public class PaymentListActivity extends AppCompatActivity {
                                     if(menucount.get(current2)==0){
                                         mArrayList.remove(current2);
                                         menucount.remove(current2);
-                                    }//0이라고 아예 없어지는게 아님 키는 남아있으므로 키지워줌
+                                    }// 0이라고 아예 없어지는게 아님 키는 남아있으므로 키지워줌
 
 
                                     mAdapter = new PaymentListAdapter(mArrayList);

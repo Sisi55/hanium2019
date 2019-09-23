@@ -65,7 +65,9 @@ public class OrderedListActivity extends AppCompatActivity {
         final OrderedListActivity.CafeItemAdapter adapter=new OrderedListActivity.CafeItemAdapter(new OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener() {
             @Override
             public void onCafeItemClicked(Person model) {
+
                 Intent intent = new Intent(OrderedListActivity.this, MenuListActivity.class);
+                Toast.makeText(OrderedListActivity.this, "dddddd", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
         });
@@ -179,9 +181,10 @@ public class OrderedListActivity extends AppCompatActivity {
                                     HashMap<String,Integer> rank=new HashMap<>();
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         String str = (String)document.getData().get("guest");
+                                        Log.e("  many order", str);
                                         // 잠시만여-지연
                                         // 카메라 연동되면 AppSetting.personUUID로 바꿀예정
-                                        if(str.equals("a056b551-622b-46f8-8620-731a66bc5be8")){
+                                        if(str.equals(AppSetting.personUUID)){
                                             String orderToString=(String)document.getData().get("orderToString");
 
                                             // rank 맵에 이미 있다면 있는값에 추가

@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
@@ -127,6 +128,32 @@ public class MainActivity extends AppCompatActivity  {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 
     }
+    private void showNewRegisterDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this/*getContext()*/)
+                .setTitle("얼굴 등록하시겠어요?")
+                //.setView(alertView)
+                //.setMessage("10번 사진 찍습니다!")
+                .setPositiveButton("아니요", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+/*
+                        AppSetting.registeredPersonFlag = true;
+                        showGetPermissionDialog();
+*/
+                    }
+                }).setNegativeButton("네", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                AppSetting.registeredPersonFlag = false;
+                                showGetPermissionDialog();
+                            }
+                        }
+                );
+        // 되려나 된다 모달리스
+        builder.show().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+
+    }
+
     // temp
     CafeItem item;
     Map<String,Double> weather;
@@ -335,6 +362,21 @@ public class MainActivity extends AppCompatActivity  {
 
 
     private void intentClickBtn(){
+
+        // 카메라 아이콘 클릭하면 얼굴등록하기
+        ImageButton btnOtherCamera=(ImageButton)findViewById(R.id.btn_camera);
+        btnOtherCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                intentToCameraActivity();
+                /*showGetPermissionDialog();*/
+                showNewRegisterDialog();
+/*
+                Intent intent = new Intent(MainActivity.this, CameraActivity.class);
+                startActivity(intent);
+*/
+            }
+        });
 
         // 타 추천 클릭하면 화면 이동
         ImageButton btnOtherReco=(ImageButton)findViewById(R.id.btn_other_reco);

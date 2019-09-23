@@ -4,6 +4,8 @@ package com.example.kiosk_jnsy;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
@@ -205,7 +207,7 @@ public class MenuListActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                // Log.d(TAG, document.getId() + " => " + document.getData().get("name"));
                                // CafeItem ccc=document.getData();
-                               String name = (String)document.getData().get("name");
+                                String name = (String)document.getData().get("name");
                                 Long pricen = (Long)document.getData().get("price");
                                 String body=(String)document.getData().get("body");
                                 int price=pricen.intValue();
@@ -308,6 +310,7 @@ public class MenuListActivity extends AppCompatActivity {
             // TODO : 데이터를 뷰홀더에 표시하시오
             holder.name.setText(item.getName());
             holder.price.setText(item.getPrice()+"");
+
             // holder.cafe_imageview.setImageResource();
             /*
             Glide.with(holder.cafe_imageview.getContext())
@@ -326,6 +329,11 @@ public class MenuListActivity extends AppCompatActivity {
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .fitCenter())
                     .into(holder.cafe_imageview);
+
+//            holder.cafe_imageview;  이미지 동그랗게
+//            holder.cafe_imageview.setBackground(new ShapeDrawable(new OvalShape()));
+//            holder.cafe_imageview.setClipToOutline(true);
+
 
         }
 

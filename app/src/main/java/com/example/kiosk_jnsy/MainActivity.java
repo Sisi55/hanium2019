@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity  {
 //        "happiness" "neutral"
         tempEmotion=new HashMap<String,Double>();
         tempEmotion.put("happiness",0.9); // "happiness" "neutral"
-        tempEmotion.put(/*"neutral"*/"contempt",0.1);
+        tempEmotion.put("neutral"/*"contempt"*/,0.1);
 
 
 
@@ -169,8 +169,8 @@ public class MainActivity extends AppCompatActivity  {
                                             weather, // Map<String,Double>
                                             tempArray, // ArrayList<CafeItem>
                                             today, // String
-                                            /*"54abaaa4-b8af-429f-baed-9047e6c0561e" 시현*/
-                                            "82d44f92-6626-44a8-8766-57d627b99269" /*지연*/, // AppSetting.personUUID
+                                            "54abaaa4-b8af-429f-baed-9047e6c0561e" /*시현*/
+                                            /*"82d44f92-6626-44a8-8766-57d627b99269"*/ /*지연*/, // AppSetting.personUUID
                                             item.getName());
 
                                     FirebaseFirestore.getInstance().collection("order").add(order);

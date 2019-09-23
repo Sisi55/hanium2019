@@ -7,31 +7,25 @@
     android:background="@color/colorWhite"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <RelativeLayout
+        android:id="@+id/linearLayout"
         android:layout_width="415dp"
         android:layout_height="69dp"
-        android:layout_marginBottom="23dp"
         android:background="#3B240B"
-        android:orientation="vertical"
-        android:paddingTop="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintBottom_toTopOf="@+id/recycler_main_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:text="메뉴판"
             android:textColor="@color/colorWhite"
             android:textSize="30dp"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="39dp" />
-
-    </LinearLayout>
+            android:fontFamily="@font/myfont1"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"

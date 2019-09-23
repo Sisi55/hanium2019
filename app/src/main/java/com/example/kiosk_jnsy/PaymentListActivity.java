@@ -278,7 +278,7 @@ public class PaymentListActivity extends AppCompatActivity {
                 }
 
                 // 주문하면 Main으로 이동한다
-//                startActivity(new Intent(PaymentListActivity.this, MainActivity.class));
+                startActivity(new Intent(PaymentListActivity.this, MainActivity.class));
             }
         });
 
@@ -343,6 +343,7 @@ public class PaymentListActivity extends AppCompatActivity {
             public ListViewHolder(View view){
                 super(view);
                 order=(TextView)view.findViewById(R.id.list_tv);
+
                 delete=(Button)view.findViewById(R.id.delete_btn);
                 plus=(Button)view.findViewById(R.id.plus_btn);
                 price=(TextView)view.findViewById(R.id.price_tv);

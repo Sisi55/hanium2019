@@ -5,29 +5,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="10dp">
+        >
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/linearLayout2"
             android:layout_width="415dp"
             android:layout_height="69dp"
-            android:layout_marginBottom="23dp"
             android:background="#3B240B"
-            android:orientation="vertical"
-            android:paddingTop="10dp"
            >
-
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="상세 설정"
                 android:textColor="@color/colorWhite"
                 android:textSize="30dp"
-               />
-
-        </LinearLayout>
+                android:fontFamily="@font/myfont1"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
 
         <!-- 이미지 + 메뉴 이름 + 상세 설정 -->
         <!-- 필요하다 생각되었을 때 다시 수정하면 되니까 우선 이것부터 해보자 -->
@@ -57,13 +52,16 @@
                     android:id="@+id/tv_menuTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp"
+
+                    android:fontFamily="@font/myfont1"/>
 
                 <TextView
                     android:id="@+id/tv_menuPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"/>
+                    android:textSize="20dp"
+                    android:fontFamily="@font/myfont1"/>
 
                 <!--세부옵션 추가버튼 -->
                 <LinearLayout
@@ -127,14 +125,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="20dp"
-                android:text="담기"/>
+                android:text="담기"
+                android:fontFamily="@font/myfont1"
+                />
             <Button
                 android:id="@+id/btn_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="20dp"
-                android:text="목록"/>
+                android:text="목록"
+                android:fontFamily="@font/myfont1"/>
 
         </LinearLayout>
 
@@ -161,7 +162,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="아이템CF"/>
+                    android:text="아이템CF"
+                    android:fontFamily="@font/myfont1"
+                    android:textSize="13dp"/>
                 <ImageView
                     android:layout_width="match_parent"
                     android:gravity="center_horizontal"
@@ -175,13 +178,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="메뉴이름"/>
+                    android:text="메뉴이름"
+                    android:fontFamily="@font/myfont1"
+                    android:textSize="13dp"/>
                 <TextView
                     android:id="@+id/tv_itemCF_price"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="메뉴가격"/>
+                    android:text="메뉴가격"
+                    android:fontFamily="@font/myfont1"
+                    android:textSize="13dp"/>
 
             </LinearLayout>
             <LinearLayout
@@ -198,7 +205,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="아이템 필터링"/>
+                    android:text="아이템 필터링"
+                    android:fontFamily="@font/myfont1"
+                    android:textSize="13dp"/>
                 <ImageView
                     android:layout_width="match_parent"
                     android:gravity="center_horizontal"
@@ -211,13 +220,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="메뉴이름"/>
+                    android:text="메뉴이름"
+                    android:fontFamily="@font/myfont1"
+                    android:textSize="13dp"/>
                 <TextView
                     android:id="@+id/tv_we_sim_price"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="메뉴가격"/>
+                    android:text="메뉴가격"
+                    android:fontFamily="@font/myfont1"
+                    android:textSize="13dp"/>
 
             </LinearLayout>
 <!--

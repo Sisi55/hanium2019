@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:text="덕우에게 추천합니다~"
         android:textSize="20dp"
+        android:fontFamily="@font/myfont1"
         />
 
     <LinearLayout
@@ -50,7 +51,8 @@
             android:layout_weight="1"
             android:text="메뉴이름"
             android:textSize="20dp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:fontFamily="@font/myfont1"/>
         <TextView
             android:id="@+id/tv_item1_price"
             android:layout_width="match_parent"
@@ -59,6 +61,7 @@
             android:text="2200"
             android:textSize="20dp"
             android:gravity="center"
+            android:fontFamily="@font/myfont1"
             />
 
     </LinearLayout>
@@ -93,7 +96,8 @@
             android:layout_weight="1"
             android:text="메뉴이름"
             android:textSize="20dp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:fontFamily="@font/myfont1"/>
         <TextView
             android:id="@+id/tv_item2_price"
             android:layout_width="match_parent"
@@ -101,7 +105,8 @@
             android:layout_weight="1"
             android:text="1800"
             android:textSize="20dp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:fontFamily="@font/myfont1"/>
 
     </LinearLayout>
 

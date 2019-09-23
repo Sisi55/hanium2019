@@ -12,6 +12,7 @@
         android:orientation="horizontal">
         <!--고른 메뉴이름-->
         <TextView
+            android:fontFamily="@font/myfont1"
             android:id="@+id/list_tv"
             android:layout_width="330dp"
             android:layout_height="wrap_content"
@@ -22,6 +23,7 @@
             app:layout_constraintRight_toLeftOf="@+id/delete_btn" />
         <!-- 삭제버튼-->
         <Button
+            android:fontFamily="@font/myfont1"
             android:id="@+id/delete_btn"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
@@ -34,6 +36,7 @@
             app:layout_constraintRight_toRightOf="parent" />
         <!-- 고른 수량-->
         <TextView
+            android:fontFamily="@font/myfont1"
             android:id="@+id/count_tv"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
@@ -46,6 +49,7 @@
             app:layout_constraintRight_toLeftOf="@+id/delete_btn" />
         <!-- 추가버튼-->
         <Button
+            android:fontFamily="@font/myfont1"
             android:id="@+id/plus_btn"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
@@ -66,7 +70,8 @@
             android:textSize="20dp"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/delete_btn" />
+            app:layout_constraintRight_toLeftOf="@+id/delete_btn"
+            android:fontFamily="@font/myfont1"/>
 
 
 

@@ -271,7 +271,7 @@ public class PaymentListActivity extends AppCompatActivity {
                 if(AppSetting.personUUID != null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
                     // 선호도
                     for(CafeItem item:mArrayList){
-//                        incrementPreferences(item.getName(), AppSetting.PREFERENCE_ORDER); // 선호도 +5 증가
+                        incrementPreferences(item.getName(), AppSetting.PREFERENCE_ORDER); // 선호도 +5 증가
                     }
                     // DB 갱신
                     updateDB();
@@ -343,6 +343,7 @@ public class PaymentListActivity extends AppCompatActivity {
             public ListViewHolder(View view){
                 super(view);
                 order=(TextView)view.findViewById(R.id.list_tv);
+
                 delete=(Button)view.findViewById(R.id.delete_btn);
                 plus=(Button)view.findViewById(R.id.plus_btn);
                 price=(TextView)view.findViewById(R.id.price_tv);

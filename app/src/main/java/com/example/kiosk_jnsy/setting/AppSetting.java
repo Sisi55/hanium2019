@@ -10,7 +10,7 @@ public class AppSetting {
 
     // aws 서버
     public static String protocol = "http://";
-    public static String aws_dns = protocol + "ec2-54-180-104-194.ap-northeast-2.compute.amazonaws.com";
+    public static String aws_dns = protocol + "ec2-15-164-211-129.ap-northeast-2.compute.amazonaws.com";
     // 요청 url
 //    public static String recom_xgb_URL = aws_dns + "/xgb_recom/2019-09-09%2021:05:58/80.0/300.0/1.00/happiness/neutral";
     public static String recom_weather_humidity;

@@ -6,26 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".PaymentListActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linearLayout"
-        android:layout_width="393dp"
-        android:layout_height="78dp"
-        android:layout_marginBottom="10dp"
+        android:layout_width="415dp"
+        android:layout_height="69dp"
         android:background="#3B240B"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/recycler_main_list"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+    app:layout_constraintBottom_toTopOf="@+id/recycler_main_list"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
         <TextView
+            android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="장바구니"
             android:textColor="@color/colorWhite"
-            android:textSize="30dp" />
-    </LinearLayout>
+            android:textSize="30dp"
+            android:fontFamily="@font/myfont1"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_main_list"

@@ -19,65 +19,6 @@ import java.text.SimpleDateFormat;
 
 public class Recom {
 
-//    class GetDataJSON extends AsyncTask<Void, Void, String> {
-//        // public GetDataJSON()
-//        @Override
-//        protected String doInBackground(Void... params) {
-//            //
-//            // 날씨 받아올 url
-//            String uri = "http://api.openweathermap.org/data/2.5/weather?lat=37.652490&lon=127.013178&mode=json&APPID=41d82c8172c1c237afb77833d08a8a59";
-//            BufferedReader bufferedReader = null;
-//            StringBuilder sb = new StringBuilder();
-//            String json;
-//            try{
-//                URL url = new URL(uri);
-//                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-//                bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//                while ((json = bufferedReader.readLine()) != null) {
-//                    sb.append(json + "\n");
-//                }
-//                return sb.toString().trim();
-//            }catch(Exception e){
-//                Log.d("오류",e.getMessage());
-//                return "e.getMessage()";
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            // myJSON = result; // Activity 멤버 변수
-//            try{
-//                //JSONObject jsonObj = ggggnew JSONObject(result);
-//                //peoples = jsonObj.getJSONArray(TAG_RESULTS); // peoples는 Activity 멤버 JsonArray
-//                // tag results는 json dict의 key겠지 ? value-리스트를 가져온다는 소리
-//                // 일단 매개 result 를 출력하는 정도로만 시도해보자
-//
-//                //Toast.makeText(getActivity().getApplicationContext(), "날씨 갱신함", Toast.LENGTH_SHORT).show();
-//                //Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_SHORT).show();
-//                //description="초기";
-//
-//
-//                JSONArray jarray = new JSONObject(result).getJSONArray("weather");
-//                JSONObject jObject = jarray.getJSONObject(0);
-//                description = jObject.optString("description");
-//
-//                JSONObject main=new JSONObject(result).getJSONObject("main");
-//                humidity = main.optString("humidity");
-//                temp = main.optString("temp");
-//
-//                JSONObject wind=new JSONObject(result).getJSONObject("wind");
-//                speed= wind.optString("speed");
-//
-//
-//                //Toast.makeText(getActivity().getApplicationContext(), temp_d+"입니다.", Toast.LENGTH_SHORT).show();
-//
-//                Log.d("날씨 갱신결과","설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
-//                //tv.setText("설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
-//            }catch(Exception e){
-//
-//            }
-//        }
-//    }
 
 
     public static class RecomXGBTask extends AsyncTask<Void, Void, String> {

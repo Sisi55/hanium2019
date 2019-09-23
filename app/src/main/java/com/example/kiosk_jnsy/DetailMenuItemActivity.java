@@ -176,10 +176,12 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         if(v==binding.tvItemCFName || v==binding.tvItemCFPrice || v==binding.imageviewCf) {
             Intent intent = new Intent(DetailMenuItemActivity.this, DetailMenuItemActivity.class);
             intent.putExtra("detail", item2);
+            intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
             startActivity(intent);
         }else if(v==binding.tvWeSimName || v==binding.tvWeSimPrice || v==binding.imageviewWeSim){
             Intent intent = new Intent(DetailMenuItemActivity.this, DetailMenuItemActivity.class);
             intent.putExtra("detail", item1);
+            intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
             startActivity(intent);
 
         }
@@ -278,7 +280,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         if(AppSetting.personUUID != null){// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
             // 선호도 +1
             // 잠시만여
-      //      incrementPreferences(AppSetting.PREFERENCE_CLICK);
+            incrementPreferences(AppSetting.PREFERENCE_CLICK);
 
         }
 
@@ -315,7 +317,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
                 if(AppSetting.personUUID != null) {// 사용자가 얼굴인식을 하지 않는 경우를 생각한다
                     // 잠시만여
-   //                 incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
+                    incrementPreferences(AppSetting.PREFERENCE_SHOPLIST); // 선호도 3 증가
                 }
 
 

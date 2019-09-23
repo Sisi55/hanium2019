@@ -67,8 +67,11 @@ public class OrderedListActivity extends AppCompatActivity {
         final OrderedListActivity.CafeItemAdapter adapter=new OrderedListActivity.CafeItemAdapter(new OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener() {
             @Override
             public void onCafeItemClicked(Person model) {
+
                 Toast.makeText(OrderedListActivity.this, "야 눌렸냐", Toast.LENGTH_SHORT).show();
+
                 Intent intent = new Intent(OrderedListActivity.this, MenuListActivity.class);
+                Toast.makeText(OrderedListActivity.this, "dddddd", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
             }
         });
@@ -97,7 +100,7 @@ public class OrderedListActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 guest = (String) (String)document.getData().get("guest");
-                                if(guest.equals("54abaaa4-b8af-429f-baed-9047e6c0561e")){
+                                if(guest.equals(AppSetting.personUUID)){
 
 
                                     List allList=(List) document.getData().get("items");
@@ -186,9 +189,14 @@ public class OrderedListActivity extends AppCompatActivity {
                                     HashMap<String,Integer> rank=new HashMap<>();
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         String str = (String)document.getData().get("guest");
+                                        Log.e("  many order", str);
                                         // 잠시만여-지연
                                         // 카메라 연동되면 AppSetting.personUUID로 바꿀예정
-                                        if(str.equals("54abaaa4-b8af-429f-baed-9047e6c0561e")){
+
+
+
+                                        if(str.equals(AppSetting.personUUID)){
+
                                             String orderToString=(String)document.getData().get("orderToString");
 
                                             // rank 맵에 이미 있다면 있는값에 추가

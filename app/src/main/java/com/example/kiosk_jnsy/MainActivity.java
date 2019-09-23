@@ -363,7 +363,9 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, OrderedListActivity.class);
+
                 startActivity(intent);
+                Log.d("23일","액티비티 넘어감");
             }
         });
 /*
@@ -389,7 +391,7 @@ public class MainActivity extends AppCompatActivity  {
                                         String str = (String)document.getData().get("guest");
                                         // 잠시만여-지연
                                         // 카메라 연동되면 AppSetting.personUUID로 바꿀예정
-                                        if(str.equals(AppSetting.personUUID)){
+                                        if(str.equals("54abaaa4-b8af-429f-baed-9047e6c0561e")){
                                             String orderToString=(String)document.getData().get("orderToString");
 
                                             // rank 맵에 이미 있다면 있는값에 추가

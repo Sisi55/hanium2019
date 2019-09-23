@@ -278,7 +278,7 @@ public class PaymentListActivity extends AppCompatActivity {
                 }
 
                 // 주문하면 Main으로 이동한다
-//                startActivity(new Intent(PaymentListActivity.this, MainActivity.class));
+                startActivity(new Intent(PaymentListActivity.this, MainActivity.class));
             }
         });
 

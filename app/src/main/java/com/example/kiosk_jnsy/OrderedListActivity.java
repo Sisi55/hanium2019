@@ -56,6 +56,8 @@ public class OrderedListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         people=new ArrayList<Person>();
         super.onCreate(savedInstanceState);
+        Log.d("23일","액티비티 넘어왔다!!");
+
         setContentView(R.layout.activity_ordered_list);
         // 리사이클러뷰
         final RecyclerView recyclerView=findViewById(R.id.recyclerView);
@@ -65,6 +67,7 @@ public class OrderedListActivity extends AppCompatActivity {
         final OrderedListActivity.CafeItemAdapter adapter=new OrderedListActivity.CafeItemAdapter(new OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener() {
             @Override
             public void onCafeItemClicked(Person model) {
+                Toast.makeText(OrderedListActivity.this, "야 눌렸냐", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(OrderedListActivity.this, MenuListActivity.class);
                 startActivity(intent);
             }
@@ -80,6 +83,8 @@ public class OrderedListActivity extends AppCompatActivity {
         Datebtn =(Button)findViewById(R.id.bydatebtn);
         // 주문 많이 시킨순
         Orderbtn = (Button)findViewById(R.id.orderedlotbtn);
+
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseFirestore db1 = FirebaseFirestore.getInstance();
         //final List<CafeItem> people=new ArrayList<>();
@@ -92,7 +97,7 @@ public class OrderedListActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 guest = (String) (String)document.getData().get("guest");
-                                if(guest.equals(AppSetting.personUUID)){
+                                if(guest.equals("54abaaa4-b8af-429f-baed-9047e6c0561e")){
 
 
                                     List allList=(List) document.getData().get("items");
@@ -122,6 +127,7 @@ public class OrderedListActivity extends AppCompatActivity {
         Datebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("23일","날짜 순 버튼 누름");
                 // 리스트 초기화
                 people.clear();
                 FirebaseFirestore db1 = FirebaseFirestore.getInstance();
@@ -168,8 +174,9 @@ public class OrderedListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 리스트 초기화
+                Log.d("23일","주문많이시킨 순 버튼 누름");
                 Button items=(Button)findViewById(R.id.price_text);
-               // items.setVisibility(View.GONE);
+                // items.setVisibility(View.GONE);
                 people.clear();
                 FirebaseFirestore.getInstance().collection("order").get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -181,13 +188,13 @@ public class OrderedListActivity extends AppCompatActivity {
                                         String str = (String)document.getData().get("guest");
                                         // 잠시만여-지연
                                         // 카메라 연동되면 AppSetting.personUUID로 바꿀예정
-                                        if(str.equals("a056b551-622b-46f8-8620-731a66bc5be8")){
+                                        if(str.equals("54abaaa4-b8af-429f-baed-9047e6c0561e")){
                                             String orderToString=(String)document.getData().get("orderToString");
 
                                             // rank 맵에 이미 있다면 있는값에 추가
                                             if(rank.get(orderToString)!=null){
                                                 int num=rank.get(orderToString);
-                                               // Toast.makeText(MainActivity.this, orderToString+"추가", Toast.LENGTH_SHORT).show();
+                                                // Toast.makeText(MainActivity.this, orderToString+"추가", Toast.LENGTH_SHORT).show();
                                                 rank.put(orderToString,num+1);
                                             }// 없다면 1로 추가
                                             else {

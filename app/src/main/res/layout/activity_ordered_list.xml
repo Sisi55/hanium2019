@@ -5,62 +5,45 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginBottom="94dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/bydatebtn"
+            android:layout_width="179dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="주문 기록"
-            android:background="#3B240B"
-            android:textColor="@color/colorWhite"
-            android:textSize="30dp" />
+            android:text="날짜순" />
 
-
-        <LinearLayout
-            android:id="@+id/linear3"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-
-            android:gravity="top|center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/bydatebtn"
-                android:layout_width="179dp"
-                android:layout_height="wrap_content"
-                android:text="날짜순" />
-
-            <Button
-                android:id="@+id/orderedlotbtn"
-                android:layout_width="168dp"
-                android:layout_height="wrap_content"
-                android:text="주문 많이 시킨순" />
-
-
-        </LinearLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="445dp"
-
-            android:gravity="top|center"
-            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-            tools:layout_editor_absoluteX="8dp"
-            tools:layout_editor_absoluteY="142dp" />
-
+        <Button
+            android:id="@+id/orderedlotbtn"
+            android:layout_width="168dp"
+            android:layout_height="wrap_content"
+            android:text="주문 많이 시킨순" />
 
     </LinearLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        android:layout_marginBottom="144dp"
+    android:gravity="top|center"
+    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
 
 </android.support.constraint.ConstraintLayout>

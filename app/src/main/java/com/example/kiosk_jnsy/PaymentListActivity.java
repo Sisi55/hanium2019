@@ -277,6 +277,10 @@ public class PaymentListActivity extends AppCompatActivity {
                     updateDB();
                 }
 
+                // 주문하기 버튼을 누르면 로그아웃 처리
+                AppSetting.personUUID = null;
+                AppSetting.personName = null;
+
                 // 주문하면 Main으로 이동한다
                 startActivity(new Intent(PaymentListActivity.this, MainActivity.class));
             }

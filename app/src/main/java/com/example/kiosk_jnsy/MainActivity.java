@@ -1,5 +1,6 @@
 package com.example.kiosk_jnsy;
 //import com.sidemenu.model.SlideMenuItem;
+import com.example.kiosk_jnsy.face.AboutPersonGroup;
 import com.example.kiosk_jnsy.util.ViewAnimator;
 import android.animation.Animator;
 import android.app.AlertDialog;
@@ -268,7 +269,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-        inputTempOrderList(); // 임시 order data 삽입
+//        inputTempOrderList(); // 임시 order data 삽입
 
         // 추천 내역 전역으로 저장한다
 //        new Recom.RecomXGBTask().execute();
@@ -355,11 +356,35 @@ public class MainActivity extends AppCompatActivity  {
                 // 메뉴를 클릭하면 키로 유무 확인하고, 있으면 값 증가, 없으면 키 생성해서 값 할당
                 AppSetting.isSetPersonalRecom=true; // Map 가져오는 것도 한번만
 
+                // 이름 확인하는 대화상자 출력하기
+                showPersonName();
+
             }
         }
 
     }
+    private void showPersonName(){
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this/*getContext()*/)
+                .setTitle(AppSetting.personName+"님 안녕하세요!")
+                //.setView(alertView)
+                .setMessage(AppSetting.personName+"님이 아니시라면 '다시'를 눌러주세요")
+                .setPositiveButton("hello", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+//                        AppSetting.registeredPersonFlag = true;
+//                        showGetPermissionDialog();
+                    }
+                }).setNegativeButton("다시", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+//                                AppSetting.registeredPersonFlag = false;
+//                                showGetPermissionDialog();
+                            }
+                        }
+                );
+        builder.show();
+
+    }
 
 
     private void intentClickBtn(){

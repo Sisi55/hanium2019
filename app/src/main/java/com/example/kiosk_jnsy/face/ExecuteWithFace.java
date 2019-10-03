@@ -575,6 +575,7 @@ public class ExecuteWithFace {
 
 // 여기서도 ui 접근가능한데
             Log.e("   getPerson:  ", ""+person.name); // 체크
+            AppSetting.personName = person.name;
 
 /*
             handler.post(new Runnable() {

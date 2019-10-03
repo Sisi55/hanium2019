@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity  {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+
                             for (QueryDocumentSnapshot document : task.getResult()) {
 //                                Log.d(TAG, document.getId() + " => " + document.getData());
                                 item = document.toObject(CafeItem.class);
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity  {
                                 String today = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis());
 
 
-                                for(int i=0;i<10;i++){ // 임시 주문 기록 10개씩 넣기
+                                for(int i=0;i<3;i++){ // 임시 주문 기록 10개씩 넣기
 
                                     Order order = new Order(
                                             tempEmotion, // Map<String,Double>
@@ -267,7 +268,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-//        inputTempOrderList(); // 임시 order data 삽입
+        inputTempOrderList(); // 임시 order data 삽입
 
         // 추천 내역 전역으로 저장한다
 //        new Recom.RecomXGBTask().execute();

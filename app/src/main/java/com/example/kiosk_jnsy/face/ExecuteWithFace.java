@@ -161,7 +161,7 @@ public class ExecuteWithFace {
             emotionMap.put("disgust",emotion.disgust);
             emotionMap.put("fear",emotion.fear);
 
-            emotionMap.put("happiness",emotion.happiness);
+            emotionMap.put("happiness",emotion.happiness*5);
             emotionMap.put("neutral",emotion.neutral);
             emotionMap.put("sadness",emotion.sadness);
             emotionMap.put("surprise",emotion.surprise);
@@ -459,7 +459,7 @@ public class ExecuteWithFace {
             emotionMap.put("disgust",emotion.disgust);
             emotionMap.put("fear",emotion.fear);
 
-            emotionMap.put("happiness",emotion.happiness); // "happiness" "neutral"
+            emotionMap.put("happiness",emotion.happiness*5); // "happiness" "neutral"
             emotionMap.put("neutral",emotion.neutral);
             emotionMap.put("sadness",emotion.sadness);
             emotionMap.put("surprise",emotion.surprise);

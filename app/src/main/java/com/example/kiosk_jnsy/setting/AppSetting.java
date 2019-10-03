@@ -10,7 +10,7 @@ public class AppSetting {
 
     // aws 서버
     public static String protocol = "http://";
-    public static String aws_dns = protocol + "ec2-15-164-211-129.ap-northeast-2.compute.amazonaws.com";
+    public static String aws_dns = protocol + "ec2-13-209-15-93.ap-northeast-2.compute.amazonaws.com";
     // 요청 url
 //    public static String recom_xgb_URL = aws_dns + "/xgb_recom/2019-09-09%2021:05:58/80.0/300.0/1.00/happiness/neutral";
     public static String recom_weather_humidity;
@@ -27,8 +27,8 @@ public class AppSetting {
 
 
     // ms 계정 연동
-    private final static String apiEndpoint = "https://westcentralus.api.cognitive.microsoft.com/face/v1.0";
-    private final static String subscriptionKey = "93cb040c2cf540d4a3c20db47ac24577";
+    private final static String apiEndpoint = "https://sisi.cognitiveservices.azure.com/face/v1.0";
+    private final static String subscriptionKey = "cee5fa54119d469dadcc4e2e158e9f2c";
     public static FaceServiceClient faceServiceClient = new FaceServiceRestClient(apiEndpoint, subscriptionKey);
 
     public static String personGroupId="mini-cafe"; // test 그룹

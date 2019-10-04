@@ -364,7 +364,7 @@ public class MainActivity extends AppCompatActivity  {
         }
 
     }
-    private void showPersonName(){
+    private void showPersonName(){ // 안녕하세요!
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this/*getContext()*/)
                 .setTitle(AppSetting.personName+"님 안녕하세요!")
@@ -384,6 +384,16 @@ public class MainActivity extends AppCompatActivity  {
                         }
                 );
         builder.show();
+
+        // tts
+        String tts_identify = getResources().getString(R.string.after_identify_start) +
+                AppSetting.personName +
+                getResources().getString(R.string.after_identify_end);
+        if(AppSetting.emotion.containsKey("happiness") || AppSetting.emotion.containsKey("neutral") || AppSetting.emotion.containsKey("surprise")){
+            Log.e("   감정", "긍정0");
+        }else{
+            Log.e("   감정", "부정0");
+        }
 
     }
 

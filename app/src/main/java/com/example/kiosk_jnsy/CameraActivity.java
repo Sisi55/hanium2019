@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.media.ImageReader;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -98,9 +100,39 @@ public class CameraActivity extends AppCompatActivity
 
     }
 
+    final Handler handler_dialog_end = new Handler(){
+        public void handleMessage(Message msg){
+            // 원래 하려던 동작 (UI변경 작업 등)
+            if(AppSetting.progressEndFlag == false){ //start
+                mProgressDialog = new ProgressDialog(CameraActivity.this);
+                mProgressDialog.setTitle("잠시 기다려 주세요.");
+            }else{ // true end
+                mProgressDialog.dismiss();
+            }
+
+        }
+    };
+
     public void intentToMain(){
         Log.e("   Camera","intent to Main");
         AppSetting.camefromCamera = true;
+        // handler
+/*
+        Message msg = handler_dialog_end.obtainMessage();
+        handler_dialog_end.sendMessage(msg);
+*/
+//        mProgressDialog.dismiss();
+/*
+        CameraActivity.this.runOnUiThread(new Runnable() { // get activity() 해서 run on ui thread()
+            @Override
+            public void run() {
+                AppSetting.progressEndFlag = true;
+                Message msg = handler_dialog_end.obtainMessage();
+                handler_dialog_end.sendMessage(msg);
+            }
+        });
+*/
+
         startActivity(new Intent(this, MainActivity.class));
     }
 
@@ -114,6 +146,14 @@ public class CameraActivity extends AppCompatActivity
         editText = (EditText) findViewById(R.id.edit);
         mTextureView = (AutoFitTextureView) findViewById(R.id.texture);
 
+        CameraActivity.this.runOnUiThread(new Runnable() { // get activity() 해서 run on ui thread()
+            @Override
+            public void run() {
+                AppSetting.progressEndFlag = false;
+                Message msg = handler_dialog_end.obtainMessage();
+                handler_dialog_end.sendMessage(msg);
+            }
+        });
 
 /*
         if(AppSetting.camefromMain == true){
@@ -144,6 +184,17 @@ public class CameraActivity extends AppCompatActivity
     //end method
 
     String name; // 바로 아래서 사용한다 : 대화상자
+    ProgressDialog mProgressDialog;
+/*
+    final Handler handler_dialog_create = new Handler(){
+        public void handleMessage(Message msg){
+            // 원래 하려던 동작 (UI변경 작업 등)
+            mProgressDialog = new ProgressDialog(CameraActivity.this);
+            mProgressDialog.setTitle("잠시 기다려 주세요.");
+        }
+    };
+*/
+
     // texture view 관련 생명주기 인터페이스 구현
     private final TextureView.SurfaceTextureListener mSurfaceTextureListener
             = new TextureView.SurfaceTextureListener() {
@@ -157,6 +208,16 @@ public class CameraActivity extends AppCompatActivity
                 CaptureFace();
                 AppSetting.camefromMain=false; // 사용하고 나면 초기화
             }
+/*
+            mProgressDialog = new ProgressDialog(CameraActivity.this);
+            mProgressDialog.setTitle("잠시 기다려 주세요.");
+*/
+            // handler
+/*
+            Message msg = handler_dialog_create.obtainMessage();
+            handler_dialog_create.sendMessage(msg);
+*/
+
 
 
 /*
@@ -223,6 +284,8 @@ public class CameraActivity extends AppCompatActivity
             //end for
             AppSetting.trainRequestFlag = true;
             takePicture();
+            mProgressDialog.show();
+
         }
         //end method
     }
@@ -539,6 +602,7 @@ public class CameraActivity extends AppCompatActivity
             if(AppSetting.registeredPersonFlag == true){
                 // 등록된 사람이면
                 new ExecuteWithFace.DetectAndIdentifyTask(bytes, CameraActivity.this).execute(inputStream);
+                mProgressDialog.show();
             }else{
                 // 처음온 사람이면 10번 사진 등록하겠지 최소 등록횟수 찾아봐야 하나 ? 아 정확도 출력하라고..
                 new ExecuteWithFace.DetectAndAddFaceTask(bytes,CameraActivity.this).execute();

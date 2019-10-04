@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity  {
     }//end onCreate
 
     private void checkFromCamera(){
-        if(AppSetting.camefromCamera != true){
+        if(AppSetting.camefromCamera != true){ // false
             // 시나리오: Main > Camera > Main
             // 자칫하면 무한루프가 발생할 수 있으므로 체크한다
             // 앱이 처음 시작된 상태
@@ -327,6 +327,7 @@ public class MainActivity extends AppCompatActivity  {
             // 대화상자 출력한다
             showRegisterDialog(); // 얼굴 등록했는지 -> 얼굴 인식할건지
             AppSetting.camefromCamera = false; // 사용하고 초기화
+
         } else{
             //카메라에서 인텐트 발생해서 온거면
 
@@ -575,9 +576,9 @@ public class MainActivity extends AppCompatActivity  {
                                     .setPositiveButton("등록", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             // 가져온다
-                                            name = editName.getText().toString();
+                                            AppSetting.personName/*name */= editName.getText().toString();
                                             // 이름 받고 이름 토대로 사람 생성
-                                            new AboutPerson.CreatePersonTask(name, MainActivity.this).execute("");
+                                            new AboutPerson.CreatePersonTask(AppSetting.personName/*name*/, MainActivity.this).execute("");
 
 //                                            intentToCameraActivity();
 

@@ -184,10 +184,8 @@ public class PaymentListActivity extends AppCompatActivity {
         ArrayList<CafeItem> sliet = new ArrayList<CafeItem>(new HashSet<CafeItem>(plist));
         mArrayList=sliet;
 
-
-
         Log.d("시발","시발후"+mArrayList.size());
-        Toast.makeText(this, "후후kk:"+mArrayList.size(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "개수: "+mArrayList.size(), Toast.LENGTH_LONG).show();
 
         // RecyclerView를 위해 CustomAdapter를 사용합니다.
         mAdapter = new PaymentListAdapter(mArrayList);
@@ -280,6 +278,7 @@ public class PaymentListActivity extends AppCompatActivity {
                 // 주문하기 버튼을 누르면 로그아웃 처리
                 AppSetting.personUUID = null;
                 AppSetting.personName = null;
+                AppSetting.camefromCamera = false; // main으로 돌아가서 얼굴인식 다시 한다~
 
                 // 주문하면 Main으로 이동한다
                 startActivity(new Intent(PaymentListActivity.this, MainActivity.class));

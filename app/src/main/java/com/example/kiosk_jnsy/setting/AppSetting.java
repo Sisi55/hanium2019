@@ -46,6 +46,7 @@ public class AppSetting {
     public static Map<String,Double> emotion=null;
     public static Map<String,Double> emotion1=null;
     public static Map<String,Double> emotion2=null;
+    public static boolean progressEndFlag=true;
 
     public static Map<String,Integer> itemPreferences=null;
     public static String documentID=null;

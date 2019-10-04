@@ -288,7 +288,7 @@ public class ExecuteWithFace {
 
             //일단 첫 번째 사람 감정만 출력해본다
             if(null != faces[0].faceAttributes.emotion){
-                /*AppSetting.emotion = */getEmotion(faces[0].faceAttributes.emotion);
+                AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
             }
 
 //            ((Camera2BasicFragment)fragment).addTextToEditText("감정: "+result_emotion);

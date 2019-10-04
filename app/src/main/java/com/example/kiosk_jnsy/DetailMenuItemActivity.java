@@ -46,6 +46,18 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
     private Spinner spinner2;
     ArrayList<String> whipList;
     ArrayAdapter<String> arrayAdapter2;
+    private Spinner spinner3;
+    ArrayList<String> hoticeList;
+    ArrayAdapter<String> arrayAdapter3;
+    private Spinner spinner4;
+    ArrayList<String> tumblerList;
+    ArrayAdapter<String> arrayAdapter4;
+    private Spinner spinner5;
+    ArrayList<String> bbaldeList;
+    ArrayAdapter<String> arrayAdapter5;
+    private Spinner spinner6;
+    ArrayList<String> iceList;
+    ArrayAdapter<String> arrayAdapter6;
     // 장바구니 배열
     // 단,!!!!!!!! 사용자가 바뀌면 초기화 해주어야 한다.
 
@@ -232,8 +244,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(),shotList.get(i)+"가 선택되었습니다.",
-                        Toast.LENGTH_SHORT).show();
+
                 options.put("샷",Double.parseDouble(shotList.get(i)));
                 model.setOptions(options);
 
@@ -257,8 +268,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getApplicationContext(),whipList.get(i)+"가 선택되었습니다.",
-                        Toast.LENGTH_SHORT).show();
+
                 options.put("휘핑",Double.parseDouble(whipList.get(i)));
                 model.setOptions(options);
             }
@@ -266,7 +276,86 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+// 지연 핫/아이스에 대한 스피너 추가
+        hoticeList = new ArrayList<>();
+        hoticeList.add("-1.0");
+        hoticeList.add("+1.0");
+        arrayAdapter3 = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, hoticeList);
 
+        spinner3=(Spinner)findViewById(R.id.spinner3);
+        spinner3.setAdapter(arrayAdapter3);
+        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                options.put("온도",Double.parseDouble(hoticeList.get(i)));
+                model.setOptions(options);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+// 지연 텀블러에 대한 스피너 추가
+       tumblerList = new ArrayList<>();
+        tumblerList.add("0.0");
+        tumblerList.add("1.0");
+
+        arrayAdapter4 = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, tumblerList);
+
+        spinner4=(Spinner)findViewById(R.id.spinner4);
+        spinner4.setAdapter(arrayAdapter4);
+        spinner4.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                options.put("텀블러",Double.parseDouble(tumblerList.get(i)));
+                model.setOptions(options);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        // 지연 빨대에 대한 스피너 추가
+        bbaldeList = new ArrayList<>();
+        bbaldeList.add("0.0");
+        bbaldeList.add("1.0");
+
+        arrayAdapter5 = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, bbaldeList);
+
+        spinner5=(Spinner)findViewById(R.id.spinner5);
+        spinner5.setAdapter(arrayAdapter5);
+        spinner5.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                options.put("빨대",Double.parseDouble(bbaldeList.get(i)));
+                model.setOptions(options);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+        // 지연 얼음에 대한 스피너 추가
+        iceList = new ArrayList<>();
+        iceList.add("0.0");
+        iceList.add("1.0");
+        iceList.add("2.0");
+
+        arrayAdapter6 = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,iceList);
+
+        spinner6=(Spinner)findViewById(R.id.spinner6);
+        spinner6.setAdapter(arrayAdapter6);
+        spinner6.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                options.put("얼음",Double.parseDouble(iceList.get(i)));
+                model.setOptions(options);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
         // 해시 키값 알면 해당 데이터 가져올 수 있나 ?
         // 테스트
 
@@ -355,7 +444,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
                 // 현재 상태의 리스트 받아옴.
                 // 리스트에 담은 메뉴 추가
-                Toast.makeText(DetailMenuItemActivity.this, shoplist.size()+"", Toast.LENGTH_SHORT).show();
+
                 //shoplist.add(model);
                 // 결제로 넘어간다. 메뉴를 더 고르고 싶다면, paymentlistactivity에서 메뉴추가 버튼을 눌러 메뉴판으로 이동한다.
 

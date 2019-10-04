@@ -105,14 +105,14 @@ public class PaymentListActivity extends AppCompatActivity {
         if(menucount==null){
             // menucount가 없다면== 해시맵이 만들어진적이 없는 첫 주문이라면?
             menucount=new HashMap<CafeItem,Integer>();
-            Toast.makeText(this, "완전 첫주문", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "완전 첫주문", Toast.LENGTH_LONG).show();
             // 중복 제거할 게 없지. 주문에 한개도 없었던 거니까
             // 방금 선택한 객체를 해시맵에 넣자/
             for(int i=0;i<mArrayList.size();i++){
                 // 해당 객체가 한번도 세지지 않은 상황이라면...
                 if(!(menucount.containsKey(mArrayList.get(i)))){
                     // 해당객체 : 1 의 형태로 map에 넣는다.
-                    Toast.makeText(this, "이건 처음넣는다!", Toast.LENGTH_LONG).show();
+                 //   Toast.makeText(this, "이건 처음넣는다!", Toast.LENGTH_LONG).show();
                     menucount.put(mArrayList.get(i),1);
                 }// 해당 객체가 한번이라도 세어진 상황이라면... value=1이겠지
 
@@ -120,7 +120,7 @@ public class PaymentListActivity extends AppCompatActivity {
                     int n=menucount.get(mArrayList.get(i))+1;
                     Log.d("띠용","1111111111");
                     menucount.put(mArrayList.get(i),n);
-                    Toast.makeText(this, "주문기록 있는 상황에서 메뉴판에서 다시 추가", Toast.LENGTH_LONG).show();
+                  //  Toast.makeText(this, "주문기록 있는 상황에서 메뉴판에서 다시 추가", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -142,13 +142,13 @@ public class PaymentListActivity extends AppCompatActivity {
                     menucount.put(mArrayList.get(i),n+1);
                     over.add(mArrayList.get(i));// 넣어둠
                     Log.d("시발","시발");
-                    Toast.makeText(this, "주문기록 있는 상황에서 메뉴판에서 다시 추가", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(this, "주문기록 있는 상황에서 메뉴판에서 다시 추가", Toast.LENGTH_SHORT).show();
 
                 }
                 else{
                     // 해당객체 : 1 의 형태로 map에 넣는다.
                     Log.d("띠용","33333333333"+mArrayList.get(i).getName());
-                    Toast.makeText(this, "이건 처음넣는다!", Toast.LENGTH_SHORT).show();
+                //    Toast.makeText(this, "이건 처음넣는다!", Toast.LENGTH_SHORT).show();
                     menucount.put(mArrayList.get(i),1);
                 }
 
@@ -174,7 +174,7 @@ public class PaymentListActivity extends AppCompatActivity {
         // 어댑터에 넣기 전 중복 된건 지우고 보여주자!!
         // 지연 : mArraylist의 중복 객체들을 제거
         Log.d("시발","시발전"+mArrayList.size());
-        Toast.makeText(this, "전전:"+mArrayList.size(), Toast.LENGTH_LONG).show();
+    //    Toast.makeText(this, "전전:"+mArrayList.size(), Toast.LENGTH_LONG).show();
 
         // 지연 : mArraylist의 중복 객체들을 제거
         List<CafeItem> plist =mArrayList; // ProxyBean들을 담고 있는 proxy list
@@ -185,7 +185,7 @@ public class PaymentListActivity extends AppCompatActivity {
         mArrayList=sliet;
 
         Log.d("시발","시발후"+mArrayList.size());
-        Toast.makeText(this, "개수: "+mArrayList.size(), Toast.LENGTH_LONG).show();
+     //  Toast.makeText(this, "개수: "+mArrayList.size(), Toast.LENGTH_LONG).show();
 
         // RecyclerView를 위해 CustomAdapter를 사용합니다.
         mAdapter = new PaymentListAdapter(mArrayList);

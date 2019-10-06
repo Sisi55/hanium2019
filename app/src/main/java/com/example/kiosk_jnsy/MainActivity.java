@@ -13,6 +13,9 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.TextToSpeechService;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -72,6 +75,7 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 //import io.codetail.animation.ViewAnimationUtils;
@@ -79,7 +83,8 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity  {
 
-
+    private TextToSpeech mTTS;
+    String tts_identify;
     //ActivityMainBinding binding;
     boolean iamRegistered = false;
     View alertView;
@@ -265,6 +270,8 @@ public class MainActivity extends AppCompatActivity  {
 
         setContentView(R.layout.activity_main);
 
+
+
        // binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 
@@ -316,6 +323,9 @@ public class MainActivity extends AppCompatActivity  {
 
         intentClickBtn();
 
+
+
+
     }//end onCreate
 
     private void checkFromCamera(){
@@ -357,6 +367,32 @@ public class MainActivity extends AppCompatActivity  {
                 // 메뉴를 클릭하면 키로 유무 확인하고, 있으면 값 증가, 없으면 키 생성해서 값 할당
                 AppSetting.isSetPersonalRecom=true; // Map 가져오는 것도 한번만
 
+                tts_identify = getResources().getString(R.string.after_identify_start) + AppSetting.personName + getResources().getString(R.string.after_identify_end);
+
+                mTTS=new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+
+                    @Override
+                    public void onInit(int status) {
+                        mTTS.setLanguage(Locale.KOREAN);
+                        if (status == TextToSpeech.SUCCESS) {
+                            mTTS.speak("안녕하세요"+AppSetting.personName+"님!", TextToSpeech.QUEUE_FLUSH, null);
+                            try {
+                                Thread.sleep(1500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            if(AppSetting.emotion.containsKey("happiness") || AppSetting.emotion.containsKey("neutral") || AppSetting.emotion.containsKey("surprise")){
+                                Log.e("   감정", "긍정0");
+                                // tts추가
+                                mTTS.speak(getResources().getString(R.string.identify_good),TextToSpeech.QUEUE_FLUSH, null);
+                            }
+                            else{
+                                Log.e("   감정", "부정0");
+                                mTTS.speak(getResources().getString(R.string.identify_bad),TextToSpeech.QUEUE_FLUSH, null);
+                            }
+                        }
+                    }
+                });
                 // 이름 확인하는 대화상자 출력하기
                 showPersonName();
 
@@ -365,6 +401,7 @@ public class MainActivity extends AppCompatActivity  {
 
     }
     private void showPersonName(){ // 안녕하세요!
+
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this/*getContext()*/)
                 .setTitle(AppSetting.personName+"님 안녕하세요!")
@@ -386,15 +423,48 @@ public class MainActivity extends AppCompatActivity  {
         builder.show();
 
         // tts
-        String tts_identify = getResources().getString(R.string.after_identify_start) +
-                AppSetting.personName +
-                getResources().getString(R.string.after_identify_end);
+
+
+
+        /*
         if(AppSetting.emotion.containsKey("happiness") || AppSetting.emotion.containsKey("neutral") || AppSetting.emotion.containsKey("surprise")){
             Log.e("   감정", "긍정0");
+            // tts추가
+
+            mTTS.speak("오늘 기분이 좋아보이시네요!",TextToSpeech.QUEUE_FLUSH, null);
         }else{
             Log.e("   감정", "부정0");
+            mTTS.speak("내일은 오늘보다 나은 하루일거에요!",TextToSpeech.QUEUE_FLUSH, null);
         }
+        */
 
+    }
+    private void speak(String text){
+
+        /*
+      //  float speed=(float)mSeekBarSpeed.getProgress()/50;
+      //  if(speed<0.1) speed=0.1f;
+
+        mTTS.setPitch(pitch);
+        mTTS.setSpeechRate(speed);
+        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH,null);
+*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mTTS.speak(text,TextToSpeech.QUEUE_FLUSH,null,null);
+        } else {
+            mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // TTS 객체가 남아있다면 실행을 중지하고 메모리에서 제거한다.
+        if(mTTS != null){
+            mTTS.stop();
+            mTTS.shutdown();
+            mTTS = null;
+        }
     }
 
 

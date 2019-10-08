@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -76,6 +77,19 @@ public class PaymentListActivity extends AppCompatActivity {
     String temp=null;
     String speed;
     String humidity;
+
+    void playTTS(){
+        // tts
+        String[] str_random = getResources().getStringArray(R.array.order_random);
+        int num = str_random.length; /*// index*/
+
+        Random random = new Random();
+//        random.nextInt(num); // [) 범위 라서!
+
+        // tts 읽어주세용
+//        str_random[random.nextInt(num)] 이거 읽어주세용
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,6 +222,10 @@ public class PaymentListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("결과온","설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
+
+                // tts 로딩시간 걸린다니까 클릭하자마자 tts 함수 호출할게요
+                playTTS();
+
                 //tv.setText("설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
                 // 아무 데이터 넣을게요
                 Map<String,Double> emotion=new HashMap<String,Double>();

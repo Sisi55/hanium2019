@@ -385,15 +385,19 @@ public class MainActivity extends AppCompatActivity  {
                 );
         builder.show();
 
-        // tts
-        String tts_identify = getResources().getString(R.string.after_identify_start) +
+
+        // tts 이거 얼굴인식하는 곳에 잘라 가져가세용
+        String tts_identify = getResources().getString(R.string.after_identify_start) + // getResources().getString(R.string)
                 AppSetting.personName +
                 getResources().getString(R.string.after_identify_end);
         if(AppSetting.emotion.containsKey("happiness") || AppSetting.emotion.containsKey("neutral") || AppSetting.emotion.containsKey("surprise")){
-            Log.e("   감정", "긍정0");
+            Log.e("   감정", "긍정");
+            tts_identify += tts_identify + getResources().getString(R.string.identify_good);
         }else{
-            Log.e("   감정", "부정0");
+            Log.e("   감정", "부정");
+            tts_identify += tts_identify + getResources().getString(R.string.identify_bad);
         }
+        // tts_identify  읽어주세용
 
     }
 
@@ -587,6 +591,7 @@ public class MainActivity extends AppCompatActivity  {
                                         public void onClick(DialogInterface dialog, int which) {
                                             // 가져온다
                                             AppSetting.personName/*name */= editName.getText().toString();
+
                                             // 이름 받고 이름 토대로 사람 생성
                                             new AboutPerson.CreatePersonTask(AppSetting.personName/*name*/, MainActivity.this).execute("");
 

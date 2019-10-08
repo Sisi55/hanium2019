@@ -56,5 +56,8 @@ public class AppSetting {
     public static final int PREFERENCE_SHOPLIST = 3;
     public static final int PREFERENCE_ORDER = 5;
 
+    public static boolean newFaceFlag = false; // 기본값
+    // true 이면 main 의 tts 에서 손님 안녕하세요 말한다
+
 
 }

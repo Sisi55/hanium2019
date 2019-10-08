@@ -72,6 +72,30 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
         print_xgbRecom_result();
         print_CFRecom_result();
 
+        // tts
+        playTTS();
+
+    }
+
+    void playTTS(){
+
+        // tts
+        String tts_recom;
+
+        if(AppSetting.emotion.containsKey("happiness") || AppSetting.emotion.containsKey("neutral") || AppSetting.emotion.containsKey("surprise")){
+            Log.e("   감정", "긍정");
+
+            tts_recom= getResources().getString(R.string.recom_good_start) + // getResources().getString(R.string)
+                    /*메뉴이름*/"" + // 위,아래 결정해야 해
+                    getResources().getString(R.string.recom_good_end);
+        }else{
+            Log.e("   감정", "부정");
+
+            tts_recom= ""/*메뉴이름*/ + getResources().getString(R.string.recom_bad);
+        }
+
+        // tts 읽어주세용  tts_recom
+
     }
 
     CafeItem item1;

@@ -363,14 +363,16 @@ public class ExecuteWithFace {
 //                            return null;
                         }else if(trainingStatus.status == TrainingStatus.Status.Succeeded){
 
+/*
                             handler.postDelayed(new Runnable() { // handler 에 looper 할당안하면 여기서 오류
                                 @Override
                                 public void run() {
                                     ((CameraActivity)activity).addTextToEditText("train status succeeded");
                                 }
                             },0);
+*/
 
-                            Log.e("train status succeeded","");
+//                            Log.e("train status succeeded","");
                         }
                         //end if else
                         if(detectFlag == true){

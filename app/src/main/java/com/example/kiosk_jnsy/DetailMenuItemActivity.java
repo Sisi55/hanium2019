@@ -458,13 +458,13 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         // 멤버 model과 AppSetting.itemPreferences 이용한다
 
         if(AppSetting.itemPreferences.keySet().contains(model.getName())==true){
-            int value = AppSetting.itemPreferences.get(model.getName());
+            int value = AppSetting.itemPreferences.get(model.getName()).intValue();
             AppSetting.itemPreferences.put(model.getName(), value+score); // 1 증가
         }else{
             AppSetting.itemPreferences.put(model.getName(), score); // 1 할당
         }
         // 잠시만여
-  //      updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요
+        updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요
     }
 
     private void updateDB(){

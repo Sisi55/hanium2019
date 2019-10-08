@@ -2,11 +2,10 @@ package com.example.kiosk_jnsy.model;
 
 import java.util.HashMap;
 import java.util.Map;
-
+// com.example.kiosk_jnsy.model.UserDTO
 public class UserDTO {
     String personName;
     String personUUID;
-
     Map<String,Integer> itemPreference = new HashMap<>();
 
     UserDTO(){}

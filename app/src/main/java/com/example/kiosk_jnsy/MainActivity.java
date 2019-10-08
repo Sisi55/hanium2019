@@ -90,8 +90,7 @@ public class MainActivity extends AppCompatActivity  {
     View alertView;
     String name;
     EditText editName;
-
-
+    String ttsRecoResult; //tts 추천메뉴
     String result; // 나 추천 결과
     String myname; // 나 추천 결과 이름
     String arr[];// 나 추천 split
@@ -367,8 +366,19 @@ public class MainActivity extends AppCompatActivity  {
                 // 메뉴를 클릭하면 키로 유무 확인하고, 있으면 값 증가, 없으면 키 생성해서 값 할당
                 AppSetting.isSetPersonalRecom=true; // Map 가져오는 것도 한번만
 
+                // tts
                 tts_identify = getResources().getString(R.string.after_identify_start) + AppSetting.personName + getResources().getString(R.string.after_identify_end);
-
+                ttsRecoResult=null;
+                if(AppSetting.ttsRecoItem1!=null&AppSetting.ttsRecoItem2!=null) {
+                    ttsRecoResult=AppSetting.ttsRecoItem1+"와 " +AppSetting.ttsRecoItem2;
+                }else if(AppSetting.ttsRecoItem1==null){
+                    ttsRecoResult=AppSetting.ttsRecoItem2;
+                }else if(AppSetting.ttsRecoItem2==null){
+                    ttsRecoResult=AppSetting.ttsRecoItem1;
+                }else{
+                    ttsRecoResult="추천없음";
+                }
+                // tts 객체 생성
                 mTTS=new TextToSpeech(this, new TextToSpeech.OnInitListener() {
 
                     @Override
@@ -384,12 +394,24 @@ public class MainActivity extends AppCompatActivity  {
                             if(AppSetting.emotion.containsKey("happiness") || AppSetting.emotion.containsKey("neutral") || AppSetting.emotion.containsKey("surprise")){
                                 Log.e("   감정", "긍정0");
                                 // tts추가
+
                                 mTTS.speak(getResources().getString(R.string.identify_good),TextToSpeech.QUEUE_FLUSH, null);
+                                if(ttsRecoResult.equals("추천없음")){
+
+                                }else{
+                                    mTTS.speak("기분이 더 좋아지는 " + AppSetting.ttsRecoItem2+ " 어떠세요?", TextToSpeech.QUEUE_FLUSH, null);
+                                }
                             }
                             else{
                                 Log.e("   감정", "부정0");
                                 mTTS.speak(getResources().getString(R.string.identify_bad),TextToSpeech.QUEUE_FLUSH, null);
+                                if(ttsRecoResult.equals("추천없음")){
+
+                                }else{
+                                mTTS.speak(ttsRecoResult+" 로 힐링~해보세요~", TextToSpeech.QUEUE_FLUSH, null);
+                                }
                             }
+
                         }
                     }
                 });
@@ -540,7 +562,7 @@ public class MainActivity extends AppCompatActivity  {
                                         String str = (String)document.getData().get("guest");
                                         // 잠시만여-지연
                                         // 카메라 연동되면 AppSetting.personUUID로 바꿀예정
-                                        if(str.equals("54abaaa4-b8af-429f-baed-9047e6c0561e")){
+                                        if(str.equals(AppSetting.personUUID)){
                                             String orderToString=(String)document.getData().get("orderToString");
 
                                             // rank 맵에 이미 있다면 있는값에 추가
@@ -579,6 +601,7 @@ public class MainActivity extends AppCompatActivity  {
                                     map.put("휘핑",op1d);
                                     map.put("샷",op2d);
 
+
                                     // 이메뉴의 이미지 url 필요
                                     FirebaseFirestore.getInstance().collection("menu").get()
                                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -594,6 +617,7 @@ public class MainActivity extends AppCompatActivity  {
                                                                 int price = pricen.intValue();
                                                                 String imageUrl = (String) document.getData().get("imageUrl");
                                                                 myresult=new CafeItem(myname, price, imageUrl, body);
+                                                                Toast.makeText(MainActivity.this, "빠른 주문", Toast.LENGTH_SHORT).show();
                                                                 Intent intent = new Intent(MainActivity.this, DetailMenuItemActivity.class);
 
                                                                 intent.putExtra("detail",myresult);

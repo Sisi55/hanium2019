@@ -39,6 +39,10 @@ public class AppSetting {
     // 마지막 사진 찍고 모델 train 요청하는 플래그
     // 사용하고 false 설정해야 한다
 
+    // tts 추천메뉴
+    public static String ttsRecoItem1="요거트스무디";
+    public static String ttsRecoItem2="자몽에이드";
+
 //    public static String emotion=null;
     public static boolean camefromMain = false;
     public static boolean camefromCamera = false;

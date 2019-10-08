@@ -8,10 +8,10 @@
     <!-- tts -->
 <!--얼굴인식하면-->
     <string name="after_identify_start">안녕하세요, </string> <!-- 님 -->
-    <string name="after_identify_end"> 님</string>
+    <string name="after_identify_end"> 님!</string>
 
-    <string name="identify_good">오늘은 기분이 좋아보이시네요</string>
-    <string name="identify_bad">내일은 오늘보다 더 나은 하루일거에요</string>
+    <string name="identify_good">오늘은 기분이 좋아보이시네요!</string>
+    <string name="identify_bad">내일은 오늘보다 더 나은 하루일거에요!</string>
 
 <!--추천에 들어가면-->
     <string name="recom_good_start">기분이 더 좋아지는 </string>

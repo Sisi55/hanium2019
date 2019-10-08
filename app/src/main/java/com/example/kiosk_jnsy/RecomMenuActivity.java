@@ -108,6 +108,7 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
             JSONObject jsonObj = new JSONObject(xgb_json);
             String xgb_result_itemName = jsonObj.get("item").toString(); // 메뉴 이름
 
+
             FirebaseFirestore.getInstance().collection("menu")
                     .whereEqualTo("name", xgb_result_itemName)
                     .get()
@@ -126,6 +127,8 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
                                         imageView1.setVisibility(View.INVISIBLE);
                                     }else{
                                         textView1.setText(item1.getName());
+                                        // 지연 : AppSetting에 추가
+                                        AppSetting.ttsRecoItem1=item1.getName();
                                         textView1_price.setText(item1.getPrice()+"");
                                         Glide.with(RecomMenuActivity.this)
                                                 .load(item1.getImageUrl())
@@ -182,6 +185,8 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
                                         imageView2.setVisibility(View.INVISIBLE);
                                     }else{
                                         textView2.setText(item2.getName());
+                                        // 지연 : AppSetting에 추가
+                                        AppSetting.ttsRecoItem2=item2.getName();
                                         textView2_price.setText(item2.getPrice()+"");
                                         Glide.with(RecomMenuActivity.this)
                                                 .load(item2.getImageUrl())

@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity  {
 
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         AppSetting.documentID = document.getId();
-                                        AppSetting.itemPreferences = (Map<String,Integer>) document.getData().get("itemPreference");
+                                        AppSetting.itemPreferences = (Map<String,Long/*Integer*/>) document.getData().get("itemPreference");
                                         Log.e("   record", AppSetting.itemPreferences+" id:"+AppSetting.documentID);
                                         break; // 한번만 실행되게 한다
                                     }

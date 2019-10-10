@@ -341,10 +341,10 @@ public class PaymentListActivity extends AppCompatActivity {
         // 멤버 model과 AppSetting.itemPreferences 이용한다
 
         if(AppSetting.itemPreferences.keySet().contains(ItemName)==true){
-            int value = AppSetting.itemPreferences.get(ItemName);
+            long value = AppSetting.itemPreferences.get(ItemName);
             AppSetting.itemPreferences.put(ItemName, value+score); // 1 증가
         }else{
-            AppSetting.itemPreferences.put(ItemName, score); // 1 할당
+            AppSetting.itemPreferences.put(ItemName, (long)score); // 1 할당
         }
     }
 

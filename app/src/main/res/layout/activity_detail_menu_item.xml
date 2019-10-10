@@ -230,10 +230,11 @@
                 >
 
                 <TextView
+                    android:id="@+id/title1"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="아이템CF"
+                    android:text="아이템CF (선호도)"
                     android:fontFamily="@font/myfont1"
                     android:textSize="13dp"/>
                 <ImageView
@@ -276,7 +277,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="아이템 필터링"
+                    android:text="날씨/감정 유사도"
                     android:fontFamily="@font/myfont1"
                     android:textSize="13dp"/>
                 <ImageView

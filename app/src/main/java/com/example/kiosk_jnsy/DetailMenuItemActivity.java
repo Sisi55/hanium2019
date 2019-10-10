@@ -68,56 +68,108 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
         String cf_json = AppSetting.response_CF_overall;
 
-        try {
+        if(cf_json == null){ // null은 아니야 여기 정보만 없는거니까
+            Log.e("  recom cf", "null");
+        }else{
+            try {
 
-            Log.e("  print recom detail2", AppSetting.response_CF_overall);
+                Log.e("  print recom detail2", AppSetting.response_CF_overall);
 
-            JSONObject jsonObj = new JSONObject(cf_json);
-            String sim_json  = jsonObj.get("items_sim").toString(); // dict
-            jsonObj = new JSONObject(sim_json); // {"꼬미": "삼계탕", "라떼": "꼬미", "삼계탕": "꼬미", "아메리카노": "꼬미"}
-            String cf_result_itemName = jsonObj.get(model.getName()).toString();
+                JSONObject jsonObj = new JSONObject(cf_json);
+                String sim_json  = jsonObj.get("items_sim").toString(); // dict
+                jsonObj = new JSONObject(sim_json); // {"꼬미": "삼계탕", "라떼": "꼬미", "삼계탕": "꼬미", "아메리카노": "꼬미"}
+                String cf_result_itemName = jsonObj.get(model.getName()).toString();
 
-            FirebaseFirestore.getInstance().collection("menu")
-                    .whereEqualTo("name", cf_result_itemName)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
+                FirebaseFirestore.getInstance().collection("menu")
+                        .whereEqualTo("name", cf_result_itemName)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
 //                                    Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                    // 쿼리 가져온거 반복
-                                    item2 = document.toObject(CafeItem.class);
-                                    if(item2 == null){
-                                        binding.tvItemCFName.setVisibility(View.INVISIBLE);
-                                        binding.tvItemCFPrice.setVisibility(View.INVISIBLE);
-                                        binding.imageviewCf.setVisibility(View.INVISIBLE);
-
-                                    }else{
+                                        // 쿼리 가져온거 반복
+                                        item2 = document.toObject(CafeItem.class);
                                         binding.tvItemCFName.setText(item2.getName());
                                         binding.tvItemCFPrice.setText(item2.getPrice()+"");
                                         Glide.with(DetailMenuItemActivity.this)
                                                 .load(item2.getImageUrl())
                                                 .into(binding.imageviewCf);
+
                                     }
-
-                                }
+                                }/*else{
+                                    Log.e("   혹시 여기? 222", "item이 없니?");
+                                }*/
                             }
-                        }
-                    });
+                        });
+/*
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e("  no item recom cf", "null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            }
+                        });
+*/
 
-        }catch (Exception e){
-            Log.e(" recom activity", e.getMessage());
-            binding.tvItemCFName.setVisibility(View.INVISIBLE);
-            binding.tvItemCFPrice.setVisibility(View.INVISIBLE);
-            binding.imageviewCf.setVisibility(View.INVISIBLE);
-            // .setOnClickListener(null);
-            binding.tvItemCFName.setOnClickListener(null);
-            binding.tvItemCFPrice.setOnClickListener(null);
-            binding.imageviewCf.setOnClickListener(null);
+            }catch (Exception e){
+//                Log.e(" recom activity", e.getMessage()); // 여기였어..
+                Log.e("   혹시 여기? 333", "item이 없어서 로그 출력");
+
+                // 아이템이 없으면 키워드 기반 유사 아이템 출력하기
+                Log.e("   키워드 기반 유사아이템", "!");
+                printRecomKeywords();
+
+/*
+                binding.tvItemCFName.setVisibility(View.INVISIBLE);
+                binding.tvItemCFPrice.setVisibility(View.INVISIBLE);
+                binding.imageviewCf.setVisibility(View.INVISIBLE);
+                // .setOnClickListener(null);
+                binding.tvItemCFName.setOnClickListener(null);
+                binding.tvItemCFPrice.setOnClickListener(null);
+                binding.imageviewCf.setOnClickListener(null);
+*/
+
+            }
 
         }
+
+
+    }
+
+    void printRecomKeywords(){
+        Log.e("  아이템 이름", model.getName());
+        Log.e("  유사 아이템 이름", model.getKeywordSimiliar()+"");
+
+        // 파베에서 이름 같은거 가져오기
+        FirebaseFirestore.getInstance().collection("menu")
+                .whereEqualTo("name", model.getKeywordSimiliar()) // 쿼리 조건
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
+//                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                // 쿼리 가져온거 반복
+                                item2 = document.toObject(CafeItem.class);
+                                binding.tvItemCFName.setText(item2.getName());
+                                // 지연 : AppSetting에 추가
+                                AppSetting.ttsRecoItem1=item2.getName();
+                                binding.tvItemCFPrice.setText(item2.getPrice()+"");
+                                Glide.with(DetailMenuItemActivity.this)
+                                        .load(item2.getImageUrl())
+                                        .into(binding.imageviewCf);
+
+                                binding.title1.setText("아이템 키워드");
+
+                            }
+                        }
+                    }
+                });
+
 
     }
 
@@ -458,10 +510,12 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         // 멤버 model과 AppSetting.itemPreferences 이용한다
 
         if(AppSetting.itemPreferences.keySet().contains(model.getName())==true){
-            int value = AppSetting.itemPreferences.get(model.getName()).intValue();
-            AppSetting.itemPreferences.put(model.getName(), value+score); // 1 증가
+//            int value = AppSetting.itemPreferences.get(model.getName());
+            long value = AppSetting.itemPreferences.get(model.getName());
+            int intValue = ((Long)value).intValue();
+            AppSetting.itemPreferences.put(model.getName(), intValue/*value*/+(long)score); // 1 증가
         }else{
-            AppSetting.itemPreferences.put(model.getName(), score); // 1 할당
+            AppSetting.itemPreferences.put(model.getName(), (long)score); // 1 할당
         }
         // 잠시만여
         updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요

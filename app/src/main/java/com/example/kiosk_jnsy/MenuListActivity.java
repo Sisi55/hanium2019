@@ -213,10 +213,12 @@ public class MenuListActivity extends AppCompatActivity {
                                 int price=pricen.intValue();
                                 //int price=100000;
                                 String imageUrl=(String)document.getData().get("imageUrl");
+                                // 시현 : 유사 아이템 추가 (키워드 기반)
+                                String keywordSimiliar = (String)document.getData().get("keywordSimiliar");
 
                                 // 객체 형태로 받아와야 함. 오류...
                                 //CafeItem ciObject = dataSnapshot.getValue(CafeItem.class);
-                                citems.add(new CafeItem(name,price,imageUrl,body));
+                                citems.add(new CafeItem(name,price,imageUrl,body,keywordSimiliar));
                                 Log.d("현재 들어감",citems.size()+"");
                             }
                             // for문 다 수행 후 어댑터 설정

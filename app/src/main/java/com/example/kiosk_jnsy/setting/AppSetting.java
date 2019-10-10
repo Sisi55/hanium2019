@@ -52,7 +52,8 @@ public class AppSetting {
     public static Map<String,Double> emotion2=null;
     public static boolean progressEndFlag=true;
 
-    public static Map<String,Integer> itemPreferences=null;
+    public static Map<String,Long> itemPreferences=null;
+//    public static Map<String,Integer> itemPreferences=null;
     public static String documentID=null;
     public static boolean isSetPersonalRecom=false;
 

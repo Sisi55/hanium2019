@@ -12,6 +12,7 @@ public class CafeItem implements Serializable { // 인텐트에 객체를 전달
     private String body; // 메뉴 상세설명 : 나중에 추가
     private String photoUrl; // 안씀
     private String imageUrl; // 스토리지 download url
+    private String keywordSimiliar; // 유사 아이템 name
 
     public Map<String, Double> getOptions() {
         return options;
@@ -41,6 +42,33 @@ public class CafeItem implements Serializable { // 인텐트에 객체를 전달
         this.imageUrl = imageUrl;
         this.body=body;
 
+    }
+    public CafeItem(String name, int price, String imageUrl, String body, String keywordSimiliar) {
+        this.price=price;
+        this.name = name;
+        // this.photoUrl = photoUrl;
+        this.imageUrl = imageUrl;
+        this.body=body;
+        this.keywordSimiliar = keywordSimiliar;
+
+    }
+
+    public CafeItem(String name, int price, String imageUrl, String body,Map<String,Double> options, String keywordSimiliar) {
+        this.price=price;
+        this.name = name;
+        // this.photoUrl = photoUrl;
+        this.imageUrl = imageUrl;
+        this.body=body;
+        this.options=options;
+        this.keywordSimiliar = keywordSimiliar;
+    }
+
+    public void setKeywordSimiliar(String keywordSimiliar) {
+        this.keywordSimiliar = keywordSimiliar;
+    }
+
+    public String getKeywordSimiliar() {
+        return keywordSimiliar;
     }
 
     @Override

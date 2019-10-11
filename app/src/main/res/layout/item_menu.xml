@@ -5,14 +5,14 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <Button
+    <TextView
         android:id="@+id/name_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#F5F6CE"
         android:gravity="center" />
 
-    <Button
+    <TextView
         android:id="@+id/price_text"
         android:background="#FFFFFF"
         android:layout_width="match_parent"

@@ -67,12 +67,37 @@ public class OrderedListActivity extends AppCompatActivity {
         final OrderedListActivity.CafeItemAdapter adapter=new OrderedListActivity.CafeItemAdapter(new OrderedListActivity.CafeItemAdapter.OnCafeItemClickListener() {
             @Override
             public void onCafeItemClicked(Person model) {
+                String date_menu=(String)model.map.get("name");
+                String dep="\\(";
+                String x[]=date_menu.split(dep);
+                final String here_name=x[0];
+                Toast.makeText(getApplicationContext(), here_name+"ddszzzzzzzzzzzzzzzzz", Toast.LENGTH_SHORT).show();
+                FirebaseFirestore.getInstance().collection("menu").get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    // 메뉴정보 추출
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        // 메뉴 이름 바꿔야 함..
+                                        if(((String)document.getData().get("name")).equals(here_name)) {
+                                            Long pricen = (Long) document.getData().get("price");
+                                            String body = (String) document.getData().get("body");
+                                            int price = pricen.intValue();
+                                            String imageUrl = (String) document.getData().get("imageUrl");
+                                            CafeItem myresult=new CafeItem(here_name, price, imageUrl, body);
 
-                Toast.makeText(OrderedListActivity.this, "야 눌렸냐", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(OrderedListActivity.this, DetailMenuItemActivity.class);
 
-                Intent intent = new Intent(OrderedListActivity.this, MenuListActivity.class);
-                Toast.makeText(OrderedListActivity.this, "dddddd", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+                                            intent.putExtra("detail",myresult);
+                                            startActivity(intent);
+                                            break;
+                                        }
+                                    }
+                                } else { }
+                            }
+                        });
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -178,7 +203,7 @@ public class OrderedListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // 리스트 초기화
                 Log.d("23일","주문많이시킨 순 버튼 누름");
-                Button items=(Button)findViewById(R.id.price_text);
+                TextView items=(TextView)findViewById(R.id.price_text);
                 // items.setVisibility(View.GONE);
                 people.clear();
                 FirebaseFirestore.getInstance().collection("order").get()
@@ -309,12 +334,15 @@ public class OrderedListActivity extends AppCompatActivity {
             // TODO : 데이터를 뷰홀더에 표시하시오
             holder.guest.setText(item.date);
 
+            // 날짜순 출력
             if((Map)item.map!=null) {
 
                 Map<String, Double> op = (Map) item.map.get("options");
-                holder.items.setText(item.map.get("name") + "(휘핑 :" + op.get("휘핑") + " / 샷 : " + op.get("샷") + ")");
+                holder.items.setText(item.map.get("name") + "(휘핑 :" + op.get("휘핑") + " / 샷 : " + op.get("샷")
+                        + " / 온도 : "+op.get("온도")+" / 텀블러 : "+op.get("텀블러")+" / 빨대 : "+op.get("빨대")+" / 얼음 : "+op.get("얼음"));
             }else{
                 // 꼼수라면
+                //많이먹은 순
 
                 //holder.items.setVisibility(View.GONE);
                 holder.items.setText("↑ 메뉴 보기");
@@ -330,12 +358,27 @@ public class OrderedListActivity extends AppCompatActivity {
                         final double op1d=Double.parseDouble(op1[1]);
                         String[] op2=arr[2].split(":"); // option2
                         final double op2d=Double.parseDouble(op2[1]);
+                        String[] op3=arr[2].split(":"); // option2
+                        final double op3d=Double.parseDouble(op3[1]);
+                        String[] op4=arr[2].split(":"); // option2
+                        final double op4d=Double.parseDouble(op4[1]);
+                        String[] op5=arr[2].split(":"); // option2
+                        final double op5d=Double.parseDouble(op5[1]);
+                        String[] op6=arr[2].split(":"); // option2
+                        final double op6d=Double.parseDouble(op6[1]);
+
+
+
 
 
                         // 객체 생성해서 인텐트로 보냄
                         HashMap map=new HashMap<String,Double>();
                         map.put("휘핑",op1d);
                         map.put("샷",op2d);
+                        map.put("온도",op3d);
+                        map.put("텀블러",op4d);
+                        map.put("빨대",op5d);
+                        map.put("얼음",op6d);
 
                         // 이메뉴의 이미지 url 필요
                         FirebaseFirestore.getInstance().collection("menu").get()
@@ -357,6 +400,7 @@ public class OrderedListActivity extends AppCompatActivity {
                                                 }
 
                                             }
+
                                             //Toast.makeText(getApplicationContext(), "이동시키고싶어", Toast.LENGTH_SHORT).show();
                                                     /*
                                                     Intent intent = new Intent(getApplicationContext(), DetailMenuItemActivity.class);
@@ -380,8 +424,8 @@ public class OrderedListActivity extends AppCompatActivity {
 
         public static class CafeItemViewHolder extends RecyclerView.ViewHolder {
             // TODO : 뷰홀더 완성하시오
-            Button guest;
-            Button items;
+            TextView guest;
+            TextView items;
             //TextView img;
 
             public CafeItemViewHolder(@NonNull View itemView) {

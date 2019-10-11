@@ -263,7 +263,11 @@ public class PaymentListActivity extends AppCompatActivity {
                         m=(Map)it.getOptions();
                         double o1=m.get("휘핑");
                         double o2=m.get("샷");
-                        orderToString=orderToString+name+"/휘핑:"+o1+"/샷:"+o2+"/";
+                        double o3=m.get("온도");
+                        double o4=m.get("텀블러");
+                        double o5=m.get("빨대");
+                        double o6=m.get("얼음");
+                        orderToString=orderToString+name+"/휘핑:"+o1+"/샷:"+o2+"/"+"온도"+o3+"/텀블러:"+o4+"/"+"빨대"+o5+"/얼음:"+o6+"/";
                     }
                     Order order = new Order(AppSetting.emotion,weather,mArrayList,today,guest,orderToString);
                     //

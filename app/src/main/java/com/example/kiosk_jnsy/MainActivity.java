@@ -396,20 +396,12 @@ public class MainActivity extends AppCompatActivity  {
                                 // tts추가
 
                                 mTTS.speak(getResources().getString(R.string.identify_good),TextToSpeech.QUEUE_FLUSH, null);
-                                if(ttsRecoResult.equals("추천없음")){
 
-                                }else{
-                                    mTTS.speak("기분이 더 좋아지는 " + AppSetting.ttsRecoItem2+ " 어떠세요?", TextToSpeech.QUEUE_FLUSH, null);
-                                }
                             }
                             else{
                                 Log.e("   감정", "부정0");
                                 mTTS.speak(getResources().getString(R.string.identify_bad),TextToSpeech.QUEUE_FLUSH, null);
-                                if(ttsRecoResult.equals("추천없음")){
 
-                                }else{
-                                mTTS.speak(ttsRecoResult+" 로 힐링~해보세요~", TextToSpeech.QUEUE_FLUSH, null);
-                                }
                             }
 
                         }

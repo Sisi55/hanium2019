@@ -63,6 +63,7 @@ public class AppSetting {
 
     public static boolean newFaceFlag = false; // 기본값
     // true 이면 main 의 tts 에서 손님 안녕하세요 말한다
+    public static String docId = null;
 
 
 }

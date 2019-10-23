@@ -12,9 +12,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.kiosk_jnsy.model.CafeItem;
+import com.example.kiosk_jnsy.model.RecomDTO;
 import com.example.kiosk_jnsy.setting.AppSetting;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -137,6 +140,9 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
                                     }
 
                                 }
+
+                                // db
+                                writeRecomContent(item1.getName());
                             }
                         }
                     });
@@ -155,6 +161,13 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
         }
 
+    }
+
+    private void writeRecomContent(String itemName){
+
+        FirebaseFirestore.getInstance().collection("recom")
+                // .whereEqualTo("name", xgb_result_itemName)
+                .add(new RecomDTO(AppSetting.personName, itemName));
     }
 
     CafeItem item2;
@@ -193,6 +206,8 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
                                                 .into(imageView2);
 
                                     }
+
+                                    writeRecomContent(item2.getName());
 
                                 }
                             }

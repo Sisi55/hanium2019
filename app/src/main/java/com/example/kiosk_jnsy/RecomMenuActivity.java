@@ -2,6 +2,8 @@ package com.example.kiosk_jnsy;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +26,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 public class RecomMenuActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView textView1;
@@ -32,6 +36,7 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
     TextView textView2_price;
     ImageView imageView1;
     ImageView imageView2;
+    TextToSpeech mTTS;
 
     @Override
     public void onClick(View v) {
@@ -43,12 +48,38 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
         }else if(v==textView2 || v==textView2_price || v==imageView2){
             Intent intent = new Intent(RecomMenuActivity.this, DetailMenuItemActivity.class);
-            intent.putExtra("detail", item1);
+            intent.putExtra("detail", item2);
             startActivity(intent);
 
         }
     }
+    private void speak(String text){
 
+        /*
+      //  float speed=(float)mSeekBarSpeed.getProgress()/50;
+      //  if(speed<0.1) speed=0.1f;
+
+        mTTS.setPitch(pitch);
+        mTTS.setSpeechRate(speed);
+        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH,null);
+*/
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mTTS.speak(text,TextToSpeech.QUEUE_FLUSH,null,null);
+        } else {
+            mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+        }
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // TTS 객체가 남아있다면 실행을 중지하고 메모리에서 제거한다.
+        if(mTTS != null){
+            mTTS.stop();
+            mTTS.shutdown();
+            mTTS = null;
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +94,7 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
         imageView1 = (ImageView) findViewById(R.id.imageview1);
         imageView2 = (ImageView) findViewById(R.id.imageview2);
 
+
         // 클릭 이벤트 tv이름, tv가격, 이미지 누르면 전부
         textView1.setOnClickListener(this);
         textView1_price.setOnClickListener(this);
@@ -76,7 +108,8 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
         print_CFRecom_result();
 
         // tts
-        playTTS();
+        //playTTS();
+
 
     }
 
@@ -145,16 +178,19 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
                                     }
 
+
                                     // db
                                     if(item1 != null){
                                         writeRecomContent(item1.getName());
                                     }
 
                                 }
+
                             }
                         });
 
 //            textView1.setText(xgb_result_itemName );
+
 
             } catch (Exception e) {
                 Log.e(" recom activity", 2+e.getMessage());
@@ -166,6 +202,7 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
                 textView1.setOnClickListener(null);
                 textView1_price.setOnClickListener(null);
                 imageView1.setOnClickListener(null);
+
 
             }
 
@@ -182,6 +219,35 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
                 .add(new RecomDTO(AppSetting.personName, itemName));
     }
 
+    private void ttsPlease(){
+        // tts 객체 생성
+        mTTS= new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+
+            @Override
+            public void onInit(int status) {
+                mTTS.setLanguage(Locale.KOREAN);
+                if (status == TextToSpeech.SUCCESS) {
+
+                    if(AppSetting.emotion!=null){
+                        if (AppSetting.emotion.containsKey("happiness") || AppSetting.emotion.containsKey("neutral") || AppSetting.emotion.containsKey("surprise")) {
+                            Log.e("   감정", "긍정0");
+                            //mTTS.speak("기분이 더 좋아지는 " + item2.getName() + " 어떠세요?", TextToSpeech.QUEUE_FLUSH, null);
+                            mTTS.speak("기분이 더 좋아지는 " + item2.getName() + " 어떠세요?", TextToSpeech.QUEUE_FLUSH, null);
+
+                        } else {
+                            Log.e("   감정", "부정0");
+                            mTTS.speak(getResources().getString(R.string.identify_bad), TextToSpeech.QUEUE_FLUSH, null);
+                            mTTS.speak( item2.getName() + " 로 힐링~해보세요~", TextToSpeech.QUEUE_FLUSH, null);
+
+                        }}else{
+                        mTTS.speak("안나와요 널값이에요", TextToSpeech.QUEUE_FLUSH, null);
+
+                    }
+
+                }
+            }
+        });
+    }
     CafeItem item2;
     private void print_CFRecom_result() {
 
@@ -223,6 +289,7 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
                                     writeRecomContent(item2.getName());
 
                                 }
+                                ttsPlease();
                             }
                         }
                     });

@@ -71,8 +71,11 @@ public class OrderedListActivity extends AppCompatActivity {
                 String dep="\\(";
                 String x[]=date_menu.split(dep);
                 final String here_name=x[0];
+
+
                 Toast.makeText(getApplicationContext(), here_name+"ddszzzzzzzzzzzzzzzzz", Toast.LENGTH_SHORT).show();
                 FirebaseFirestore.getInstance().collection("cre_menu").get()
+
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -137,7 +140,7 @@ public class OrderedListActivity extends AppCompatActivity {
                                         people.add(p);
                                     }
 
-                                    Toast.makeText(getApplicationContext(), "현재"+today, Toast.LENGTH_SHORT).show();
+                                  //  Toast.makeText(getApplicationContext(), "현재"+today, Toast.LENGTH_SHORT).show();
                                 }
                             }
                             // 데이터 새로고침
@@ -181,7 +184,7 @@ public class OrderedListActivity extends AppCompatActivity {
                                                 people.add(p);
                                             }
 
-                                            Toast.makeText(getApplicationContext(), "현재"+today, Toast.LENGTH_SHORT).show();
+                                    //        Toast.makeText(getApplicationContext(), "현재"+today, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                     // 데이터 새로고침

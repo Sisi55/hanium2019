@@ -185,10 +185,16 @@ public class MenuListActivity extends AppCompatActivity {
 
                 // 메뉴 개수...
                 HashMap<CafeItem,Integer> m=(HashMap<CafeItem,Integer>)getIntent().getSerializableExtra("m_count");
-                if(m==null)
-                    Toast.makeText(MenuListActivity.this, "맵에 아무것도 없음", Toast.LENGTH_SHORT).show();
-                else
-                 //   Toast.makeText(MenuListActivity.this, "맵에 있음", Toast.LENGTH_SHORT).show();
+
+/*
+                if(m==null) {
+//                    Toast.makeText(MenuListActivity.this, "맵에 아무것도 없음", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(MenuListActivity.this, "맵에 있음", Toast.LENGTH_SHORT).show();
+                }
+*/
+
                 intent.putExtra("shoplist",shoplist); // 지연 : 고대로 보냄
                 intent.putExtra("m_count",m);
                 startActivity(intent);
@@ -199,7 +205,7 @@ public class MenuListActivity extends AppCompatActivity {
         Log.d("현재",citems.size()+"");
 
 
-        FirebaseFirestore.getInstance().collection("menu").get()
+        FirebaseFirestore.getInstance().collection("cre_menu").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -207,18 +213,19 @@ public class MenuListActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                // Log.d(TAG, document.getId() + " => " + document.getData().get("name"));
                                // CafeItem ccc=document.getData();
-                                String name = (String)document.getData().get("name");
-                                Long pricen = (Long)document.getData().get("price");
-                                String body=(String)document.getData().get("body");
-                                int price=pricen.intValue();
-                                //int price=100000;
-                                String imageUrl=(String)document.getData().get("imageUrl");
-                                // 시현 : 유사 아이템 추가 (키워드 기반)
-                                String keywordSimiliar = (String)document.getData().get("keywordSimiliar");
-
-                                // 객체 형태로 받아와야 함. 오류...
-                                //CafeItem ciObject = dataSnapshot.getValue(CafeItem.class);
-                                citems.add(new CafeItem(name,price,imageUrl,body,keywordSimiliar));
+//                                String name = (String)document.getData().get("name");
+//                                Long pricen = (Long)document.getData().get("price");
+//                                String body=(String)document.getData().get("body");
+////                                long price=pricen/*.intValue()*/;
+//                                //int price=100000;
+//                                String imageUrl=(String)document.getData().get("imageUrl");
+//                                // 시현 : 유사 아이템 추가 (키워드 기반)
+//                                String keywordSimiliar = (String)document.getData().get("keywordSimiliar");
+//
+//                                // 객체 형태로 받아와야 함. 오류...
+//                                //CafeItem ciObject = dataSnapshot.getValue(CafeItem.class);
+//                                item1 = ;
+                                citems.add(document.toObject(CafeItem.class));
                                 Log.d("현재 들어감",citems.size()+"");
                             }
                             // for문 다 수행 후 어댑터 설정

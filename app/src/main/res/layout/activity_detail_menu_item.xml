@@ -78,6 +78,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                               
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -96,6 +97,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -114,6 +116,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -132,10 +135,11 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:fontFamily="@font/myfont1"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/myfont1"
+
                                 android:text="텀블러" />
 
                             <Spinner
@@ -150,6 +154,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -168,10 +173,11 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:fontFamily="@font/myfont1"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/myfont1"
+
                                 android:text="얼음" />
 
                             <Spinner

@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:text="메뉴등록"
         android:id="@+id/registerbtn"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        android:fontFamily="@font/myfont1"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_main_list"

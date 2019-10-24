@@ -44,6 +44,7 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -72,7 +73,7 @@ public class CameraActivity extends AppCompatActivity
 
     public void CaptureFace(){
         // 대화상자 출력 "카메라에 얼굴나오게"
-        new AlertDialog.Builder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle("카메라에 얼굴이 나오게 해주세요!")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -83,19 +84,26 @@ public class CameraActivity extends AppCompatActivity
                         takePicture(); // 사진 찍는다 > 콜백3
 */
 
+                        try{
+                            Thread.sleep(1000);
+                        }catch(Exception e){
+                            Log.e("   카메라sleep", e.getMessage());
+                        }
                         // if-else 카메라
                         if(AppSetting.registeredPersonFlag == true){
                             takePicture(); // 사진 찍는다 > 콜백3
                             // 한번 찍는다
 
                         }else{
-
                             startCaptureThread();
                             // 10번 찍겠지
                         }
 
                     }
-                }).show();
+                });
+        builder.show().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+
 
 
     }
@@ -251,6 +259,7 @@ public class CameraActivity extends AppCompatActivity
     };
 
     Handler capturehandler = new Handler();
+    int captureCount=-1;
 
     public void startCaptureThread(){
         new CaptureThread().start(); // post 라서 스레드 start 가능 ?
@@ -265,6 +274,7 @@ public class CameraActivity extends AppCompatActivity
             for(int i=10;i>0;i--){ //10번 반복
 
                 final int count = i;
+                captureCount = i;
 
                 try{
                     sleep(1500);
@@ -284,7 +294,14 @@ public class CameraActivity extends AppCompatActivity
             //end for
             AppSetting.trainRequestFlag = true;
             takePicture();
-            mProgressDialog.show();
+
+//            mProgressDialog.show();
+            capturehandler.post(new Runnable() { // 이 스레드는 단순히 확인용. 지워도 오케
+                @Override
+                public void run() {
+                    mProgressDialog.show();
+                }
+            });
 
         }
         //end method
@@ -854,12 +871,22 @@ public class CameraActivity extends AppCompatActivity
             // Tell #mCaptureCallback to wait for the lock.
             mState = STATE_WAITING_LOCK; // capture 전에 mState 변경 > 콜백2에서 분기
 
+            if(mPreviewRequestBuilder.build() == null){
+                Log.e("  카메라 null", "1");
+            }
+            if(mCaptureCallback == null){
+                Log.e("  카메라 null", "2");
+            }
+            if(mBackgroundHandler == null){
+                Log.e("  카메라 null", "3");
+            }
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
                     mBackgroundHandler);
             // 원래는 listener, handler 모두 null 을 전달했었다
 
         } catch (CameraAccessException e) {
             e.printStackTrace();
+            Log.e(" 카메라 null 오류", e.getMessage());
         }
         //end try catch
     }
@@ -961,7 +988,7 @@ public class CameraActivity extends AppCompatActivity
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("사진 capture");
+                    showToast("사진 capture "+captureCount);
 //                    Log.d(TAG, mFile.toString());
                     unlockFocus();
 

@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.kiosk_jnsy.databinding.ActivityDetailMenuItemBinding;
 import com.example.kiosk_jnsy.model.CafeItem;
+import com.example.kiosk_jnsy.model.RecomDTO;
 import com.example.kiosk_jnsy.setting.AppSetting;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -63,13 +64,15 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
     CafeItem model; // 클릭한 메뉴
 
-    CafeItem item2;
+    CafeItem item2,item;
     private void print_CFRecom_result() {
 
         String cf_json = AppSetting.response_CF_overall;
 
         if(cf_json == null){ // null은 아니야 여기 정보만 없는거니까
             Log.e("  recom cf", "null");
+            // 키워드
+            printRecomKeywords();
         }else{
             try {
 
@@ -80,7 +83,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
                 jsonObj = new JSONObject(sim_json); // {"꼬미": "삼계탕", "라떼": "꼬미", "삼계탕": "꼬미", "아메리카노": "꼬미"}
                 String cf_result_itemName = jsonObj.get(model.getName()).toString();
 
-                FirebaseFirestore.getInstance().collection("menu")
+                FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/)
                         .whereEqualTo("name", cf_result_itemName)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -91,14 +94,15 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 //                                    Log.d(TAG, document.getId() + " => " + document.getData());
 
                                         // 쿼리 가져온거 반복
-                                        item2 = document.toObject(CafeItem.class);
-                                        binding.tvItemCFName.setText(item2.getName());
-                                        binding.tvItemCFPrice.setText(item2.getPrice()+"");
+                                        item = document.toObject(CafeItem.class);
+                                        binding.tvItemCFName.setText(item.getName());
+                                        binding.tvItemCFPrice.setText(item.getPrice()+"");
                                         Glide.with(DetailMenuItemActivity.this)
-                                                .load(item2.getImageUrl())
+                                                .load(item.getImageUrl())
                                                 .into(binding.imageviewCf);
 
                                     }
+                                    writeRecomContent(item.getName());
                                 }/*else{
                                     Log.e("   혹시 여기? 222", "item이 없니?");
                                 }*/
@@ -143,7 +147,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         Log.e("  유사 아이템 이름", model.getKeywordSimiliar()+"");
 
         // 파베에서 이름 같은거 가져오기
-        FirebaseFirestore.getInstance().collection("menu")
+        FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/)
                 .whereEqualTo("name", model.getKeywordSimiliar()) // 쿼리 조건
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -164,8 +168,10 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
                                         .into(binding.imageviewCf);
 
                                 binding.title1.setText("아이템 키워드");
+//                                writeRecomContent(item2.getName());
 
                             }
+                            writeRecomContent(item2.getName());
                         }
                     }
                 });
@@ -185,7 +191,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
             JSONObject jsonObj = new JSONObject(we_sim_json);
             String result_itemName = jsonObj.get(model.getName()).toString(); // 메뉴 이름
 
-            FirebaseFirestore.getInstance().collection("menu")
+            FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/)
                     .whereEqualTo("name", result_itemName)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -209,6 +215,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
                                         Glide.with(DetailMenuItemActivity.this)
                                                 .load(item1.getImageUrl())
                                                 .into(binding.imageviewWeSim);
+                                        writeRecomContent(item1.getName());
                                     }
 
 
@@ -235,6 +242,13 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
     }
 
+    private void writeRecomContent(String itemName){
+
+        FirebaseFirestore.getInstance().collection("recom")
+                // .whereEqualTo("name", xgb_result_itemName)
+                .add(new RecomDTO(AppSetting.personName, itemName));
+    }
+
     @Override
     public void onClick(View v) {
         if(v==binding.tvItemCFName || v==binding.tvItemCFPrice || v==binding.imageviewCf) {
@@ -256,6 +270,8 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_menu_item);
         options=new HashMap<String,Double>();
+
+//        AppSetting.personUUID
 
 
         // 나추천 설정 : 제일 많이 먹은 메뉴를 보여줄때
@@ -428,7 +444,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         // 지연 : 인텐트 테스트/////
         // 인텐트에서 받아온 정보 출력
         String menuTitle=model.getName();
-        int menuPrice=model.getPrice();
+        long menuPrice=model.getPrice();
 
         binding.tvMenuTitle.setText(menuTitle);
         binding.tvMenuPrice.setText(menuPrice+"");

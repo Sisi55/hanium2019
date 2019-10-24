@@ -138,7 +138,10 @@ public class ExecuteWithFace {
                 detectFlag = true; // 사람있다
             }
 
-//            AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
+            if(faces.length >0){
+                AppSetting.emotion = getEmotion(faces[0].faceAttributes.emotion);
+            }
+
 
 /*
             if(null != faces[0].faceAttributes.emotion){
@@ -735,7 +738,7 @@ public class ExecuteWithFace {
             Log.e("   add face", "");
 
             if(AppSetting.trainRequestFlag == true){ // add face 다 하면?
-                new AboutPersonGroup.TrainPersonGroupTask(activity).execute();
+//                new AboutPersonGroup.TrainPersonGroupTask(activity).execute();
                 AppSetting.trainRequestFlag = false; // 사용하고 초기화
                 ((CameraActivity)activity).intentToMain();
             }

@@ -240,7 +240,7 @@ public class PaymentListActivity extends AppCompatActivity {
                 Map<String,Double> weather=new HashMap<String,Double>();
                 /// 설명은 string형이라 따로 변수르 만들어야 함!!!!!!!!!!!!!!!!111111111111
                 //weather.put("description",Double.valueOf(description).doubleValue());
-                Log.d("결과온",Double.parseDouble(temp)+"");
+//                Log.d("결과온",Double.parseDouble(temp)+"");
                 weather.put("humidity",Double.parseDouble(humidity));
                 weather.put("temp",Double.parseDouble(temp));
                 weather.put("speed",Double.parseDouble(speed));
@@ -272,7 +272,7 @@ public class PaymentListActivity extends AppCompatActivity {
                     Order order = new Order(AppSetting.emotion,weather,mArrayList,today,guest,orderToString);
                     //
                     //FirebaseDatabase.getInstance().getReference().child("order").push().setValue(order);
-                    FirebaseFirestore.getInstance().collection("order").add(order);
+                    FirebaseFirestore.getInstance().collection("cre_order").add(order);
                 }catch(Exception e){
                     Log.d("예외",e.getMessage());
                 }

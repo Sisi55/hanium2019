@@ -53,7 +53,7 @@ public class Recom {
                 return sb.toString().trim();
             }catch(Exception e){
                 Log.e("오류",e.getMessage());
-                return e.getMessage();
+                return "";
             }
 
 //            return null;
@@ -63,11 +63,13 @@ public class Recom {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
+/*
             Document doc = Jsoup.parse(s);
             s = doc.text();
+*/
 
             AppSetting.response_xgb_personalize = s;
-            Log.e("   recom", s);
+            Log.e("   recom xgb", s);
         }
     }
 
@@ -90,7 +92,7 @@ public class Recom {
                 return sb.toString().trim();
             } catch (Exception e) {
                 Log.e("오류", e.getMessage());
-                return e.getMessage();
+                return "{}";
             }
 
 //            return null;
@@ -100,11 +102,15 @@ public class Recom {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
+//            Log.e(" jsoup before", s);
+
+/*
             Document doc = Jsoup.parse(s);
             s = doc.text();
+*/
 
             AppSetting.response_weather_emotion_matrix = s;
-            Log.e("   recom", s);
+            Log.e("   recom wea", s);
 
         }
 
@@ -130,7 +136,7 @@ public class Recom {
                 return sb.toString().trim();
             } catch (Exception e) {
                 Log.e("오류", e.getMessage());
-                return e.getMessage();
+                return "{}";
             }
 
 //            return null;
@@ -140,11 +146,15 @@ public class Recom {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
+//            Log.e("  jsoup cf b", s);
+
+/*
             Document doc = Jsoup.parse(s);
             s = doc.text();
+*/
 
             AppSetting.response_CF_overall = s;
-            Log.e("   recom", s);
+            Log.e("   recom cf", s);
 
         }
 

@@ -7,16 +7,58 @@
     android:background="?android:attr/selectableItemBackground">
 
 
-    <TextView
-        android:text=""
-        android:id="@+id/list_tv"
+
+
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="3"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_weight="3"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/delete_btn"
-        />
+        android:layout_weight="3"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:text="메뉴"
+            android:id="@+id/list_tv"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/myfont1"
+            android:textSize="20dp"
+            android:padding="10dp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:text="이름"
+                android:id="@+id/tv_name"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/myfont1"
+                android:textSize="20dp"
+                android:padding="10dp"
+                />
+
+            <TextView
+                android:text="감정"
+                android:id="@+id/tv_emotion"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/myfont1"
+                android:textSize="20dp"
+                android:padding="10dp"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <Button
         android:background="#000000"
@@ -24,12 +66,13 @@
         android:id="@+id/delete_btn"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:textSize="50dp"
+        android:layout_height="match_parent"
+        android:textSize="30dp"
         android:text="-"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toRightOf="@+id/list_tv"
         app:layout_constraintRight_toRightOf="parent"
+        android:fontFamily="@font/myfont1"
         />
 
 </LinearLayout>

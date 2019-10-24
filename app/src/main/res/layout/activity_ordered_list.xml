@@ -18,12 +18,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
+            android:fontFamily="@font/myfont1"
             android:id="@+id/bydatebtn"
             android:layout_width="179dp"
             android:layout_height="wrap_content"
             android:text="날짜순" />
 
         <Button
+            android:fontFamily="@font/myfont1"
             android:id="@+id/orderedlotbtn"
             android:layout_width="168dp"
             android:layout_height="wrap_content"

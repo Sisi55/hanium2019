@@ -106,60 +106,72 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
         String xgb_json = AppSetting.response_xgb_personalize;
 
-        try {
+        Log.e("  is json? 2", xgb_json);
+        if(xgb_json.equals("")){
+            // 다른 정보가 나오도록 한다
+        }else{
+            try {
 
-            JSONObject jsonObj = new JSONObject(xgb_json);
-            String xgb_result_itemName = jsonObj.get("item").toString(); // 메뉴 이름
+                JSONObject jsonObj = new JSONObject(xgb_json);
+                String xgb_result_itemName = jsonObj.get("item").toString(); // 메뉴 이름
 
 
-            FirebaseFirestore.getInstance().collection("menu")
-                    .whereEqualTo("name", xgb_result_itemName)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
+                FirebaseFirestore.getInstance().collection("cre_menu")
+                        .whereEqualTo("name", xgb_result_itemName)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
 //                                    Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                    // 쿼리 가져온거 반복
-                                    item1 = document.toObject(CafeItem.class);
-                                    if(item1 == null){
-                                        textView1.setVisibility(View.INVISIBLE);
-                                        textView1_price.setVisibility(View.INVISIBLE);
-                                        imageView1.setVisibility(View.INVISIBLE);
-                                    }else{
-                                        textView1.setText(item1.getName());
-                                        // 지연 : AppSetting에 추가
-                                        AppSetting.ttsRecoItem1=item1.getName();
-                                        textView1_price.setText(item1.getPrice()+"");
-                                        Glide.with(RecomMenuActivity.this)
-                                                .load(item1.getImageUrl())
-                                                .into(imageView1);
+                                        // 쿼리 가져온거 반복
+                                        item1 = document.toObject(CafeItem.class);
+                                        if(item1 == null){
+                                            textView1.setVisibility(View.INVISIBLE);
+                                            textView1_price.setVisibility(View.INVISIBLE);
+                                            imageView1.setVisibility(View.INVISIBLE);
+                                        }else{
+                                            textView1.setText(item1.getName());
+                                            // 지연 : AppSetting에 추가
+                                            AppSetting.ttsRecoItem1=item1.getName();
+                                            textView1_price.setText(item1.getPrice()+"");
+                                            Glide.with(RecomMenuActivity.this)
+                                                    .load(item1.getImageUrl())
+                                                    .into(imageView1);
+
+                                        }
 
                                     }
 
-                                }
+                                    // db
+                                    if(item1 != null){
+                                        writeRecomContent(item1.getName());
+                                    }
 
-                                // db
-                                writeRecomContent(item1.getName());
+                                }
                             }
-                        }
-                    });
+                        });
 
 //            textView1.setText(xgb_result_itemName );
 
-        } catch (Exception e) {
-            Log.e(" recom activity", e.getMessage());
-            textView1.setVisibility(View.INVISIBLE);
-            textView1_price.setVisibility(View.INVISIBLE);
-            imageView1.setVisibility(View.INVISIBLE);
+            } catch (Exception e) {
+                Log.e(" recom activity", 2+e.getMessage());
 
-            textView1.setOnClickListener(null);
-            textView1_price.setOnClickListener(null);
-            imageView1.setOnClickListener(null);
+                textView1.setVisibility(View.INVISIBLE);
+                textView1_price.setVisibility(View.INVISIBLE);
+                imageView1.setVisibility(View.INVISIBLE);
+
+                textView1.setOnClickListener(null);
+                textView1_price.setOnClickListener(null);
+                imageView1.setOnClickListener(null);
+
+            }
 
         }
+
+
 
     }
 
@@ -174,13 +186,14 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
     private void print_CFRecom_result() {
 
         String cf_json = AppSetting.response_CF_overall;
+        Log.e("  is json? 1", cf_json);
 
         try {
 
             JSONObject jsonObj = new JSONObject(cf_json);
             String cf_result_itemName  = jsonObj.get("user_cf").toString();
 
-            FirebaseFirestore.getInstance().collection("menu")
+            FirebaseFirestore.getInstance().collection("cre_menu")
                     .whereEqualTo("name", cf_result_itemName)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -215,7 +228,7 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
                     });
 
         }catch (Exception e){
-            Log.e(" recom activity", e.getMessage());
+            Log.e(" recom activity", 1+e.getMessage());
             textView2.setVisibility(View.INVISIBLE);
             textView2_price.setVisibility(View.INVISIBLE);
             imageView2.setVisibility(View.INVISIBLE);

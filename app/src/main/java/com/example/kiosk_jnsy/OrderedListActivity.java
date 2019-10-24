@@ -72,7 +72,7 @@ public class OrderedListActivity extends AppCompatActivity {
                 String x[]=date_menu.split(dep);
                 final String here_name=x[0];
                 Toast.makeText(getApplicationContext(), here_name+"ddszzzzzzzzzzzzzzzzz", Toast.LENGTH_SHORT).show();
-                FirebaseFirestore.getInstance().collection("menu").get()
+                FirebaseFirestore.getInstance().collection("cre_menu").get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -206,7 +206,7 @@ public class OrderedListActivity extends AppCompatActivity {
                 TextView items=(TextView)findViewById(R.id.price_text);
                 // items.setVisibility(View.GONE);
                 people.clear();
-                FirebaseFirestore.getInstance().collection("order").get()
+                FirebaseFirestore.getInstance().collection("cre_order").get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -381,7 +381,7 @@ public class OrderedListActivity extends AppCompatActivity {
                         map.put("얼음",op6d);
 
                         // 이메뉴의 이미지 url 필요
-                        FirebaseFirestore.getInstance().collection("menu").get()
+                        FirebaseFirestore.getInstance().collection("cre_menu").get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {

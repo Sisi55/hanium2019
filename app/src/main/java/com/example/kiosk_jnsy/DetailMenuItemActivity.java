@@ -71,6 +71,8 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
         if(cf_json == null){ // null은 아니야 여기 정보만 없는거니까
             Log.e("  recom cf", "null");
+            // 키워드
+            printRecomKeywords();
         }else{
             try {
 
@@ -81,7 +83,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
                 jsonObj = new JSONObject(sim_json); // {"꼬미": "삼계탕", "라떼": "꼬미", "삼계탕": "꼬미", "아메리카노": "꼬미"}
                 String cf_result_itemName = jsonObj.get(model.getName()).toString();
 
-                FirebaseFirestore.getInstance().collection("menu")
+                FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/)
                         .whereEqualTo("name", cf_result_itemName)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -145,7 +147,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         Log.e("  유사 아이템 이름", model.getKeywordSimiliar()+"");
 
         // 파베에서 이름 같은거 가져오기
-        FirebaseFirestore.getInstance().collection("menu")
+        FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/)
                 .whereEqualTo("name", model.getKeywordSimiliar()) // 쿼리 조건
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -189,7 +191,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
             JSONObject jsonObj = new JSONObject(we_sim_json);
             String result_itemName = jsonObj.get(model.getName()).toString(); // 메뉴 이름
 
-            FirebaseFirestore.getInstance().collection("menu")
+            FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/)
                     .whereEqualTo("name", result_itemName)
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -268,6 +270,8 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_menu_item);
         options=new HashMap<String,Double>();
+
+//        AppSetting.personUUID
 
 
         // 나추천 설정 : 제일 많이 먹은 메뉴를 보여줄때
@@ -440,7 +444,7 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         // 지연 : 인텐트 테스트/////
         // 인텐트에서 받아온 정보 출력
         String menuTitle=model.getName();
-        int menuPrice=model.getPrice();
+        long menuPrice=model.getPrice();
 
         binding.tvMenuTitle.setText(menuTitle);
         binding.tvMenuPrice.setText(menuPrice+"");

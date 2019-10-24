@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-        FirebaseFirestore.getInstance().collection("menu").get()
+        FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -202,11 +202,14 @@ public class MainActivity extends AppCompatActivity  {
                                             weather, // Map<String,Double>
                                             tempArray, // ArrayList<CafeItem>
                                             today, // String
-                                            "54abaaa4-b8af-429f-baed-9047e6c0561e" /*시현*/
+                                            "18647e25-aa71-41dd-a6cc-2956e80c1f9b"
+                                            /*"18647e25-aa71-41dd-a6cc-2956e80c1f9b"*/
+                                            /*"a056b551-622b-46f8-8620-731a66bc5be8"*/
+                                            /*"54abaaa4-b8af-429f-baed-9047e6c0561e"*/ /*시현*/
                                             /*"82d44f92-6626-44a8-8766-57d627b99269"*/ /*지연*/, // AppSetting.personUUID
                                             item.getName());
 
-                                    FirebaseFirestore.getInstance().collection("order").add(order);
+                                    FirebaseFirestore.getInstance().collection("cre_order"/*"order"*/).add(order);
 
                                 }
                                 Log.e("  temp input", ""+item.getName());
@@ -262,13 +265,48 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 */
+    private void dbsetCheckTrue(){
+        FirebaseFirestore.getInstance().collection("cre_order"/*"menu"*/).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                               if (task.isSuccessful()) {
 
+                                                   for (QueryDocumentSnapshot document : task.getResult()) {
+//                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                                       Order tempOrder= document.toObject(Order.class);
+//                                                       tempOrder.setCheck(true);
+                                                       String docId = document.getId();
+//                                                       Log.e("  check", true+"");
+
+                                                       tempMap.put(docId, tempOrder);
+                                                   }
+                                                   dbUpdate();
+
+                                               }
+                                           }
+                                       }
+                );
+
+    }
+    private void dbUpdate(){
+        for(String key : tempMap.keySet()){
+            Log.e("  update", key);
+            FirebaseFirestore.getInstance().collection("cre_order"/*"menu"*/)
+                    .document(key)
+                    .update("check", true);
+
+        }
+    }
+    HashMap<String, Order> tempMap = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
+//        dbsetCheckTrue();
+//        HashMap<Sl..llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll.tring, Order> tempMap = new HashMap<>();
 
 
        // binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
@@ -316,8 +354,8 @@ public class MainActivity extends AppCompatActivity  {
             btnMyReco.setEnabled(true);
 
         }
-
-
+// 가짜 정보 넣는다
+//        AppSetting.personUUID = "6fe0d49b-0f23-445e-a144-d824f91bdb00";
         checkFromCamera();
 
         intentClickBtn();
@@ -446,6 +484,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
+/*
         // tts 이거 얼굴인식하는 곳에 잘라 가져가세용
         String tts_identify = getResources().getString(R.string.after_identify_start) + // getResources().getString(R.string)
                 AppSetting.personName +
@@ -457,6 +496,7 @@ public class MainActivity extends AppCompatActivity  {
             Log.e("   감정", "부정");
             tts_identify += tts_identify + getResources().getString(R.string.identify_bad);
         }
+*/
         // tts_identify  읽어주세용
 
         // tts
@@ -568,7 +608,7 @@ public class MainActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
 
-                FirebaseFirestore.getInstance().collection("order").get()
+                FirebaseFirestore.getInstance().collection("cre_order").get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -619,7 +659,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
                                     // 이메뉴의 이미지 url 필요
-                                    FirebaseFirestore.getInstance().collection("menu").get()
+                                    FirebaseFirestore.getInstance().collection("cre_menu").get()
                                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {

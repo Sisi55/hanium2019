@@ -143,38 +143,44 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
     }
 
     void printRecomKeywords(){
-        Log.e("  아이템 이름", model.getName());
-        Log.e("  유사 아이템 이름", model.getKeywordSimiliar()+"");
+        if(model != null){
+            Log.e("  아이템 이름", model.getName());
+            Log.e("  유사 아이템 이름", model.getKeywordSimiliar()+"");
 
-        // 파베에서 이름 같은거 가져오기
-        FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/)
-                .whereEqualTo("name", model.getKeywordSimiliar()) // 쿼리 조건
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
+            // 파베에서 이름 같은거 가져오기
+            FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/)
+                    .whereEqualTo("name", model.getKeywordSimiliar()) // 쿼리 조건
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
 //                                    Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                // 쿼리 가져온거 반복
-                                item2 = document.toObject(CafeItem.class);
-                                binding.tvItemCFName.setText(item2.getName());
-                                // 지연 : AppSetting에 추가
-                                AppSetting.ttsRecoItem1=item2.getName();
-                                binding.tvItemCFPrice.setText(item2.getPrice()+"");
-                                Glide.with(DetailMenuItemActivity.this)
-                                        .load(item2.getImageUrl())
-                                        .into(binding.imageviewCf);
+                                    // 쿼리 가져온거 반복
+                                    item2 = document.toObject(CafeItem.class);
+                                    binding.tvItemCFName.setText(item2.getName());
+                                    // 지연 : AppSetting에 추가
+                                    AppSetting.ttsRecoItem1=item2.getName();
+                                    binding.tvItemCFPrice.setText(item2.getPrice()+"");
+                                    Glide.with(DetailMenuItemActivity.this)
+                                            .load(item2.getImageUrl())
+                                            .into(binding.imageviewCf);
 
-                                binding.title1.setText("아이템 키워드");
+                                    binding.title1.setText("아이템 키워드");
 //                                writeRecomContent(item2.getName());
 
+                                }
+                                if(item2 != null){
+                                    writeRecomContent(item2.getName());
+                                }
+
                             }
-                            writeRecomContent(item2.getName());
                         }
-                    }
-                });
+                    });
+
+        }
 
 
     }

@@ -221,7 +221,11 @@ public class PaymentListActivity extends AppCompatActivity {
         order_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("결과온","설명 >>"+description+"\n온도 >>"+temp+"\n습도 >>"+humidity+"\n풍속 >>"+speed);
+                Log.d("결과온","설명 >>"+
+                        ""+"\n온도 >>"+
+                        AppSetting.recom_weather_temp+"\n습도 >>"+
+                        AppSetting.recom_weather_humidity+"\n풍속 >>"+
+                        AppSetting.recom_weather_speed);
 
                 // tts 로딩시간 걸린다니까 클릭하자마자 tts 함수 호출할게요
                 playTTS();
@@ -241,9 +245,16 @@ public class PaymentListActivity extends AppCompatActivity {
                 /// 설명은 string형이라 따로 변수르 만들어야 함!!!!!!!!!!!!!!!!111111111111
                 //weather.put("description",Double.valueOf(description).doubleValue());
 //                Log.d("결과온",Double.parseDouble(temp)+"");
-                weather.put("humidity",Double.parseDouble(humidity));
-                weather.put("temp",Double.parseDouble(temp));
-                weather.put("speed",Double.parseDouble(speed));
+                if(AppSetting.recom_weather_humidity == null){
+                    weather.put("humidity",Double.parseDouble("80"/*AppSetting.recom_weather_humidity)*/));
+                    weather.put("temp",Double.parseDouble("1"/*AppSetting.recom_weather_temp*/));
+                    weather.put("speed",Double.parseDouble("300"/*AppSetting.recom_weather_speed*/));
+                }else{
+                    weather.put("humidity",Double.parseDouble(/*"80"*/AppSetting.recom_weather_humidity));
+                    weather.put("temp",Double.parseDouble(/*"1"*/AppSetting.recom_weather_temp));
+                    weather.put("speed",Double.parseDouble(/*"300"*/AppSetting.recom_weather_speed));
+
+                }
 
                 // calender로 현재 날짜 알아오기
                 SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
@@ -511,7 +522,7 @@ public class PaymentListActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
             //
             // 날씨 받아올 url
-            String uri = "http://api.openweathermap.org/data/2.5/weather?lat=37.652490&lon=127.013178&mode=json&APPID=41d82c8172c1c237afb77833d08a8a59";
+            String uri = "http://api.openweathermap.org/data/2.5/weather?lat=37.652490&lon=127.013178&mode=json&APPID=d4246e2d41b8660df3b7086d27e865ae";
             BufferedReader bufferedReader = null;
             StringBuilder sb = new StringBuilder();
             String json;

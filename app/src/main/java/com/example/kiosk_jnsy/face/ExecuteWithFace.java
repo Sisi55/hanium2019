@@ -152,8 +152,10 @@ public class ExecuteWithFace {
             ((Camera2BasicFragment)fragment).addTextToEditText("감정: "+result_emotion);
 */
             // add face
-            new AddFaceTask(/*전역:create 후 저장*/UUID.fromString(AppSetting.personUUID),
-                    bytes, /*faces[0],*/ activity/*fragment*/, detectFlag).execute();
+            if(AppSetting.personUUID != null){
+                new AddFaceTask(/*전역:create 후 저장*/UUID.fromString(AppSetting.personUUID),
+                        bytes, /*faces[0],*/ activity/*fragment*/, detectFlag).execute();
+            }
 //            ((Camera2BasicFragment)fragment).addTextToEditText("new add face task");
         }
 
@@ -738,6 +740,7 @@ public class ExecuteWithFace {
             Log.e("   add face", "");
 
             if(AppSetting.trainRequestFlag == true){ // add face 다 하면?
+                // train 주석
 //                new AboutPersonGroup.TrainPersonGroupTask(activity).execute();
                 AppSetting.trainRequestFlag = false; // 사용하고 초기화
                 ((CameraActivity)activity).intentToMain();
@@ -754,7 +757,7 @@ public class ExecuteWithFace {
         protected String doInBackground(Void... params) {
             //
             // 날씨 받아올 url
-            String uri = "http://api.openweathermap.org/data/2.5/weather?lat=37.652490&lon=127.013178&mode=json&APPID=41d82c8172c1c237afb77833d08a8a59";
+            String uri = "http://api.openweathermap.org/data/2.5/weather?lat=37.652490&lon=127.013178&mode=json&APPID=d4246e2d41b8660df3b7086d27e865ae";
             BufferedReader bufferedReader = null;
             StringBuilder sb = new StringBuilder();
             String json;

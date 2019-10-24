@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity  {
 
         setContentView(R.layout.activity_main);
 
-//        dbsetCheckTrue();
+
 //        HashMap<Sl..llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll.tring, Order> tempMap = new HashMap<>();
 
 
@@ -314,6 +314,7 @@ public class MainActivity extends AppCompatActivity  {
 
 
 //        inputTempOrderList(); // 임시 order data 삽입
+//        dbsetCheckTrue();
 
         // 추천 내역 전역으로 저장한다
 //        new Recom.RecomXGBTask().execute();
@@ -437,7 +438,7 @@ public class MainActivity extends AppCompatActivity  {
                                 if(ttsRecoResult.equals("추천없음")){
 
                                 }else{
-                                    mTTS.speak("기분이 더 좋아지는 " + AppSetting.ttsRecoItem2+ " 어떠세요?", TextToSpeech.QUEUE_FLUSH, null);
+                                 //   mTTS.speak("기분이 더 좋아지는 " + AppSetting.ttsRecoItem2+ " 어떠세요?", TextToSpeech.QUEUE_FLUSH, null);
                                 }
                             }
                             else{

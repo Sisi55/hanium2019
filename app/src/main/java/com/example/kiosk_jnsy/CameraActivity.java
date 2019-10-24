@@ -73,7 +73,7 @@ public class CameraActivity extends AppCompatActivity
 
     public void CaptureFace(){
         // 대화상자 출력 "카메라에 얼굴나오게"
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+        /*AlertDialog.Builder builder = */new AlertDialog.Builder(this)
                 .setTitle("카메라에 얼굴이 나오게 해주세요!")
                 .setPositiveButton("네", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -100,9 +100,9 @@ public class CameraActivity extends AppCompatActivity
                         }
 
                     }
-                });
-        builder.show().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
+                }).show();
+//        builder.show().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
+//                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 
 
 

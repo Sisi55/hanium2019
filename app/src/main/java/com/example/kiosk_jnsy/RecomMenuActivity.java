@@ -45,7 +45,7 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
         }else if(v==textView2 || v==textView2_price || v==imageView2){
             Intent intent = new Intent(RecomMenuActivity.this, DetailMenuItemActivity.class);
-            intent.putExtra("detail", item1);
+            intent.putExtra("detail", item2);
             startActivity(intent);
 
         }

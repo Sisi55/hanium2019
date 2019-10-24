@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:fontFamily="@font/myfont1"
         android:id="@+id/name_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,6 +14,7 @@
         android:gravity="center" />
 
     <TextView
+        android:fontFamily="@font/myfont1"
         android:id="@+id/price_text"
         android:background="#FFFFFF"
         android:layout_width="match_parent"

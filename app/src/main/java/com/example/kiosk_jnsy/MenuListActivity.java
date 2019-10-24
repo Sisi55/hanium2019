@@ -99,7 +99,7 @@ public class MenuListActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                         // 성공하면
-                        Toast.makeText(MenuListActivity.this,"Image Uproad Successfultty",Toast.LENGTH_LONG).show();
+                  //      Toast.makeText(MenuListActivity.this,"Image Uproad Successfultty",Toast.LENGTH_LONG).show();
 
                         Log.d("백지연",taskSnapshot.getMetadata().getReference().getDownloadUrl()+"");
                         taskSnapshot.getMetadata().getReference().getDownloadUrl()
@@ -188,7 +188,7 @@ public class MenuListActivity extends AppCompatActivity {
                 if(m==null)
                     Toast.makeText(MenuListActivity.this, "맵에 아무것도 없음", Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(MenuListActivity.this, "맵에 있음", Toast.LENGTH_SHORT).show();
+                 //   Toast.makeText(MenuListActivity.this, "맵에 있음", Toast.LENGTH_SHORT).show();
                 intent.putExtra("shoplist",shoplist); // 지연 : 고대로 보냄
                 intent.putExtra("m_count",m);
                 startActivity(intent);

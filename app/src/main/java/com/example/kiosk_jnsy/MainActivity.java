@@ -576,7 +576,7 @@ public class MainActivity extends AppCompatActivity  {
                                             // rank 맵에 이미 있다면 있는값에 추가
                                             if(rank.get(orderToString)!=null){
                                                 int num=rank.get(orderToString);
-                                                Toast.makeText(MainActivity.this, orderToString+"추가", Toast.LENGTH_SHORT).show();
+                                            //    Toast.makeText(MainActivity.this, orderToString+"추가", Toast.LENGTH_SHORT).show();
                                                 rank.put(orderToString,num+1);
                                             }// 없다면 1로 추가
                                             else {
@@ -625,7 +625,7 @@ public class MainActivity extends AppCompatActivity  {
                                                                 int price = pricen.intValue();
                                                                 String imageUrl = (String) document.getData().get("imageUrl");
                                                                 myresult=new CafeItem(myname, price, imageUrl, body);
-                                                                Toast.makeText(MainActivity.this, "빠른 주문", Toast.LENGTH_SHORT).show();
+                                                           //     Toast.makeText(MainActivity.this, "빠른 주문", Toast.LENGTH_SHORT).show();
                                                                 Intent intent = new Intent(MainActivity.this, DetailMenuItemActivity.class);
 
                                                                 intent.putExtra("detail",myresult);

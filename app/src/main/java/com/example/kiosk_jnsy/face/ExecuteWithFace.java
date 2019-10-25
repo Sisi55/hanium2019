@@ -166,7 +166,7 @@ public class ExecuteWithFace {
             emotionMap.put("disgust",emotion.disgust);
             emotionMap.put("fear",emotion.fear);
 
-            emotionMap.put("happiness",emotion.happiness*5);
+            emotionMap.put("happiness",emotion.happiness);
             emotionMap.put("neutral",emotion.neutral);
             emotionMap.put("sadness",emotion.sadness);
             emotionMap.put("surprise",emotion.surprise);
@@ -466,7 +466,7 @@ public class ExecuteWithFace {
             emotionMap.put("disgust",emotion.disgust);
             emotionMap.put("fear",emotion.fear);
 
-            emotionMap.put("happiness",emotion.happiness*5); // "happiness" "neutral"
+            emotionMap.put("happiness",emotion.happiness); // "happiness" "neutral"
             emotionMap.put("neutral",emotion.neutral);
             emotionMap.put("sadness",emotion.sadness);
             emotionMap.put("surprise",emotion.surprise);
@@ -741,7 +741,7 @@ public class ExecuteWithFace {
 
             if(AppSetting.trainRequestFlag == true){ // add face 다 하면?
                 // train 주석
-//                new AboutPersonGroup.TrainPersonGroupTask(activity).execute();
+                new AboutPersonGroup.TrainPersonGroupTask(activity).execute();
                 AppSetting.trainRequestFlag = false; // 사용하고 초기화
                 ((CameraActivity)activity).intentToMain();
             }

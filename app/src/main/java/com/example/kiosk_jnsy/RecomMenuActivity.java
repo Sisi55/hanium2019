@@ -1,5 +1,6 @@
 package com.example.kiosk_jnsy;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.kiosk_jnsy.model.CafeItem;
@@ -108,7 +110,7 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
         print_CFRecom_result();
 
         // tts
-        //playTTS();
+//        playTTS();
 
 
     }
@@ -124,6 +126,8 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
             tts_recom= getResources().getString(R.string.recom_good_start) + // getResources().getString(R.string)
                     /*메뉴이름*/"" + // 위,아래 결정해야 해
                     getResources().getString(R.string.recom_good_end);
+            Toast.makeText(RecomMenuActivity.this, getResources().getString(R.string.identify_good), Toast.LENGTH_SHORT).show();
+
         }else{
             Log.e("   감정", "부정");
 
@@ -134,6 +138,42 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
     }
 
+    void printRecom(String itemName){
+
+        FirebaseFirestore.getInstance().collection("cre_menu"/*"menu"*/)
+                .whereEqualTo("name", itemName) // 쿼리 조건
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) { // document.toObject(Order.class)
+//                                    Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                // 쿼리 가져온거 반복
+                                item1 = document.toObject(CafeItem.class);
+
+                                textView1.setText(item1.getName());
+                                // 지연 : AppSetting에 추가
+                                AppSetting.ttsRecoItem1=item1.getName();
+                                textView1_price.setText(item1.getPrice()+"");
+                                Glide.with(RecomMenuActivity.this)
+                                        .load(item1.getImageUrl())
+                                        .into(imageView1);
+
+                            }
+                            if(item2 != null){
+                                writeRecomContent(item2.getName());
+                            }
+
+                        }
+                    }
+                });
+
+
+    }
+
+
     CafeItem item1;
     private void print_xgbRecom_result() {
 
@@ -142,6 +182,9 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
         Log.e("  is json? 2", xgb_json);
         if(xgb_json.equals("")){
             // 다른 정보가 나오도록 한다
+            // 딸기라떼
+            printRecom("딸기라떼");
+
         }else{
             try {
 
@@ -216,7 +259,8 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
 
         FirebaseFirestore.getInstance().collection("recom")
                 // .whereEqualTo("name", xgb_result_itemName)
-                .add(new RecomDTO(AppSetting.personName, itemName));
+                .add(new RecomDTO(AppSetting.personName, itemName))
+                ;
     }
 
     private void ttsPlease(){
@@ -233,12 +277,12 @@ public class RecomMenuActivity extends AppCompatActivity implements View.OnClick
                             Log.e("   감정", "긍정0");
                             //mTTS.speak("기분이 더 좋아지는 " + item2.getName() + " 어떠세요?", TextToSpeech.QUEUE_FLUSH, null);
                             mTTS.speak("기분이 더 좋아지는 " + item2.getName() + " 어떠세요?", TextToSpeech.QUEUE_FLUSH, null);
-
+                            Toast.makeText(RecomMenuActivity.this, "기분이 더 좋아지는 " + item2.getName() + " 어떠세요?", Toast.LENGTH_SHORT).show();
                         } else {
                             Log.e("   감정", "부정0");
                             mTTS.speak(getResources().getString(R.string.identify_bad), TextToSpeech.QUEUE_FLUSH, null);
                             mTTS.speak( item2.getName() + " 로 힐링~해보세요~", TextToSpeech.QUEUE_FLUSH, null);
-
+                            Toast.makeText(RecomMenuActivity.this, item2.getName() + " 로 힐링~해보세요~", Toast.LENGTH_SHORT).show();
                         }}else{
                         mTTS.speak("안나와요 널값이에요", TextToSpeech.QUEUE_FLUSH, null);
 

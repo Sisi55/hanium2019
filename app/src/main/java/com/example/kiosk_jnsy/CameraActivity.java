@@ -85,7 +85,7 @@ public class CameraActivity extends AppCompatActivity
 */
 
                         try{
-                            Thread.sleep(1000);
+                            Thread.sleep(1500);
                         }catch(Exception e){
                             Log.e("   카메라sleep", e.getMessage());
                         }
@@ -149,6 +149,7 @@ public class CameraActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+//        new AboutPersonGroup.TrainPersonGroupTask(this).execute();
 
 //        View view = inflater.inflate(R.layout.fragment_camera2_basic, container, false);
         editText = (EditText) findViewById(R.id.edit);
@@ -271,13 +272,13 @@ public class CameraActivity extends AppCompatActivity
         public void run() {
             super.run();
 
-            for(int i=10;i>0;i--){ //10번 반복
+            for(int i=3;i>0;i--){ //10번 반복
 
                 final int count = i;
                 captureCount = i;
 
                 try{
-                    sleep(1500);
+                    sleep(1000);
                 }catch (Exception e){Log.e("   thread error","");}
 
                 takePicture();

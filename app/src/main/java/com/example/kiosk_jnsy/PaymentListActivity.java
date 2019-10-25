@@ -278,7 +278,21 @@ public class PaymentListActivity extends AppCompatActivity {
                         double o4=m.get("텀블러");
                         double o5=m.get("빨대");
                         double o6=m.get("얼음");
-                        orderToString=orderToString+name+"/휘핑:"+o1+"/샷:"+o2+"/"+"온도"+o3+"/텀블러:"+o4+"/"+"빨대"+o5+"/얼음:"+o6+"/";
+                        //orderToString=orderToString+name+"/휘핑:"+o1+"/샷:"+o2+"/"+"온도"+o3+"/텀블러:"+o4+"/"+"빨대"+o5+"/얼음:"+o6+"/";
+
+                        String temp="",takeout="";
+                        if(o3 == 1.0){
+                            temp = "핫";
+                        }else{
+                            temp = "아이스";
+                        }
+                        if(o4 == 0.0){
+                            takeout = "매장";
+                        }
+                        else{
+                            takeout = "takeout";
+                        }
+                        orderToString=orderToString+name+"/휘핑:"+o1+"/샷:"+o2+"/온도: "+temp+"/테이크아웃: "+takeout+"/"+"/"+"빨대"+o5+"/얼음:"+o6+"/";
                     }
                     Order order = new Order(AppSetting.emotion,weather,mArrayList,today,guest,orderToString);
                     //

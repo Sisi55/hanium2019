@@ -94,15 +94,15 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 //                                    Log.d(TAG, document.getId() + " => " + document.getData());
 
                                         // 쿼리 가져온거 반복
-                                        item = document.toObject(CafeItem.class);
-                                        binding.tvItemCFName.setText(item.getName());
-                                        binding.tvItemCFPrice.setText(item.getPrice()+"");
+                                        item1 = document.toObject(CafeItem.class);
+                                        binding.tvItemCFName.setText(item1.getName());
+                                        binding.tvItemCFPrice.setText(item1.getPrice()+"");
                                         Glide.with(DetailMenuItemActivity.this)
-                                                .load(item.getImageUrl())
+                                                .load(item1.getImageUrl())
                                                 .into(binding.imageviewCf);
 
                                     }
-                                    writeRecomContent(item.getName());
+                                    writeRecomContent(item1.getName());
                                 }/*else{
                                     Log.e("   혹시 여기? 222", "item이 없니?");
                                 }*/
@@ -276,6 +276,8 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail_menu_item);
         options=new HashMap<String,Double>();
+        model=(CafeItem)getIntent().getSerializableExtra("detail");
+
 
 //        AppSetting.personUUID
 
@@ -290,7 +292,6 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
 
 
         }
-        model=(CafeItem)getIntent().getSerializableExtra("detail");
         // 나추천 설정
 
 
@@ -531,16 +532,19 @@ public class DetailMenuItemActivity extends AppCompatActivity implements View.On
     private void incrementPreferences(int score){
         // 멤버 model과 AppSetting.itemPreferences 이용한다
 
-        if(AppSetting.itemPreferences.keySet().contains(model.getName())==true){
+        if(model == null){
+            if(AppSetting.itemPreferences.keySet().contains(model.getName())==true){
 //            int value = AppSetting.itemPreferences.get(model.getName());
-            long value = AppSetting.itemPreferences.get(model.getName());
-            int intValue = ((Long)value).intValue();
-            AppSetting.itemPreferences.put(model.getName(), intValue/*value*/+(long)score); // 1 증가
-        }else{
-            AppSetting.itemPreferences.put(model.getName(), (long)score); // 1 할당
+                long value = AppSetting.itemPreferences.get(model.getName());
+                int intValue = ((Long)value).intValue();
+                AppSetting.itemPreferences.put(model.getName(), intValue/*value*/+(long)score); // 1 증가
+            }else{
+                AppSetting.itemPreferences.put(model.getName(), (long)score); // 1 할당
+            }
+            // 잠시만여
+            updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요
+
         }
-        // 잠시만여
-        updateDB(); // 갱신하고 바로 업로드 - 주문까지 갈거라는 보장이 없더라구요
     }
 
     private void updateDB(){

@@ -304,6 +304,7 @@ public class MainActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+//        new AboutPersonGroup.TrainPersonGroupTask(this).execute();
 
 
 //        HashMap<Sl..llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll.tring, Order> tempMap = new HashMap<>();
@@ -424,6 +425,8 @@ public class MainActivity extends AppCompatActivity  {
                     public void onInit(int status) {
                         mTTS.setLanguage(Locale.KOREAN);
                         if (status == TextToSpeech.SUCCESS) {
+                            Toast.makeText(MainActivity.this, "안녕하세요"+AppSetting.personName+"님!", Toast.LENGTH_SHORT).show();
+
                             mTTS.speak("안녕하세요"+AppSetting.personName+"님!", TextToSpeech.QUEUE_FLUSH, null);
                             try {
                                 Thread.sleep(1500);
@@ -435,11 +438,13 @@ public class MainActivity extends AppCompatActivity  {
                                 // tts추가
 
                                 mTTS.speak(getResources().getString(R.string.identify_good),TextToSpeech.QUEUE_FLUSH, null);
-
-
+                                Toast.makeText(MainActivity.this, getResources().getString(R.string.identify_good), Toast.LENGTH_SHORT).show();
                                 }else{
+                               // Toast.makeText(MainActivity.this, getResources().getString(R.string.identify_good), Toast.LENGTH_SHORT
                                  //   mTTS.speak("기분이 더 좋아지는 " + AppSetting.ttsRecoItem2+ " 어떠세요?", TextToSpeech.QUEUE_FLUSH, null);
-                                }
+                                Toast.makeText(MainActivity.this, getResources().getString(R.string.identify_bad), Toast.LENGTH_SHORT).show();
+
+                            }
 
 
 

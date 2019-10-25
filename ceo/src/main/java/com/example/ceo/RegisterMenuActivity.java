@@ -119,7 +119,7 @@ public class RegisterMenuActivity extends AppCompatActivity {
                                                     CafeItem ci = new CafeItem(name, price, task.getResult().toString(),"상세설명");
                                                     //mFirebaseDatabaseReference.child(MESSAGES_CHILD).child(key).setValue(friendlyMessage);
                                                     //FirebaseDatabase.getInstance().getReference().child("menu").push().setValue(ci);
-                                                    FirebaseFirestore.getInstance().collection("menu").add(ci);
+                                                    FirebaseFirestore.getInstance().collection("cre_menu").add(ci);
                                                 }
                                             }
                                         });

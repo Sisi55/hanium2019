@@ -7,6 +7,29 @@
     android:orientation="vertical"
     tools:context=".RegisterMenuActivity">
 
+    <RelativeLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="69dp"
+        android:background="#3B240B"
+        app:layout_constraintBottom_toTopOf="@+id/recycler_main_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+        <TextView
+            android:textAlignment="center"
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="손님 저희를 전적으로 믿으십시오"
+            android:textColor="@color/colorWhite"
+            android:textSize="23dp"
+            android:fontFamily="@font/myfont1"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
